@@ -1,12 +1,13 @@
-# Ignore compiled Java classes
+# 忽略编译生成的 Java class 文件
 *.class
 
-# Ignore tar files
+# 忽略 tar 文件
 *.tar*
 .project
 .classpath
 .jdtls-bin/
 .settings/
 
-# zed editor
+# zed 编辑器
 .zed/
+
