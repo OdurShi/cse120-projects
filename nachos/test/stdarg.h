@@ -1,14 +1,14 @@
-/* stdarg.h for GNU.
-   Note that the type used in va_arg is supposed to match the
-   actual type **after default promotions**.
-   Thus, va_arg (..., short) is not valid.  */
+/* GNU 的 stdarg.h。
+   注意，va_arg 中使用的类型应当与实参**经过默认类型提升之后**的实际类型
+   一致。
+   因此，va_arg (..., short) 是无效的。  */
 
 #ifndef _STDARG_H
 #ifndef _ANSI_STDARG_H_
 #ifndef __need___va_list
 #define _STDARG_H
 #define _ANSI_STDARG_H_
-#endif /* not __need___va_list */
+#endif /* 未定义 __need___va_list */
 #undef __need___va_list
 
 #ifdef __clipper__
@@ -60,7 +60,7 @@
 #include "va-v850.h"
 #else
 
-/* Define __gnuc_va_list.  */
+/* 定义 __gnuc_va_list。  */
 
 #ifndef __GNUC_VA_LIST
 #define __GNUC_VA_LIST
@@ -71,12 +71,12 @@ typedef void *__gnuc_va_list;
 #endif
 #endif
 
-/* Define the standard macros for the user,
-   if this invocation was from the user program.  */
+/* 如果这次 include 来自用户程序，
+   就为用户定义标准的宏。  */
 #ifdef _STDARG_H
 
-/* Amount of space required in an argument list for an arg of type TYPE.
-   TYPE may alternatively be an expression whose type is used.  */
+/* 参数列表中一个类型为 TYPE 的参数所需的空间大小。
+   TYPE 也可以是一个表达式，此时使用该表达式的类型。  */
 
 #if defined(sysV68)
 #define __va_rounded_size(TYPE)  \
@@ -90,57 +90,56 @@ typedef void *__gnuc_va_list;
  (AP = ((__gnuc_va_list) __builtin_next_arg (LASTARG)))
 
 #undef va_end
-void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
+void va_end (__gnuc_va_list);		/* 在 libgcc.a 中定义 */
 #define va_end(AP)	((void)0)
 
-/* We cast to void * and then to TYPE * because this avoids
-   a warning about increasing the alignment requirement.  */
+/* 我们先转换成 void *，再转换成 TYPE *，因为这样可以避免
+   关于提高对齐要求的警告。  */
 
 #if (defined (__arm__) && ! defined (__ARMEB__)) || defined (__i386__) || defined (__i860__) || defined (__ns32000__) || defined (__vax__)
-/* This is for little-endian machines; small args are padded upward.  */
+/* 这是给小端机器用的；较小的参数向上填充。  */
 #define va_arg(AP, TYPE)						\
  (AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)),	\
   *((TYPE *) (void *) ((char *) (AP) - __va_rounded_size (TYPE))))
-#else /* big-endian */
-/* This is for big-endian machines; small args are padded downward.  */
+#else /* 大端 */
+/* 这是给大端机器用的；较小的参数向下填充。  */
 #define va_arg(AP, TYPE)						\
  (AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)),	\
   *((TYPE *) (void *) ((char *) (AP)					\
 		       - ((sizeof (TYPE) < __va_rounded_size (char)	\
 			   ? sizeof (TYPE) : __va_rounded_size (TYPE))))))
-#endif /* big-endian */
+#endif /* 大端 */
 
-/* Copy __gnuc_va_list into another variable of this type.  */
+/* 把 __gnuc_va_list 复制到另一个同类型的变量中。  */
 #define __va_copy(dest, src) (dest) = (src)
 
 #endif /* _STDARG_H */
 
-#endif /* not v850 */
-#endif /* not mn10200 */
-#endif /* not mn10300 */
-#endif /* not sh */
-#endif /* not m32r */
-#endif /* not arc */
-#endif /* not powerpc with V.4 calling sequence */
-#endif /* not h8300 */
-#endif /* not alpha */
-#endif /* not i960 */
-#endif /* not sparc */
-#endif /* not mips */
-#endif /* not hppa */
-#endif /* not i860 */
-#endif /* not m88k */
-#endif /* not clipper */
+#endif /* 非 v850 */
+#endif /* 非 mn10200 */
+#endif /* 非 mn10300 */
+#endif /* 非 sh */
+#endif /* 非 m32r */
+#endif /* 非 arc */
+#endif /* 非使用 V.4 调用序列的 powerpc */
+#endif /* 非 h8300 */
+#endif /* 非 alpha */
+#endif /* 非 i960 */
+#endif /* 非 sparc */
+#endif /* 非 mips */
+#endif /* 非 hppa */
+#endif /* 非 i860 */
+#endif /* 非 m88k */
+#endif /* 非 clipper */
 
 #ifdef _STDARG_H
-/* Define va_list, if desired, from __gnuc_va_list. */
-/* We deliberately do not define va_list when called from
-   stdio.h, because ANSI C says that stdio.h is not supposed to define
-   va_list.  stdio.h needs to have access to that data type, 
-   but must not use that name.  It should use the name __gnuc_va_list,
-   which is safe because it is reserved for the implementation.  */
+/* 如果需要，就根据 __gnuc_va_list 定义 va_list。 */
+/* 当从 stdio.h 中 include 时，我们故意不定义 va_list，
+   因为 ANSI C 规定 stdio.h 不应该定义 va_list。stdio.h
+   需要访问这个数据类型，但不能使用这个名字。它应该使用
+   __gnuc_va_list 这个名字，这是安全的，因为这个名字是保留给实现使用的。  */
 
-#ifdef _HIDDEN_VA_LIST  /* On OSF1, this means varargs.h is "half-loaded".  */
+#ifdef _HIDDEN_VA_LIST  /* 在 OSF1 上，这表示 varargs.h 处于"加载了一半"的状态。  */
 #undef _VA_LIST
 #endif
 
@@ -149,10 +148,10 @@ void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
 #endif
 
 #if defined(__svr4__) || (defined(_SCO_DS) && !defined(__VA_LIST))
-/* SVR4.2 uses _VA_LIST for an internal alias for va_list,
-   so we must avoid testing it and setting it here.
-   SVR4 uses _VA_LIST as a flag in stdarg.h, but we should
-   have no conflict with that.  */
+/* SVR4.2 把 _VA_LIST 用作 va_list 的内部别名，
+   所以我们必须避免在这里测试或设置它。
+   SVR4 在 stdarg.h 中把 _VA_LIST 用作一个标志，但我们
+   应该不会与之冲突。  */
 #ifndef _VA_LIST_
 #define _VA_LIST_
 #ifdef __i860__
@@ -165,23 +164,23 @@ typedef __gnuc_va_list va_list;
 #define __VA_LIST
 #endif
 #endif /* _VA_LIST_ */
-#else /* not __svr4__ || _SCO_DS */
+#else /* 非 __svr4__ || _SCO_DS */
 
-/* The macro _VA_LIST_ is the same thing used by this file in Ultrix.
-   But on BSD NET2 we must not test or define or undef it.
-   (Note that the comments in NET 2's ansi.h
-   are incorrect for _VA_LIST_--see stdio.h!)  */
+/* 宏 _VA_LIST_ 和这个文件在 Ultrix 上使用的是同一个东西。
+   但在 BSD NET2 上，我们不能测试、定义或取消定义它。
+   （注意，NET 2 的 ansi.h 中关于 _VA_LIST_ 的注释
+   是不正确的——参见 stdio.h！）  */
 #if !defined (_VA_LIST_) || defined (__BSD_NET2__) || defined (____386BSD____) || defined (__bsdi__) || defined (__sequent__) || defined (__FreeBSD__) || defined(WINNT)
-/* The macro _VA_LIST_DEFINED is used in Windows NT 3.5  */
+/* 宏 _VA_LIST_DEFINED 在 Windows NT 3.5 中使用  */
 #ifndef _VA_LIST_DEFINED
-/* The macro _VA_LIST is used in SCO Unix 3.2.  */
+/* 宏 _VA_LIST 在 SCO Unix 3.2 中使用。  */
 #ifndef _VA_LIST
-/* The macro _VA_LIST_T_H is used in the Bull dpx2  */
+/* 宏 _VA_LIST_T_H 在 Bull dpx2 中使用  */
 #ifndef _VA_LIST_T_H
 typedef __gnuc_va_list va_list;
-#endif /* not _VA_LIST_T_H */
-#endif /* not _VA_LIST */
-#endif /* not _VA_LIST_DEFINED */
+#endif /* 未定义 _VA_LIST_T_H */
+#endif /* 未定义 _VA_LIST */
+#endif /* 未定义 _VA_LIST_DEFINED */
 #if !(defined (__BSD_NET2__) || defined (____386BSD____) || defined (__bsdi__) || defined (__sequent__) || defined (__FreeBSD__))
 #define _VA_LIST_
 #endif
@@ -195,11 +194,11 @@ typedef __gnuc_va_list va_list;
 #define _VA_LIST_T_H
 #endif
 
-#endif /* not _VA_LIST_, except on certain systems */
+#endif /* 未定义 _VA_LIST_，某些系统除外 */
 
-#endif /* not __svr4__ */
+#endif /* 非 __svr4__ */
 
 #endif /* _STDARG_H */
 
-#endif /* not _ANSI_STDARG_H_ */
-#endif /* not _STDARG_H */
+#endif /* 未定义 _ANSI_STDARG_H_ */
+#endif /* 未定义 _STDARG_H */

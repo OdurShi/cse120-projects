@@ -1,5 +1,5 @@
 /* ---------------------------------------- */
-/*           VARARGS  for MIPS/GNU CC       */
+/*         MIPS/GNU CC 的 VARARGS           */
 /*                                          */
 /*                                          */
 /*                                          */
@@ -7,20 +7,20 @@
 /* ---------------------------------------- */
 
 
-/* These macros implement varargs for GNU C--either traditional or ANSI.  */
+/* 这些宏为 GNU C 实现可变参数（varargs）——无论是传统风格还是 ANSI 风格。  */
 
-/* Define __gnuc_va_list.  */
+/* 定义 __gnuc_va_list。  */
 
 #ifndef __GNUC_VA_LIST
 #define __GNUC_VA_LIST
 #if defined (__mips_eabi) && ! defined (__mips_soft_float) && ! defined (__mips_single_float)
 
 typedef struct {
-  /* Pointer to FP regs.  */
+  /* 指向浮点（FP）寄存器的指针。  */
   char *__fp_regs;
-  /* Number of FP regs remaining.  */
+  /* 剩余的浮点寄存器个数。  */
   int __fp_left;
-  /* Pointer to GP regs followed by stack parameters.  */
+  /* 指向通用（GP）寄存器的指针，其后紧跟栈上的参数。  */
   char *__gp_regs;
 } __gnuc_va_list;
 
@@ -29,10 +29,10 @@ typedef struct {
 typedef char * __gnuc_va_list;
 
 #endif /* ! (defined (__mips_eabi) && ! defined (__mips_soft_float) && ! defined (__mips_single_float)) */
-#endif /* not __GNUC_VA_LIST */
+#endif /* 未定义 __GNUC_VA_LIST */
 
-/* If this is for internal libc use, don't define anything but
-   __gnuc_va_list.  */
+/* 如果这是给 libc 内部使用的，除了 __gnuc_va_list 之外
+   什么都不要定义。  */
 #if defined (_STDARG_H) || defined (_VARARGS_H)
 
 #ifndef _VA_MIPS_H_ENUM
@@ -61,8 +61,8 @@ enum {
 };
 #endif
 
-/* In GCC version 2, we want an ellipsis at the end of the declaration
-   of the argument list.  GCC version 1 can't parse it.  */
+/* 在 GCC 2 中，我们希望在参数列表声明的末尾加上省略号。
+   GCC 1 无法解析它。  */
 
 #if __GNUC__ > 1
 #define __va_ellipsis ...
@@ -84,7 +84,7 @@ enum {
 #define __va_reg_size 4
 #endif
 
-/* Get definitions for _MIPS_SIM_ABI64 etc.  */
+/* 获取 _MIPS_SIM_ABI64 等的定义。  */
 #ifdef _MIPS_SIM
 #include <sgidefs.h>
 #endif
@@ -123,7 +123,7 @@ enum {
 #else /* ! _STDARG_H */
 #define va_alist  __builtin_va_alist
 #ifdef __mips64
-/* This assumes that `long long int' is always a 64 bit type.  */
+/* 这里假定 `long long int' 总是 64 位的类型。  */
 #define va_dcl    long long int __builtin_va_alist; __va_ellipsis
 #else
 #define va_dcl    int __builtin_va_alist; __va_ellipsis
@@ -154,7 +154,7 @@ enum {
 	   - (__builtin_args_info (2) >= 8 ? __va_reg_size		\
 	      : (8 - __builtin_args_info (2)) * __va_reg_size)))
 #endif /* ! (! defined (__mips_soft_float) && ! defined (__mips_single_float)) */
-/* Need alternate code for _MIPS_SIM_ABI64.  */
+/* _MIPS_SIM_ABI64 需要另一套代码。  */
 #elif defined(_MIPS_SIM) && (_MIPS_SIM == _MIPS_SIM_ABI64 || _MIPS_SIM == _MIPS_SIM_NABI32)
 #define va_start(__AP)							\
   (__AP = (__gnuc_va_list) __builtin_next_arg ()			\
@@ -165,7 +165,7 @@ enum {
 #endif /* ! _STDARG_H */
 
 #ifndef va_end
-void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
+void va_end (__gnuc_va_list);		/* 在 libgcc.a 中定义 */
 #endif
 #define va_end(__AP)	((void)0)
 
@@ -231,12 +231,11 @@ void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
 
 #else /* ! defined (__mips_eabi) */
 
-/* We cast to void * and then to TYPE * because this avoids
-   a warning about increasing the alignment requirement.  */
-/* The __mips64 cases are reversed from the 32 bit cases, because the standard
-   32 bit calling convention left-aligns all parameters smaller than a word,
-   whereas the __mips64 calling convention does not (and hence they are
-   right aligned).  */
+/* 我们先转换成 void *，再转换成 TYPE *，因为这样可以避免
+   关于提高对齐要求的警告。  */
+/* __mips64 的情况与 32 位的情况是相反的，因为标准的 32 位调用约定会把
+   所有小于一个字（word）的参数左对齐，而 __mips64 的调用约定不会
+   （因此它们是右对齐的）。  */
 #ifdef __mips64
 #ifdef __MIPSEB__
 #define va_arg(__AP, __type)                                    \
@@ -249,10 +248,10 @@ void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
    *(__type *) (void *) (__AP - __va_rounded_size (__type)))
 #endif
 
-#else /* not __mips64 */
+#else /* 非 __mips64 */
 
 #ifdef __MIPSEB__
-/* For big-endian machines.  */
+/* 用于大端机器。  */
 #define va_arg(__AP, __type)					\
   ((__AP = (char *) ((__alignof__ (__type) > 4			\
 		      ? ((int)__AP + 8 - 1) & -8		\
@@ -260,7 +259,7 @@ void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
 		     + __va_rounded_size (__type))),		\
    *(__type *) (void *) (__AP - __va_rounded_size (__type)))
 #else
-/* For little-endian machines.  */
+/* 用于小端机器。  */
 #define va_arg(__AP, __type)						    \
   ((__type *) (void *) (__AP = (char *) ((__alignof__(__type) > 4	    \
 					  ? ((int)__AP + 8 - 1) & -8	    \
@@ -270,7 +269,7 @@ void va_end (__gnuc_va_list);		/* Defined in libgcc.a */
 #endif
 #endif /* ! defined (__mips_eabi)  */
 
-/* Copy __gnuc_va_list into another variable of this type.  */
+/* 把 __gnuc_va_list 复制到另一个同类型的变量中。  */
 #define __va_copy(dest, src) (dest) = (src)
 
 #endif /* defined (_STDARG_H) || defined (_VARARGS_H) */

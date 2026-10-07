@@ -9,15 +9,15 @@
 /**
  * tokenizeCommand
  *
- * Splits the specified command line into tokens, creating a token array with a maximum
- * of maxTokens entries, using storage to hold the tokens. The storage array should be as
- * long as the command line.
+ * 把指定的命令行拆分成若干 token，生成一个最多有 maxTokens 个元素的
+ * token 数组，并用 storage 来存放这些 token。storage 数组的长度应该
+ * 和命令行一样长。
  *
- * Whitespace (spaces, tabs, newlines) separate tokens, unless
- * enclosed in double quotes. Any character can be quoted by preceeding
- * it with a backslash. Quotes must be terminated.
+ * 空白字符（空格、tab、换行）用来分隔 token，除非它们被双引号
+ * 括起来。任何字符都可以通过在前面加反斜杠来转义。
+ * 引号必须成对出现。
  *
- * Returns the number of tokens, or -1 on error.
+ * 返回 token 的个数；出错时返回 -1。
  */
 static int tokenizeCommand(char* command, int maxTokens, char *tokens[], char* storage) {
     const int quotingCharacter = 0x00000001;

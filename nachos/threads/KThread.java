@@ -1,48 +1,46 @@
 package nachos.threads;
-
 import nachos.machine.*;
 
 /**
- * A KThread is a thread that can be used to execute Nachos kernel code. Nachos
- * allows multiple threads to run concurrently.
- * 
- * To create a new thread of execution, first declare a class that implements
- * the <tt>Runnable</tt> interface. That class then implements the <tt>run</tt>
- * method. An instance of the class can then be allocated, passed as an argument
- * when creating <tt>KThread</tt>, and forked. For example, a thread that
- * computes pi could be written as follows:
- * 
+ * KThread 是一个可以用来执行 Nachos 内核代码的线程。Nachos
+ * 允许多个线程并发运行。
+ *
+ * 要创建一个新的执行线程，首先声明一个实现了 <tt>Runnable</tt>
+ * 接口的类，由这个类来实现 <tt>run</tt> 方法。然后创建这个类的一个实例，
+ * 在创建 <tt>KThread</tt> 时把它作为参数传进去，再调用 fork。例如，
+ * 一个计算 pi 的线程可以这样写：
+ *
  * <p>
  * <blockquote>
- * 
+ *
  * <pre>
  * class PiRun implements Runnable {
  * 	public void run() {
- *         // compute pi
+ *         // 计算 pi
  *         ...
  *     }
  * }
  * </pre>
- * 
+ *
  * </blockquote>
  * <p>
- * The following code would then create a thread and start it running:
- * 
+ * 下面的代码会创建这个线程，并让它开始运行：
+ *
  * <p>
  * <blockquote>
- * 
+ *
  * <pre>
  * PiRun p = new PiRun();
  * new KThread(p).fork();
  * </pre>
- * 
+ *
  * </blockquote>
  */
 public class KThread {
 	/**
-	 * Get the current thread.
-	 * 
-	 * @return the current thread.
+	 * 获取当前线程。
+	 *
+	 * @return 当前线程。
 	 */
 	public static KThread currentThread() {
 		Lib.assertTrue(currentThread != null);
@@ -50,8 +48,8 @@ public class KThread {
 	}
 
 	/**
-	 * Allocate a new <tt>KThread</tt>. If this is the first <tt>KThread</tt>,
-	 * create an idle thread as well.
+	 * 分配（创建）一个新的 <tt>KThread</tt>。如果这是第一个 <tt>KThread</tt>，
+	 * 还会顺带创建一个 idle 线程。
 	 */
 	public KThread() {
 		if (currentThread != null) {
@@ -71,9 +69,9 @@ public class KThread {
 	}
 
 	/**
-	 * Allocate a new KThread.
-	 * 
-	 * @param target the object whose <tt>run</tt> method is called.
+	 * 分配（创建）一个新的 KThread。
+	 *
+	 * @param target 一个对象，这个线程运行时会调用它的 <tt>run</tt> 方法。
 	 */
 	public KThread(Runnable target) {
 		this();
@@ -81,10 +79,10 @@ public class KThread {
 	}
 
 	/**
-	 * Set the target of this thread.
-	 * 
-	 * @param target the object whose <tt>run</tt> method is called.
-	 * @return this thread.
+	 * 设置这个线程的 target。
+	 *
+	 * @param target 一个对象，这个线程运行时会调用它的 <tt>run</tt> 方法。
+	 * @return 这个线程本身。
 	 */
 	public KThread setTarget(Runnable target) {
 		Lib.assertTrue(status == statusNew);
@@ -94,11 +92,10 @@ public class KThread {
 	}
 
 	/**
-	 * Set the name of this thread. This name is used for debugging purposes
-	 * only.
-	 * 
-	 * @param name the name to give to this thread.
-	 * @return this thread.
+	 * 设置这个线程的名字。名字只用于调试。
+	 *
+	 * @param name 要给这个线程起的名字。
+	 * @return 这个线程本身。
 	 */
 	public KThread setName(String name) {
 		this.name = name;
@@ -106,27 +103,25 @@ public class KThread {
 	}
 
 	/**
-	 * Get the name of this thread. This name is used for debugging purposes
-	 * only.
-	 * 
-	 * @return the name given to this thread.
+	 * 获取这个线程的名字。名字只用于调试。
+	 *
+	 * @return 这个线程的名字。
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Get the full name of this thread. This includes its name along with its
-	 * numerical ID. This name is used for debugging purposes only.
-	 * 
-	 * @return the full name given to this thread.
+	 * 获取这个线程的完整名字，包括名字和它的数字 ID。只用于调试。
+	 *
+	 * @return 这个线程的完整名字。
 	 */
 	public String toString() {
 		return (name + " (#" + id + ")");
 	}
 
 	/**
-	 * Deterministically and consistently compare this thread to another thread.
+	 * 以确定且一致的方式，把这个线程和另一个线程做比较。
 	 */
 	public int compareTo(Object o) {
 		KThread thread = (KThread) o;
@@ -140,10 +135,9 @@ public class KThread {
 	}
 
 	/**
-	 * Causes this thread to begin execution. The result is that two threads are
-	 * running concurrently: the current thread (which returns from the call to
-	 * the <tt>fork</tt> method) and the other thread (which executes its
-	 * target's <tt>run</tt> method).
+	 * 让这个线程开始执行。执行的结果是两个线程并发运行：当前线程（它从
+	 * <tt>fork</tt> 方法调用中返回），以及另一个线程（它执行自己 target 的
+	 * <tt>run</tt> 方法）。
 	 */
 	public void fork() {
 		Lib.assertTrue(status == statusNew);
@@ -182,14 +176,12 @@ public class KThread {
 	}
 
 	/**
-	 * Finish the current thread and schedule it to be destroyed when it is safe
-	 * to do so. This method is automatically called when a thread's
-	 * <tt>run</tt> method returns, but it may also be called directly.
-	 * 
-	 * The current thread cannot be immediately destroyed because its stack and
-	 * other execution state are still in use. Instead, this thread will be
-	 * destroyed automatically by the next thread to run, when it is safe to
-	 * delete this thread.
+	 * 结束当前线程，并安排在安全的时候把它销毁。当一个线程的 <tt>run</tt>
+	 * 方法返回时，这个方法会被自动调用；但也可以直接调用它。
+	 *
+	 * 当前线程不能被立刻销毁，因为它的栈和其他执行状态还在使用中。
+	 * 所以，这个线程会在下一个线程开始运行、可以安全删除它的时候，
+	 * 由那个线程自动销毁。
 	 */
 	public static void finish() {
 		Lib.debug(dbgThread, "Finishing thread: " + currentThread.toString());
@@ -207,20 +199,17 @@ public class KThread {
 	}
 
 	/**
-	 * Relinquish the CPU if any other thread is ready to run. If so, put the
-	 * current thread on the ready queue, so that it will eventually be
-	 * rescheuled.
-	 * 
+	 * 如果有其他线程准备好运行，就让出 CPU。这种情况下，把当前线程放进
+	 * ready queue，这样它之后还会被重新调度。
+	 *
 	 * <p>
-	 * Returns immediately if no other thread is ready to run. Otherwise returns
-	 * when the current thread is chosen to run again by
-	 * <tt>readyQueue.nextThread()</tt>.
-	 * 
+	 * 如果没有其他线程准备好运行，就立刻返回。否则，要等到当前线程再次被
+	 * <tt>readyQueue.nextThread()</tt> 选中运行时才返回。
+	 *
 	 * <p>
-	 * Interrupts are disabled, so that the current thread can atomically add
-	 * itself to the ready queue and switch to the next thread. On return,
-	 * restores interrupts to the previous state, in case <tt>yield()</tt> was
-	 * called with interrupts disabled.
+	 * 这里会关闭中断，这样当前线程就能原子地把自己加入 ready queue，
+	 * 并切换到下一个线程。返回时，把中断恢复成调用前的状态，以防
+	 * <tt>yield()</tt> 是在中断已经关闭的情况下被调用的。
 	 */
 	public static void yield() {
 		Lib.debug(dbgThread, "Yielding thread: " + currentThread.toString());
@@ -237,15 +226,14 @@ public class KThread {
 	}
 
 	/**
-	 * Relinquish the CPU, because the current thread has either finished or it
-	 * is blocked. This thread must be the current thread.
-	 * 
+	 * 让出 CPU，原因是当前线程要么已经结束，要么被阻塞了。这个线程必须是
+	 * 当前线程。
+	 *
 	 * <p>
-	 * If the current thread is blocked (on a synchronization primitive, i.e. a
-	 * <tt>Semaphore</tt>, <tt>Lock</tt>, or <tt>Condition</tt>), eventually
-	 * some thread will wake this thread up, putting it back on the ready queue
-	 * so that it can be rescheduled. Otherwise, <tt>finish()</tt> should have
-	 * scheduled this thread to be destroyed by the next thread to run.
+	 * 如果当前线程是被阻塞了（阻塞在某个同步原语上，即 <tt>Semaphore</tt>、
+	 * <tt>Lock</tt> 或 <tt>Condition</tt>），之后会有某个线程把它唤醒，把它放回
+	 * ready queue，这样它就能被重新调度。否则（即线程已经结束），
+	 * <tt>finish()</tt> 应该已经安排好，由下一个运行的线程来销毁这个线程。
 	 */
 	public static void sleep() {
 		Lib.debug(dbgThread, "Sleeping thread: " + currentThread.toString());
@@ -259,8 +247,7 @@ public class KThread {
 	}
 
 	/**
-	 * Moves this thread to the ready state and adds this to the scheduler's
-	 * ready queue.
+	 * 把这个线程设为 ready 状态，并把它加入调度器的 ready queue。
 	 */
 	public void ready() {
 		Lib.debug(dbgThread, "Ready thread: " + toString());
@@ -276,9 +263,11 @@ public class KThread {
 	}
 
 	/**
-	 * Waits for this thread to finish. If this thread is already finished,
-	 * return immediately. This method must only be called once; the second call
-	 * is not guaranteed to return. This thread must not be the current thread.
+	 * 等待这个线程结束。如果这个线程已经结束，就立刻返回。这个方法只能被
+	 * 调用一次；第二次调用不保证会返回。这个线程不能是当前线程。
+	 *
+	 * 【译注：proj1 的 spec 对第二次调用的要求更严格：对同一个线程第二次
+	 * 调用 join 必须触发 assert。】
 	 */
 	public void join() {
 		Lib.debug(dbgThread, "Joining to thread: " + toString());
@@ -288,13 +277,12 @@ public class KThread {
 	}
 
 	/**
-	 * Create the idle thread. Whenever there are no threads ready to be run,
-	 * and <tt>runNextThread()</tt> is called, it will run the idle thread. The
-	 * idle thread must never block, and it will only be allowed to run when all
-	 * other threads are blocked.
-	 * 
+	 * 创建 idle 线程。每当没有线程可以运行、而 <tt>runNextThread()</tt>
+	 * 又被调用时，就运行 idle 线程。idle 线程绝不能阻塞，而且只有在其他
+	 * 所有线程都被阻塞时，才允许它运行。
+	 *
 	 * <p>
-	 * Note that <tt>ready()</tt> never adds the idle thread to the ready set.
+	 * 注意：<tt>ready()</tt> 永远不会把 idle 线程加入 ready set。
 	 */
 	private static void createIdleThread() {
 		Lib.assertTrue(idleThread == null);
@@ -313,8 +301,7 @@ public class KThread {
 	}
 
 	/**
-	 * Determine the next thread to run, then dispatch the CPU to the thread
-	 * using <tt>run()</tt>.
+	 * 决定下一个要运行的线程，然后通过 <tt>run()</tt> 把 CPU 交给那个线程。
 	 */
 	private static void runNextThread() {
 		KThread nextThread = readyQueue.nextThread();
@@ -325,23 +312,20 @@ public class KThread {
 	}
 
 	/**
-	 * Dispatch the CPU to this thread. Save the state of the current thread,
-	 * switch to the new thread by calling <tt>TCB.contextSwitch()</tt>, and
-	 * load the state of the new thread. The new thread becomes the current
-	 * thread.
-	 * 
+	 * 把 CPU 交给这个线程。保存当前线程的状态，调用 <tt>TCB.contextSwitch()</tt>
+	 * 切换到新线程，再加载新线程的状态。新线程成为当前线程。
+	 *
 	 * <p>
-	 * If the new thread and the old thread are the same, this method must still
-	 * call <tt>saveState()</tt>, <tt>contextSwitch()</tt>, and
-	 * <tt>restoreState()</tt>.
-	 * 
+	 * 即使新线程和旧线程是同一个，这个方法也必须照常调用 <tt>saveState()</tt>、
+	 * <tt>contextSwitch()</tt> 和 <tt>restoreState()</tt>。
+	 *
 	 * <p>
-	 * The state of the previously running thread must already have been changed
-	 * from running to blocked or ready (depending on whether the thread is
-	 * sleeping or yielding).
-	 * 
-	 * @param finishing <tt>true</tt> if the current thread is finished, and
-	 * should be destroyed by the new thread.
+	 * 之前在运行的那个线程，它的状态必须已经从 running 改成了 blocked 或
+	 * ready（取决于这个线程是在 sleep 还是在 yield）。
+	 *
+	 * @param finishing 如果当前线程已经结束、应该由新线程来销毁它，则为
+	 * <tt>true</tt>。
+	 * 【译注：这个方法其实没有 finishing 参数，这是旧版本遗留的注释，可以忽略。】
 	 */
 	private void run() {
 		Lib.assertTrue(Machine.interrupt().disabled());
@@ -361,8 +345,8 @@ public class KThread {
 	}
 
 	/**
-	 * Prepare this thread to be run. Set <tt>status</tt> to
-	 * <tt>statusRunning</tt> and check <tt>toBeDestroyed</tt>.
+	 * 准备让这个线程运行。把 <tt>status</tt> 设为 <tt>statusRunning</tt>，
+	 * 并检查 <tt>toBeDestroyed</tt>。
 	 */
 	protected void restoreState() {
 		Lib.debug(dbgThread, "Running thread: " + currentThread.toString());
@@ -383,8 +367,7 @@ public class KThread {
 	}
 
 	/**
-	 * Prepare this thread to give up the processor. Kernel threads do not need
-	 * to do anything here.
+	 * 准备让这个线程交出处理器。内核线程在这里不需要做任何事。
 	 */
 	protected void saveState() {
 		Lib.assertTrue(Machine.interrupt().disabled());
@@ -408,7 +391,7 @@ public class KThread {
 	}
 
 	/**
-	 * Tests whether this module is working.
+	 * 测试这个模块是否正常工作。
 	 */
 	public static void selfTest() {
 		Lib.debug(dbgThread, "Enter KThread.selfTest");
@@ -420,8 +403,8 @@ public class KThread {
 	private static final char dbgThread = 't';
 
 	/**
-	 * Additional state used by schedulers.
-	 * 
+	 * 供调度器使用的额外状态。
+	 *
 	 * @see nachos.threads.PriorityScheduler.ThreadState
 	 */
 	public Object schedulingState = null;
@@ -437,9 +420,9 @@ public class KThread {
 	private static final int statusFinished = 4;
 
 	/**
-	 * The status of this thread. A thread can either be new (not yet forked),
-	 * ready (on the ready queue but not running), running, or blocked (not on
-	 * the ready queue and not running).
+	 * 这个线程的状态。一个线程可以处于以下状态之一：new（还没有 fork）、
+	 * ready（在 ready queue 上，但没有在运行）、running（正在运行），
+	 * 或者 blocked（既不在 ready queue 上，也没有在运行）。
 	 */
 	private int status = statusNew;
 
@@ -450,12 +433,11 @@ public class KThread {
 	private TCB tcb;
 
 	/**
-	 * Unique identifer for this thread. Used to deterministically compare
-	 * threads.
+	 * 唯一标识符。用于以确定的方式比较线程。
 	 */
 	private int id = numCreated++;
 
-	/** Number of times the KThread constructor was called. */
+	/** KThread 构造函数被调用的次数。 */
 	private static int numCreated = 0;
 
 	private static ThreadQueue readyQueue = null;

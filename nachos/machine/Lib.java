@@ -11,7 +11,7 @@ import java.security.PrivilegedAction;
 import java.util.Random;
 
 /**
- * Thrown when an assertion fails.
+ * 断言（assertion）失败时抛出。
  */
 class AssertionFailureError extends Error {
 	AssertionFailureError() {
@@ -24,11 +24,11 @@ class AssertionFailureError extends Error {
 }
 
 /**
- * Provides miscellaneous library routines.
+ * 提供各种杂项库函数。
  */
 public final class Lib {
 	/**
-	 * Prevent instantiation.
+	 * 禁止实例化。
 	 */
 	private Lib() {
 	}
@@ -36,9 +36,9 @@ public final class Lib {
 	private static Random random = null;
 
 	/**
-	 * Seed the random number generater. May only be called once.
-	 * 
-	 * @param randomSeed the seed for the random number generator.
+	 * 为随机数生成器设置种子（seed）。只能调用一次。
+	 *
+	 * @param randomSeed 随机数生成器的种子。
 	 */
 	public static void seedRandom(long randomSeed) {
 		assertTrue(random == null);
@@ -46,12 +46,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Return a random integer between 0 and <i>range - 1</i>. Must not be
-	 * called before <tt>seedRandom()</tt> seeds the random number generator.
-	 * 
-	 * @param range a positive value specifying the number of possible return
-	 * values.
-	 * @return a random integer in the specified range.
+	 * 返回一个 0 到 <i>range - 1</i> 之间的随机整数。在 <tt>seedRandom()</tt>
+	 * 为随机数生成器设置种子之前，不能调用这个方法。
+	 *
+	 * @param range 一个正数，表示可能的返回值的个数。
+	 * @return 指定范围内的一个随机整数。
 	 */
 	public static int random(int range) {
 		assertTrue(range > 0);
@@ -59,19 +58,19 @@ public final class Lib {
 	}
 
 	/**
-	 * Return a random double between 0.0 (inclusive) and 1.0 (exclusive).
-	 * 
-	 * @return a random double between 0.0 and 1.0.
+	 * 返回一个介于 0.0（含）和 1.0（不含）之间的随机 double。
+	 *
+	 * @return 一个介于 0.0 和 1.0 之间的随机 double。
 	 */
 	public static double random() {
 		return random.nextDouble();
 	}
 
 	/**
-	 * Asserts that <i>expression</i> is <tt>true</tt>. If not, then Nachos
-	 * exits with an error message.
-	 * 
-	 * @param expression the expression to assert.
+	 * 断言 <i>expression</i> 为 <tt>true</tt>。如果不是，Nachos 会带着一条
+	 * 错误信息退出。
+	 *
+	 * @param expression 要断言的表达式。
 	 */
 	public static void assertTrue(boolean expression) {
 		if (!expression)
@@ -79,11 +78,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Asserts that <i>expression</i> is <tt>true</tt>. If not, then Nachos
-	 * exits with the specified error message.
-	 * 
-	 * @param expression the expression to assert.
-	 * @param message the error message.
+	 * 断言 <i>expression</i> 为 <tt>true</tt>。如果不是，Nachos 会带着指定的
+	 * 错误信息退出。
+	 *
+	 * @param expression 要断言的表达式。
+	 * @param message 错误信息。
 	 */
 	public static void assertTrue(boolean expression, String message) {
 		if (!expression)
@@ -91,39 +90,37 @@ public final class Lib {
 	}
 
 	/**
-	 * Asserts that this call is never made. Same as <tt>assertTrue(false)</tt>.
+	 * 断言这个调用永远不会被执行到。等同于 <tt>assertTrue(false)</tt>。
 	 */
 	public static void assertNotReached() {
 		assertTrue(false);
 	}
 
 	/**
-	 * Asserts that this call is never made, with the specified error messsage.
-	 * Same as <tt>assertTrue(false, message)</tt>.
-	 * 
-	 * @param message the error message.
+	 * 断言这个调用永远不会被执行到，并附带指定的错误信息。等同于
+	 * <tt>assertTrue(false, message)</tt>。
+	 *
+	 * @param message 错误信息。
 	 */
 	public static void assertNotReached(String message) {
 		assertTrue(false, message);
 	}
 
 	/**
-	 * Print <i>message</i> if <i>flag</i> was enabled on the command line. To
-	 * specify which flags to enable, use the -d command line option. For
-	 * example, to enable flags a, c, and e, do the following:
-	 * 
+	 * 如果命令行中启用了 <i>flag</i>，就打印 <i>message</i>。要指定启用哪些
+	 * flag，使用 -d 命令行选项。例如，要启用 flag a、c 和 e，这样做：
+	 *
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * nachos -d ace
 	 * </pre>
-	 * 
+	 *
 	 * <p>
-	 * Nachos uses several debugging flags already, but you are encouraged to
-	 * add your own.
-	 * 
-	 * @param flag the debug flag that must be set to print this message.
-	 * @param message the debug message.
+	 * Nachos 已经用了几个调试 flag，但也鼓励你添加自己的 flag。
+	 *
+	 * @param flag 打印这条信息所必须设置的调试 flag。
+	 * @param message 调试信息。
 	 */
 	public static void debug(char flag, String message) {
 		if (test(flag))
@@ -131,11 +128,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Tests if <i>flag</i> was enabled on the command line.
-	 * 
-	 * @param flag the debug flag to test.
-	 * 
-	 * @return <tt>true</tt> if this flag was enabled on the command line.
+	 * 检查命令行中是否启用了 <i>flag</i>。
+	 *
+	 * @param flag 要检查的调试 flag。
+	 *
+	 * @return 如果命令行中启用了这个 flag，返回 <tt>true</tt>。
 	 */
 	public static boolean test(char flag) {
 		if (debugFlags == null)
@@ -149,9 +146,9 @@ public final class Lib {
 	}
 
 	/**
-	 * Enable all the debug flags in <i>flagsString</i>.
-	 * 
-	 * @param flagsString the flags to enable.
+	 * 启用 <i>flagsString</i> 中的所有调试 flag。
+	 *
+	 * @param flagsString 要启用的 flag。
 	 */
 	public static void enableDebugFlags(String flagsString) {
 		if (debugFlags == null)
@@ -165,18 +162,18 @@ public final class Lib {
 		}
 	}
 
-	/** Debug flags specified on the command line. */
+	/** 命令行中指定的调试 flag。 */
 	private static boolean debugFlags[];
 
 	/**
-	 * Read a file, verifying that the requested number of bytes is read, and
-	 * verifying that the read operation took a non-zero amount of time.
-	 * 
-	 * @param file the file to read.
-	 * @param position the file offset at which to start reading.
-	 * @param buf the buffer in which to store the data.
-	 * @param offset the buffer offset at which storing begins.
-	 * @param length the number of bytes to read.
+	 * 读取一个文件，并验证确实读到了所请求的字节数，以及读操作花费了非零的
+	 * 时间。
+	 *
+	 * @param file 要读取的文件。
+	 * @param position 开始读取的文件偏移量。
+	 * @param buf 用来存放数据的缓冲区。
+	 * @param offset 开始存放数据的缓冲区偏移量。
+	 * @param length 要读取的字节数。
 	 */
 	public static void strictReadFile(OpenFile file, int position, byte[] buf,
 			int offset, int length) {
@@ -187,11 +184,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Load an entire file into memory.
-	 * 
-	 * @param file the file to load.
-	 * @return an array containing the contents of the entire file, or
-	 * <tt>null</tt> if an error occurred.
+	 * 把整个文件加载到内存中。
+	 *
+	 * @param file 要加载的文件。
+	 * @return 一个包含整个文件内容的数组；如果出错，返回 <tt>null</tt>。
 	 */
 	public static byte[] loadFile(OpenFile file) {
 		int startOffset = file.tell();
@@ -213,10 +209,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Take a read-only snapshot of a file.
-	 * 
-	 * @param file the file to take a snapshot of.
-	 * @return a read-only snapshot of the file.
+	 * 给文件做一个只读的快照。
+	 *
+	 * @param file 要做快照的文件。
+	 * @return 这个文件的只读快照。
 	 */
 	public static OpenFile cloneFile(OpenFile file) {
 		OpenFile clone = new ArrayFile(loadFile(file));
@@ -227,11 +223,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert a short into its little-endian byte string representation.
-	 * 
-	 * @param array the array in which to store the byte string.
-	 * @param offset the offset in the array where the string will start.
-	 * @param value the value to convert.
+	 * 把一个 short 转换成它的小端（little-endian）字节串表示。
+	 *
+	 * @param array 用来存放字节串的数组。
+	 * @param offset 字节串在数组中的起始偏移量。
+	 * @param value 要转换的值。
 	 */
 	public static void bytesFromShort(byte[] array, int offset, short value) {
 		array[offset + 0] = (byte) ((value >> 0) & 0xFF);
@@ -239,11 +235,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert an int into its little-endian byte string representation.
-	 * 
-	 * @param array the array in which to store the byte string.
-	 * @param offset the offset in the array where the string will start.
-	 * @param value the value to convert.
+	 * 把一个 int 转换成它的小端字节串表示。
+	 *
+	 * @param array 用来存放字节串的数组。
+	 * @param offset 字节串在数组中的起始偏移量。
+	 * @param value 要转换的值。
 	 */
 	public static void bytesFromInt(byte[] array, int offset, int value) {
 		array[offset + 0] = (byte) ((value >> 0) & 0xFF);
@@ -253,11 +249,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert an int into its little-endian byte string representation, and
-	 * return an array containing it.
-	 * 
-	 * @param value the value to convert.
-	 * @return an array containing the byte string.
+	 * 把一个 int 转换成它的小端字节串表示，并返回一个包含它的数组。
+	 *
+	 * @param value 要转换的值。
+	 * @return 一个包含该字节串的数组。
 	 */
 	public static byte[] bytesFromInt(int value) {
 		byte[] array = new byte[4];
@@ -266,13 +261,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert an int into a little-endian byte string representation of the
-	 * specified length.
-	 * 
-	 * @param array the array in which to store the byte string.
-	 * @param offset the offset in the array where the string will start.
-	 * @param length the number of bytes to store (must be 1, 2, or 4).
-	 * @param value the value to convert.
+	 * 把一个 int 转换成指定长度的小端字节串表示。
+	 *
+	 * @param array 用来存放字节串的数组。
+	 * @param offset 字节串在数组中的起始偏移量。
+	 * @param length 要存放的字节数（必须是 1、2 或 4）。
+	 * @param value 要转换的值。
 	 */
 	public static void bytesFromInt(byte[] array, int offset, int length,
 			int value) {
@@ -292,34 +286,33 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert to a short from its little-endian byte string representation.
-	 * 
-	 * @param array the array containing the byte string.
-	 * @param offset the offset of the byte string in the array.
-	 * @return the corresponding short value.
+	 * 从小端字节串表示转换成一个 short。
+	 *
+	 * @param array 包含字节串的数组。
+	 * @param offset 字节串在数组中的偏移量。
+	 * @return 对应的 short 值。
 	 */
 	public static short bytesToShort(byte[] array, int offset) {
 		return (short) ((((short) array[offset + 0] & 0xFF) << 0) | (((short) array[offset + 1] & 0xFF) << 8));
 	}
 
 	/**
-	 * Convert to an unsigned short from its little-endian byte string
-	 * representation.
-	 * 
-	 * @param array the array containing the byte string.
-	 * @param offset the offset of the byte string in the array.
-	 * @return the corresponding short value.
+	 * 从小端字节串表示转换成一个无符号 short。
+	 *
+	 * @param array 包含字节串的数组。
+	 * @param offset 字节串在数组中的偏移量。
+	 * @return 对应的 short 值。
 	 */
 	public static int bytesToUnsignedShort(byte[] array, int offset) {
 		return (((int) bytesToShort(array, offset)) & 0xFFFF);
 	}
 
 	/**
-	 * Convert to an int from its little-endian byte string representation.
-	 * 
-	 * @param array the array containing the byte string.
-	 * @param offset the offset of the byte string in the array.
-	 * @return the corresponding int value.
+	 * 从小端字节串表示转换成一个 int。
+	 *
+	 * @param array 包含字节串的数组。
+	 * @param offset 字节串在数组中的偏移量。
+	 * @return 对应的 int 值。
 	 */
 	public static int bytesToInt(byte[] array, int offset) {
 		return (int) ((((int) array[offset + 0] & 0xFF) << 0)
@@ -328,13 +321,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert to an int from a little-endian byte string representation of the
-	 * specified length.
-	 * 
-	 * @param array the array containing the byte string.
-	 * @param offset the offset of the byte string in the array.
-	 * @param length the length of the byte string.
-	 * @return the corresponding value.
+	 * 从指定长度的小端字节串表示转换成一个 int。
+	 *
+	 * @param array 包含字节串的数组。
+	 * @param offset 字节串在数组中的偏移量。
+	 * @param length 字节串的长度。
+	 * @return 对应的值。
 	 */
 	public static int bytesToInt(byte[] array, int offset, int length) {
 		assertTrue(length == 1 || length == 2 || length == 4);
@@ -352,13 +344,13 @@ public final class Lib {
 	}
 
 	/**
-	 * Convert to a string from a possibly null-terminated array of bytes.
-	 * 
-	 * @param array the array containing the byte string.
-	 * @param offset the offset of the byte string in the array.
-	 * @param length the maximum length of the byte string.
-	 * @return a string containing the specified bytes, up to and not including
-	 * the null-terminator (if present).
+	 * 从一个可能以 null 结尾的字节数组转换成字符串。
+	 *
+	 * @param array 包含字节串的数组。
+	 * @param offset 字节串在数组中的偏移量。
+	 * @param length 字节串的最大长度。
+	 * @return 一个包含指定字节的字符串，直到 null 结束符为止（如果有的话），
+	 * 不包括 null 结束符。
 	 */
 	public static String bytesToString(byte[] array, int offset, int length) {
 		int i;
@@ -371,12 +363,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Mask out and shift a bit substring.
-	 * 
-	 * @param bits the bit string.
-	 * @param lowest the first bit of the substring within the string.
-	 * @param size the number of bits in the substring.
-	 * @return the substring.
+	 * 用掩码取出一段位子串，并把它移位到最低位。
+	 *
+	 * @param bits 位串。
+	 * @param lowest 子串在位串中的起始位。
+	 * @param size 子串的位数。
+	 * @return 该子串。
 	 */
 	public static int extract(int bits, int lowest, int size) {
 		if (size == 32)
@@ -386,12 +378,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Mask out and shift a bit substring.
-	 * 
-	 * @param bits the bit string.
-	 * @param lowest the first bit of the substring within the string.
-	 * @param size the number of bits in the substring.
-	 * @return the substring.
+	 * 用掩码取出一段位子串，并把它移位到最低位。
+	 *
+	 * @param bits 位串。
+	 * @param lowest 子串在位串中的起始位。
+	 * @param size 子串的位数。
+	 * @return 该子串。
 	 */
 	public static long extract(long bits, int lowest, int size) {
 		if (size == 64)
@@ -401,12 +393,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Mask out and shift a bit substring; then sign extend the substring.
-	 * 
-	 * @param bits the bit string.
-	 * @param lowest the first bit of the substring within the string.
-	 * @param size the number of bits in the substring.
-	 * @return the substring, sign-extended.
+	 * 用掩码取出一段位子串并移位到最低位，然后对它做符号扩展。
+	 *
+	 * @param bits 位串。
+	 * @param lowest 子串在位串中的起始位。
+	 * @param size 子串的位数。
+	 * @return 符号扩展后的子串。
 	 */
 	public static int extend(int bits, int lowest, int size) {
 		int extra = 32 - (lowest + size);
@@ -414,34 +406,32 @@ public final class Lib {
 	}
 
 	/**
-	 * Test if a bit is set in a bit string.
-	 * 
-	 * @param flag the flag to test.
-	 * @param bits the bit string.
-	 * @return <tt>true</tt> if <tt>(bits & flag)</tt> is non-zero.
+	 * 检查位串中的某一位是否被置位。
+	 *
+	 * @param flag 要检查的 flag。
+	 * @param bits 位串。
+	 * @return 如果 <tt>(bits & flag)</tt> 非零，返回 <tt>true</tt>。
 	 */
 	public static boolean test(long flag, long bits) {
 		return ((bits & flag) != 0);
 	}
 
 	/**
-	 * Creates a padded upper-case string representation of the integer argument
-	 * in base 16.
-	 * 
-	 * @param i an integer.
-	 * @return a padded upper-case string representation in base 16.
+	 * 生成整数参数的 16 进制大写字符串表示，并补齐位数。
+	 *
+	 * @param i 一个整数。
+	 * @return 补齐后的 16 进制大写字符串表示。
 	 */
 	public static String toHexString(int i) {
 		return toHexString(i, 8);
 	}
 
 	/**
-	 * Creates a padded upper-case string representation of the integer argument
-	 * in base 16, padding to at most the specified number of digits.
-	 * 
-	 * @param i an integer.
-	 * @param pad the minimum number of hex digits to pad to.
-	 * @return a padded upper-case string representation in base 16.
+	 * 生成整数参数的 16 进制大写字符串表示，并把它补齐到指定的位数。
+	 *
+	 * @param i 一个整数。
+	 * @param pad 要补齐到的最少 16 进制位数。
+	 * @return 补齐后的 16 进制大写字符串表示。
 	 */
 	public static String toHexString(int i, int pad) {
 		String result = Integer.toHexString(i).toUpperCase();
@@ -451,12 +441,11 @@ public final class Lib {
 	}
 
 	/**
-	 * Divide two non-negative integers, round the quotient up to the nearest
-	 * integer, and return it.
-	 * 
-	 * @param a the numerator.
-	 * @param b the denominator.
-	 * @return <tt>ceiling(a / b)</tt>.
+	 * 两个非负整数相除，把商向上取整，并返回结果。
+	 *
+	 * @param a 被除数。
+	 * @param b 除数。
+	 * @return <tt>ceiling(a / b)</tt>。
 	 */
 	public static int divRoundUp(int a, int b) {
 		assertTrue(a >= 0 && b > 0);
@@ -465,11 +454,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Load and return the named class, or return <tt>null</tt> if the class
-	 * could not be loaded.
-	 * 
-	 * @param className the name of the class to load.
-	 * @return the loaded class, or <tt>null</tt> if an error occurred.
+	 * 加载并返回指定名字的类；如果这个类无法加载，返回 <tt>null</tt>。
+	 *
+	 * @param className 要加载的类名。
+	 * @return 加载好的类；如果出错，返回 <tt>null</tt>。
 	 */
 	public static Class tryLoadClass(String className) {
 		try {
@@ -481,10 +469,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Load and return the named class, terminating Nachos on any error.
-	 * 
-	 * @param className the name of the class to load.
-	 * @return the loaded class.
+	 * 加载并返回指定名字的类；出现任何错误都会终止 Nachos。
+	 *
+	 * @param className 要加载的类名。
+	 * @return 加载好的类。
 	 */
 	public static Class loadClass(String className) {
 		try {
@@ -497,17 +485,16 @@ public final class Lib {
 	}
 
 	/**
-	 * Create and return a new instance of the named class, using the
-	 * constructor that takes no arguments.
-	 * 
-	 * @param className the name of the class to instantiate.
-	 * @return a new instance of the class.
+	 * 用无参构造函数创建并返回指定名字的类的一个新实例。
+	 *
+	 * @param className 要实例化的类名。
+	 * @return 这个类的一个新实例。
 	 */
 	public static Object constructObject(String className) {
 		try {
-			// kamil - workaround for Java 1.4
-			// Thanks to Ka-Hing Cheung for the suggestion.
-			// Fixed for Java 1.5 by geels
+			// kamil - 针对 Java 1.4 的变通写法
+			// 感谢 Ka-Hing Cheung 的建议。
+			// 由 geels 修复以适配 Java 1.5
 		        Class<?> cls = loadClass(className);
 			Class<?>[] param_types = new Class[0];
 			Constructor<?> cons = cls.getConstructor(param_types);
@@ -521,22 +508,21 @@ public final class Lib {
 	}
 
 	/**
-	 * Verify that the specified class extends or implements the specified
-	 * superclass.
-	 * 
-	 * @param cls the descendant class.
-	 * @param superCls the ancestor class.
+	 * 验证指定的类继承或实现了指定的父类。
+	 *
+	 * @param cls 子类。
+	 * @param superCls 祖先类。
 	 */
 	public static void checkDerivation(Class<?> cls, Class<?> superCls) {
 		Lib.assertTrue(superCls.isAssignableFrom(cls));
 	}
 
 	/**
-	 * Verifies that the specified class is public and not abstract, and that a
-	 * constructor with the specified signature exists and is public.
-	 * 
-	 * @param cls the class containing the constructor.
-	 * @param parameterTypes the list of parameters.
+	 * 验证指定的类是 public 且非 abstract 的，并且存在一个具有指定签名的
+	 * public 构造函数。
+	 *
+	 * @param cls 包含该构造函数的类。
+	 * @param parameterTypes 参数类型列表。
 	 */
 	public static void checkConstructor(Class<?> cls, Class[] parameterTypes) {
 		try {
@@ -551,14 +537,13 @@ public final class Lib {
 	}
 
 	/**
-	 * Verifies that the specified class is public, and that a non-static method
-	 * with the specified name and signature exists, is public, and returns the
-	 * specified type.
-	 * 
-	 * @param cls the class containing the non-static method.
-	 * @param methodName the name of the non-static method.
-	 * @param parameterTypes the list of parameters.
-	 * @param returnType the required return type.
+	 * 验证指定的类是 public 的，并且存在一个具有指定名字和签名的非 static
+	 * 方法，该方法是 public 的，返回指定的类型。
+	 *
+	 * @param cls 包含该非 static 方法的类。
+	 * @param methodName 该非 static 方法的名字。
+	 * @param parameterTypes 参数类型列表。
+	 * @param returnType 要求的返回类型。
 	 */
 	public static void checkMethod(Class<?> cls, String methodName,
 			Class[] parameterTypes, Class returnType) {
@@ -575,14 +560,13 @@ public final class Lib {
 	}
 
 	/**
-	 * Verifies that the specified class is public, and that a static method
-	 * with the specified name and signature exists, is public, and returns the
-	 * specified type.
-	 * 
-	 * @param cls the class containing the static method.
-	 * @param methodName the name of the static method.
-	 * @param parameterTypes the list of parameters.
-	 * @param returnType the required return type.
+	 * 验证指定的类是 public 的，并且存在一个具有指定名字和签名的 static 方法，
+	 * 该方法是 public 的，返回指定的类型。
+	 *
+	 * @param cls 包含该 static 方法的类。
+	 * @param methodName 该 static 方法的名字。
+	 * @param parameterTypes 参数类型列表。
+	 * @param returnType 要求的返回类型。
 	 */
 	public static void checkStaticMethod(Class<?> cls, String methodName,
 			Class[] parameterTypes, Class returnType) {
@@ -599,12 +583,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Verifies that the specified class is public, and that a non-static field
-	 * with the specified name and type exists, is public, and is not final.
-	 * 
-	 * @param cls the class containing the field.
-	 * @param fieldName the name of the field.
-	 * @param fieldType the required type.
+	 * 验证指定的类是 public 的，并且存在一个具有指定名字和类型的非 static
+	 * 字段，该字段是 public 的，且不是 final 的。
+	 *
+	 * @param cls 包含该字段的类。
+	 * @param fieldName 字段名。
+	 * @param fieldType 要求的类型。
 	 */
 	public static void checkField(Class cls, String fieldName, Class fieldType) {
 		try {
@@ -621,12 +605,12 @@ public final class Lib {
 	}
 
 	/**
-	 * Verifies that the specified class is public, and that a static field with
-	 * the specified name and type exists and is public.
-	 * 
-	 * @param cls the class containing the static field.
-	 * @param fieldName the name of the static field.
-	 * @param fieldType the required type.
+	 * 验证指定的类是 public 的，并且存在一个具有指定名字和类型的 public
+	 * static 字段。
+	 *
+	 * @param cls 包含该 static 字段的类。
+	 * @param fieldName 该 static 字段的名字。
+	 * @param fieldType 要求的类型。
 	 */
 	public static void checkStaticField(Class cls, String fieldName,
 			Class fieldType) {
@@ -643,10 +627,10 @@ public final class Lib {
 	}
 
 	/**
-	 * Verifies that the specified class only has fields with the specified names.
-	 * 
-	 * @param cls the class containing the fields.
-	 * @param names the list of field names to verify.
+	 * 验证指定的类只拥有指定名字的那些字段。
+	 *
+	 * @param cls 包含这些字段的类。
+	 * @param names 要验证的字段名列表。
 	 */
         public static void checkFields(Class cls, List<String> names) {
 		try {

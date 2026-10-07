@@ -16,14 +16,14 @@ import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
 /**
- * Protects the environment from malicious Nachos code.
+ * 保护运行环境不受恶意 Nachos 代码的破坏。
  */
 @SuppressWarnings("removal")
 public class NachosSecurityManager extends SecurityManager {
 	/**
-	 * Allocate a new Nachos security manager.
-	 * 
-	 * @param testDirectory the directory usable by the stub file system.
+	 * 分配（创建）一个新的 Nachos security manager。
+	 *
+	 * @param testDirectory stub 文件系统可以使用的目录。
 	 */
 	public NachosSecurityManager(File testDirectory) {
 		this.testDirectory = testDirectory;
@@ -32,10 +32,10 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	/**
-	 * Return a privilege object for this security manager. This security
-	 * manager must not be the active security manager.
-	 * 
-	 * @return a privilege object for this security manager.
+	 * 返回这个 security manager 的一个 privilege 对象。这个 security manager
+	 * 不能是当前生效的 security manager。
+	 *
+	 * @return 这个 security manager 的一个 privilege 对象。
 	 */
 	public Privilege getPrivilege() {
 		Lib.assertTrue(this != System.getSecurityManager());
@@ -44,7 +44,7 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	/**
-	 * Install this security manager.
+	 * 安装这个 security manager。
 	 */
 	public void enable() {
 		Lib.assertTrue(this != System.getSecurityManager());
@@ -117,7 +117,7 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	private boolean isPrivileged() {
-		// the autograder does not allow non-Nachos threads to be created, so..
+		// autograder 不允许创建非 Nachos 线程，所以……
 		if (!TCB.isNachosThread())
 			return true;
 
@@ -173,41 +173,40 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	/**
-	 * Check the specified permission. Some operations are permissible while not
-	 * grading. These operations are regulated here.
-	 * 
-	 * @param perm the permission to check.
+	 * 检查指定的权限。有些操作在不评分时是允许的，这些操作在这里进行管控。
+	 *
+	 * @param perm 要检查的权限。
 	 */
 	public void checkPermission(Permission perm) {
 		String name = perm.getName();
 
-		// some permissions are strictly forbidden
+		// 有些权限是严格禁止的
 		if (perm instanceof RuntimePermission) {
-			// no creating class loaders
+			// 不允许创建 class loader
 			if (name.equals("createClassLoader"))
 				no(perm);
-			// required for lambda expressions
+			// lambda 表达式需要这些权限
 			if (name.equals("getProtectionDomain") ||
 			    name.equals("accessDeclaredMembers"))
 			    return;
 		}
 
-		// required for lambda expressions
+		// lambda 表达式需要这个权限
 		if (perm instanceof ReflectPermission) {
 		        if (name.equals("suppressAccessChecks"))
 			    return;
 		}
 
-		// allow the AWT mess when not grading
+		// 不评分时，允许 AWT 那一堆乱七八糟的操作
 		if (!fullySecure) {
 			if (perm instanceof NetPermission) {
-				// might be needed to load awt stuff
+				// 加载 awt 相关的东西时可能需要
 				if (name.equals("specifyStreamHandler"))
 					return;
 			}
 
 			if (perm instanceof RuntimePermission) {
-				// might need to load libawt
+				// 可能需要加载 libawt
 				if (name.startsWith("loadLibrary.")) {
 					String lib = name.substring("loadLibrary.".length());
 					if (lib.equals("awt")) {
@@ -218,29 +217,29 @@ public class NachosSecurityManager extends SecurityManager {
 			}
 
 			if (perm instanceof AWTPermission) {
-				// permit AWT stuff
+				// 允许 AWT 相关的操作
 				if (name.equals("accessEventQueue"))
 					return;
 			}
 		}
 
-		// some are always allowed
+		// 有些权限总是允许的
 		if (perm instanceof PropertyPermission) {
-			// allowed to read properties
+			// 允许读取属性
 			if (perm.getActions().equals("read"))
 				return;
 		}
 
-		// some require some more checking
+		// 有些权限需要进一步检查
 		if (perm instanceof FilePermission) {
 			if (perm.getActions().equals("read")) {
-				// the test directory can only be read with privilege
+				// test 目录只能在有特权时读取
 				if (isPrivileged())
 					return;
 
 				enablePrivilege();
 
-				// not allowed to read test directory directly w/out privilege
+				// 没有特权时，不允许直接读取 test 目录
 				try {
 					File f = new File(name);
 					if (f.isFile()) {
@@ -260,7 +259,7 @@ public class NachosSecurityManager extends SecurityManager {
 			}
 			else if (perm.getActions().equals("write")
 					|| perm.getActions().equals("delete")) {
-				// only allowed to write test diretory, and only with privilege
+				// 只允许写 test 目录，而且必须有特权
 				verifyPrivilege();
 
 				try {
@@ -276,7 +275,7 @@ public class NachosSecurityManager extends SecurityManager {
 				}
 			}
 			else if (perm.getActions().equals("execute")) {
-				// only allowed to execute with privilege, and if there's a net
+				// 只有在有特权、并且存在网络时才允许执行
 				verifyPrivilege();
 
 				if (Machine.networkLink() == null)
@@ -287,17 +286,15 @@ public class NachosSecurityManager extends SecurityManager {
 			}
 		}
 
-		// default to requiring privilege
+		// 默认情况下需要特权
 		verifyPrivilege(perm);
 	}
 
 	/**
-	 * Called by the <tt>java.lang.Thread</tt> constructor to determine a thread
-	 * group for a child thread of the current thread. The caller must be
-	 * privileged in order to successfully create the thread.
-	 * 
-	 * @return a thread group for the new thread, or <tt>null</tt> to use the
-	 * current thread's thread group.
+	 * 由 <tt>java.lang.Thread</tt> 的构造函数调用，为当前线程的子线程确定一个
+	 * 线程组（thread group）。调用者必须有特权才能成功创建线程。
+	 *
+	 * @return 新线程的线程组；返回 <tt>null</tt> 表示使用当前线程的线程组。
 	 */
 	public ThreadGroup getThreadGroup() {
 		verifyPrivilege();
@@ -305,7 +302,7 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	/**
-	 * Verify that the caller is privileged.
+	 * 验证调用者有特权。
 	 */
 	public void verifyPrivilege() {
 		if (!isPrivileged())
@@ -313,10 +310,9 @@ public class NachosSecurityManager extends SecurityManager {
 	}
 
 	/**
-	 * Verify that the caller is privileged, so as to check the specified
-	 * permission.
-	 * 
-	 * @param perm the permission being checked.
+	 * 验证调用者有特权，以便检查指定的权限。
+	 *
+	 * @param perm 正在检查的权限。
 	 */
 	public void verifyPrivilege(Permission perm) {
 		if (!isPrivileged())

@@ -3,26 +3,26 @@ package nachos.threads;
 import nachos.machine.*;
 
 /**
- * A multi-threaded OS kernel.
+ * 一个多线程的操作系统内核。
  */
 public class ThreadedKernel extends Kernel {
 	/**
-	 * Allocate a new multi-threaded kernel.
+	 * 分配（创建）一个新的多线程内核。
 	 */
 	public ThreadedKernel() {
 		super();
 	}
 
 	/**
-	 * Initialize this kernel. Creates a scheduler, the first thread, and an
-	 * alarm, and enables interrupts. Creates a file system if necessary.
+	 * 初始化这个内核。创建 scheduler、第一个线程和一个 alarm，并开启中断。
+	 * 如有需要，还会创建文件系统。
 	 */
 	public void initialize(String[] args) {
-		// set scheduler
+		// 设置 scheduler
 		String schedulerName = Config.getString("ThreadedKernel.scheduler");
 		scheduler = (Scheduler) Lib.constructObject(schedulerName);
 
-		// set fileSystem
+		// 设置 fileSystem
 		String fileSystemName = Config.getString("ThreadedKernel.fileSystem");
 		if (fileSystemName != null)
 			fileSystem = (FileSystem) Lib.constructObject(fileSystemName);
@@ -31,7 +31,7 @@ public class ThreadedKernel extends Kernel {
 		else
 			fileSystem = null;
 
-		// start threading
+		// 启动线程系统
 		new KThread(null);
 
 		alarm = new Alarm();
@@ -40,10 +40,9 @@ public class ThreadedKernel extends Kernel {
 	}
 
 	/**
-	 * Test this kernel. Test the <tt>KThread</tt>, <tt>Semaphore</tt>,
-	 * <tt>SynchList</tt>, and <tt>ElevatorBank</tt> classes. Note that the
-	 * autograder never calls this method, so it is safe to put additional tests
-	 * here.
+	 * 测试这个内核。测试 <tt>KThread</tt>、<tt>Semaphore</tt>、
+	 * <tt>SynchList</tt> 和 <tt>ElevatorBank</tt> 这几个类。注意 autograder
+	 * 永远不会调用这个方法，所以在这里添加额外的测试是安全的。
 	 */
 	public void selfTest() {
 		KThread.selfTest();
@@ -55,29 +54,28 @@ public class ThreadedKernel extends Kernel {
 	}
 
 	/**
-	 * A threaded kernel does not run user programs, so this method does
-	 * nothing.
+	 * threaded kernel 不运行用户程序，所以这个方法什么都不做。
 	 */
 	public void run() {
 	}
 
 	/**
-	 * Terminate this kernel. Never returns.
+	 * 终止这个内核。永远不会返回。
 	 */
 	public void terminate() {
 		Machine.halt();
 	}
 
-	/** Globally accessible reference to the scheduler. */
+	/** 全局可访问的 scheduler 引用。 */
 	public static Scheduler scheduler = null;
 
-	/** Globally accessible reference to the alarm. */
+	/** 全局可访问的 alarm 引用。 */
 	public static Alarm alarm = null;
 
-	/** Globally accessible reference to the file system. */
+	/** 全局可访问的文件系统引用。 */
 	public static FileSystem fileSystem = null;
 
-	// dummy variables to make javac smarter
+	// 一些 dummy 变量，让 javac 更"聪明"（顺带把这些类也编译进来）
 	private static RoundRobinScheduler dummy1 = null;
 
 	private static PriorityScheduler dummy2 = null;

@@ -6,11 +6,11 @@ import nachos.userprog.*;
 import nachos.vm.*;
 
 /**
- * A <tt>VMProcess</tt> that supports networking syscalls.
+ * 一个支持网络 syscall 的 <tt>VMProcess</tt>。
  */
 public class NetProcess extends VMProcess {
 	/**
-	 * Allocate a new process.
+	 * 分配（创建）一个新进程。
 	 */
 	public NetProcess() {
 		super();
@@ -19,13 +19,13 @@ public class NetProcess extends VMProcess {
 	private static final int syscallConnect = 11, syscallAccept = 12;
 
 	/**
-	 * Handle a syscall exception. Called by <tt>handleException()</tt>. The
-	 * <i>syscall</i> argument identifies which syscall the user executed:
-	 * 
+	 * 处理一个 syscall 异常。由 <tt>handleException()</tt> 调用。参数
+	 * <i>syscall</i> 指明用户执行的是哪个 syscall：
+	 *
 	 * <table>
 	 * <tr>
-	 * <td>syscall#</td>
-	 * <td>syscall prototype</td>
+	 * <td>syscall 编号</td>
+	 * <td>syscall 原型</td>
 	 * </tr>
 	 * <tr>
 	 * <td>11</td>
@@ -36,13 +36,13 @@ public class NetProcess extends VMProcess {
 	 * <td><tt>int  accept(int port);</tt></td>
 	 * </tr>
 	 * </table>
-	 * 
-	 * @param syscall the syscall number.
-	 * @param a0 the first syscall argument.
-	 * @param a1 the second syscall argument.
-	 * @param a2 the third syscall argument.
-	 * @param a3 the fourth syscall argument.
-	 * @return the value to be returned to the user.
+	 *
+	 * @param syscall syscall 编号。
+	 * @param a0 syscall 的第一个参数。
+	 * @param a1 syscall 的第二个参数。
+	 * @param a2 syscall 的第三个参数。
+	 * @param a3 syscall 的第四个参数。
+	 * @return 要返回给用户的值。
 	 */
 	public int handleSyscall(int syscall, int a0, int a1, int a2, int a3) {
 		switch (syscall) {

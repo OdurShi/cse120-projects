@@ -3,75 +3,65 @@ package nachos.ag;
 public class BoatGrader {
 
 	/**
-	 * BoatGrader consists of functions to be called to show that your solution
-	 * is properly synchronized. This version simply prints messages to standard
-	 * out, so that you can watch it. You cannot submit this file, as we will be
-	 * using our own version of it during grading.
-	 * 
-	 * Note that this file includes all possible variants of how someone can get
-	 * from one island to another. Inclusion in this class does not imply that
-	 * any of the indicated actions are a good idea or even allowed.
+	 * BoatGrader 由一组函数组成，调用它们可以表明你的解答是正确同步的。这个
+	 * 版本只是把消息打印到标准输出，方便你观察。你不能提交这个文件，因为评分时
+	 * 我们会使用我们自己的版本。
+	 *
+	 * 注意，这个文件包含了一个人从一个岛到另一个岛的所有可能方式。某个动作出现
+	 * 在这个类中，并不代表它是个好主意，甚至不代表它是被允许的。
 	 */
 
 	/*
-	 * ChildRowToMolokai should be called when a child pilots the boat from Oahu
-	 * to Molokai
+	 * 当一个 child 驾船从 Oahu 划到 Molokai 时，应该调用 ChildRowToMolokai
 	 */
 	public void ChildRowToMolokai() {
 		System.out.println("**Child rowing to Molokai.");
 	}
 
 	/*
-	 * ChildRowToOahu should be called when a child pilots the boat from Molokai
-	 * to Oahu
+	 * 当一个 child 驾船从 Molokai 划到 Oahu 时，应该调用 ChildRowToOahu
 	 */
 	public void ChildRowToOahu() {
 		System.out.println("**Child rowing to Oahu.");
 	}
 
 	/*
-	 * ChildRideToMolokai should be called when a child not piloting the boat
-	 * disembarks on Molokai
+	 * 当一个不驾船的 child 在 Molokai 下船时，应该调用 ChildRideToMolokai
 	 */
 	public void ChildRideToMolokai() {
 		System.out.println("**Child arrived on Molokai as a passenger.");
 	}
 
 	/*
-	 * ChildRideToOahu should be called when a child not piloting the boat
-	 * disembarks on Oahu
+	 * 当一个不驾船的 child 在 Oahu 下船时，应该调用 ChildRideToOahu
 	 */
 	public void ChildRideToOahu() {
 		System.out.println("**Child arrived on Oahu as a passenger.");
 	}
 
 	/*
-	 * AdultRowToMolokai should be called when a adult pilots the boat from Oahu
-	 * to Molokai
+	 * 当一个 adult 驾船从 Oahu 划到 Molokai 时，应该调用 AdultRowToMolokai
 	 */
 	public void AdultRowToMolokai() {
 		System.out.println("**Adult rowing to Molokai.");
 	}
 
 	/*
-	 * AdultRowToOahu should be called when a adult pilots the boat from Molokai
-	 * to Oahu
+	 * 当一个 adult 驾船从 Molokai 划到 Oahu 时，应该调用 AdultRowToOahu
 	 */
 	public void AdultRowToOahu() {
 		System.out.println("**Adult rowing to Oahu.");
 	}
 
 	/*
-	 * AdultRideToMolokai should be called when an adult not piloting the boat
-	 * disembarks on Molokai
+	 * 当一个不驾船的 adult 在 Molokai 下船时，应该调用 AdultRideToMolokai
 	 */
 	public void AdultRideToMolokai() {
 		System.out.println("**Adult arrived on Molokai as a passenger.");
 	}
 
 	/*
-	 * AdultRideToOahu should be called when an adult not piloting the boat
-	 * disembarks on Oahu
+	 * 当一个不驾船的 adult 在 Oahu 下船时，应该调用 AdultRideToOahu
 	 */
 	public void AdultRideToOahu() {
 		System.out.println("**Adult arrived on Oahu as a passenger.");

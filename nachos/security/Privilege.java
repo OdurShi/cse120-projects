@@ -12,87 +12,84 @@ import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
 /**
- * A capability that allows privileged access to the Nachos machine.
- * 
+ * 一种允许对 Nachos 机器进行特权访问的能力（capability）。
+ *
  * <p>
- * Some privileged operations are guarded by the Nachos security manager:
+ * 有些特权操作由 Nachos security manager 守护：
  * <ol>
- * <li>creating threads
- * <li>writing/deleting files in the test directory
- * <li>exit with specific status code
+ * <li>创建线程
+ * <li>在 test 目录中写入/删除文件
+ * <li>以特定的状态码退出
  * </ol>
- * These operations can only be performed through <tt>doPrivileged()</tt>.
- * 
+ * 这些操作只能通过 <tt>doPrivileged()</tt> 执行。
+ *
  * <p>
- * Some privileged operations require a capability:
+ * 有些特权操作需要一个 capability：
  * <ol>
- * <li>scheduling interrupts
- * <li>advancing the simulated time
- * <li>accessing machine statistics
- * <li>installing a console
- * <li>flushing the simulated processor's pipeline
- * <li>approving TCB operations
+ * <li>安排（schedule）中断
+ * <li>推进模拟时间
+ * <li>访问机器统计信息
+ * <li>安装 console
+ * <li>清空模拟处理器的流水线
+ * <li>批准 TCB 操作
  * </ol>
- * These operations can be directly performed using a <tt>Privilege</tt> object.
- * 
+ * 这些操作可以直接用一个 <tt>Privilege</tt> 对象来执行。
+ *
  * <p>
- * The Nachos kernel should <i>never</i> be able to directly perform any of
- * these privileged operations. If you have discovered a loophole somewhere,
- * notify someone.
+ * Nachos 内核<i>永远</i>不应该能够直接执行这些特权操作。如果你在某处发现了
+ * 漏洞，请告诉相关人员。
  */
 public abstract class Privilege {
 	/**
-	 * Allocate a new <tt>Privilege</tt> object. Note that this object in itself
-	 * does not encapsulate privileged access until the machine devices fill it
-	 * in.
+	 * 分配（创建）一个新的 <tt>Privilege</tt> 对象。注意，在机器设备把它填好
+	 * 之前，这个对象本身并不封装任何特权访问。
 	 */
 	public Privilege() {
 	}
 
 	/**
-	 * Perform the specified action with privilege.
-	 * 
-	 * @param action the action to perform.
+	 * 以特权执行指定的操作。
+	 *
+	 * @param action 要执行的操作。
 	 */
 	public abstract void doPrivileged(Runnable action);
 
 	/**
-	 * Perform the specified <tt>PrivilegedAction</tt> with privilege.
-	 * 
-	 * @param action the action to perform.
-	 * @return the return value of the action.
+	 * 以特权执行指定的 <tt>PrivilegedAction</tt>。
+	 *
+	 * @param action 要执行的操作。
+	 * @return 该操作的返回值。
 	 */
 	public abstract Object doPrivileged(PrivilegedAction action);
 
 	/**
-	 * Perform the specified <tt>PrivilegedExceptionAction</tt> with privilege.
-	 * 
-	 * @param action the action to perform.
-	 * @return the return value of the action.
+	 * 以特权执行指定的 <tt>PrivilegedExceptionAction</tt>。
+	 *
+	 * @param action 要执行的操作。
+	 * @return 该操作的返回值。
 	 */
 	public abstract Object doPrivileged(PrivilegedExceptionAction action)
 			throws PrivilegedActionException;
 
 	/**
-	 * Exit Nachos with the specified status.
-	 * 
-	 * @param exitStatus the exit status of the Nachos process.
+	 * 以指定的状态退出 Nachos。
+	 *
+	 * @param exitStatus Nachos 进程的退出状态。
 	 */
 	public abstract void exit(int exitStatus);
 
 	/**
-	 * Add an <tt>exit()</tt> notification handler. The handler will be invoked
-	 * by exit().
-	 * 
-	 * @param handler the notification handler.
+	 * 添加一个 <tt>exit()</tt> 通知处理函数。exit() 会调用这个处理函数。
+	 *
+	 * @param handler 通知处理函数。
 	 */
 	public void addExitNotificationHandler(Runnable handler) {
 		exitNotificationHandlers.add(handler);
 	}
 
 	/**
-	 * Invoke each <tt>exit()</tt> notification handler added by
-	 * <tt>addExitNotificationHandler()</tt>. Called by <tt>exit()</tt>.
+	 * 调用每一个通过 <tt>addExitNotificationHandler()</tt> 添加的
+	 * <tt>exit()</tt> 通知处理函数。由 <tt>exit()</tt> 调用。
 	 */
 	protected void invokeExitNotificationHandlers() {
 		for (Iterator i = exitNotificationHandlers.iterator(); i.hasNext();) {
@@ -107,88 +104,82 @@ public abstract class Privilege {
 
 	private LinkedList<Runnable> exitNotificationHandlers = new LinkedList<Runnable>();
 
-	/** Nachos runtime statistics. */
+	/** Nachos 运行时统计信息。 */
 	public Stats stats = null;
 
-	/** Provides access to some private <tt>Machine</tt> methods. */
+	/** 提供对 <tt>Machine</tt> 某些私有方法的访问。 */
 	public MachinePrivilege machine = null;
 
-	/** Provides access to some private <tt>Interrupt</tt> methods. */
+	/** 提供对 <tt>Interrupt</tt> 某些私有方法的访问。 */
 	public InterruptPrivilege interrupt = null;
 
-	/** Provides access to some private <tt>Processor</tt> methods. */
+	/** 提供对 <tt>Processor</tt> 某些私有方法的访问。 */
 	public ProcessorPrivilege processor = null;
 
-	/** Provides access to some private <tt>TCB</tt> methods. */
+	/** 提供对 <tt>TCB</tt> 某些私有方法的访问。 */
 	public TCBPrivilege tcb = null;
 
 	/**
-	 * An interface that provides access to some private <tt>Machine</tt>
-	 * methods.
+	 * 一个提供对 <tt>Machine</tt> 某些私有方法访问的接口。
 	 */
 	public interface MachinePrivilege {
 		/**
-		 * Install a hardware console.
-		 * 
-		 * @param console the new hardware console.
+		 * 安装一个硬件 console。
+		 *
+		 * @param console 新的硬件 console。
 		 */
 		public void setConsole(SerialConsole console);
 	}
 
 	/**
-	 * An interface that provides access to some private <tt>Interrupt</tt>
-	 * methods.
+	 * 一个提供对 <tt>Interrupt</tt> 某些私有方法访问的接口。
 	 */
 	public interface InterruptPrivilege {
 		/**
-		 * Schedule an interrupt to occur at some time in the future.
-		 * 
-		 * @param when the number of ticks until the interrupt should occur.
-		 * @param type a name for the type of interrupt being scheduled.
-		 * @param handler the interrupt handler to call.
+		 * 安排一个中断在将来的某个时间发生。
+		 *
+		 * @param when 距离中断发生还有多少个 tick。
+		 * @param type 所安排中断类型的名字。
+		 * @param handler 要调用的中断处理函数。
 		 */
 		public void schedule(long when, String type, Runnable handler);
 
 		/**
-		 * Advance the simulated time.
-		 * 
-		 * @param inKernelMode <tt>true</tt> if the current thread is running
-		 * kernel code, <tt>false</tt> if the current thread is running MIPS
-		 * user code.
+		 * 推进模拟时间。
+		 *
+		 * @param inKernelMode 如果当前线程正在运行内核代码，则为 <tt>true</tt>；
+		 * 如果当前线程正在运行 MIPS 用户代码，则为 <tt>false</tt>。
 		 */
 		public void tick(boolean inKernelMode);
 	}
 
 	/**
-	 * An interface that provides access to some private <tt>Processor</tt>
-	 * methods.
+	 * 一个提供对 <tt>Processor</tt> 某些私有方法访问的接口。
 	 */
 	public interface ProcessorPrivilege {
 		/**
-		 * Flush the processor pipeline in preparation for switching to kernel
-		 * mode.
+		 * 清空处理器流水线，为切换到内核态做准备。
 		 */
 		public void flushPipe();
 	}
 
 	/**
-	 * An interface that provides access to some private <tt>TCB</tt> methods.
+	 * 一个提供对 <tt>TCB</tt> 某些私有方法访问的接口。
 	 */
 	public interface TCBPrivilege {
 		/**
-		 * Associate the current TCB with the specified <tt>KThread</tt>.
-		 * <tt>AutoGrader.runningThread()</tt> <i>must</i> call this method
-		 * before returning.
-		 * 
-		 * @param thread the current thread.
+		 * 把当前 TCB 与指定的 <tt>KThread</tt> 关联起来。
+		 * <tt>AutoGrader.runningThread()</tt> 在返回之前<i>必须</i>调用这个
+		 * 方法。
+		 *
+		 * @param thread 当前线程。
 		 */
 		public void associateThread(KThread thread);
 
 		/**
-		 * Authorize the TCB associated with the specified thread to be
-		 * destroyed.
-		 * 
-		 * @param thread the thread whose TCB is about to be destroyed.
+		 * 授权销毁与指定线程关联的 TCB。
+		 *
+		 * @param thread 其 TCB 即将被销毁的线程。
 		 */
 		public void authorizeDestroy(KThread thread);
 	}

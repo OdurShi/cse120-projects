@@ -10,30 +10,27 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The master class of the simulated machine. Processes command line arguments,
- * constructs all simulated hardware devices, and starts the grader.
+ * 模拟机器的主类。负责处理命令行参数、构造所有模拟的硬件设备，并启动
+ * grader（评分器）。
  */
 @SuppressWarnings("removal")
 public final class Machine {
 	/**
-	 * Nachos main entry point.
-	 * 
-	 * @param args the command line arguments.
+	 * Nachos 的 main 入口。
+	 *
+	 * @param args 命令行参数。
 	 */
 	public static void main(final String[] args) {
-		// in newer versions of Java, using String.format will
-		// trigger java.util.Local to dynamically initialize
-		// its default value.  in so doing it requests write
-		// permissions on the system properties.  if student
-		// code uses it once Nachos has started, it will
-		// trigger a SecurityException and fail.  as a
-		// convenient workaround, the following statement will
-		// safely initialize java.util.Local on behalf of
-		// student code that wants to use it.
+		// 在较新版本的 Java 中，使用 String.format 会触发
+		// java.util.Local 动态初始化它的默认值。在这个过程中，它会
+		// 请求对系统属性的写权限。如果学生代码在 Nachos 启动之后
+		// 第一次使用它，就会触发 SecurityException 并失败。作为一个
+		// 方便的变通办法，下面这条语句会替想使用它的学生代码，
+		// 安全地先把 java.util.Local 初始化好。
 
 	        String s = String.format("nachos %d.0j initializing...", 5);
 	        System.out.println(s);
-		
+
 		Lib.assertTrue(Machine.args == null);
 		Machine.args = args;
 
@@ -41,19 +38,19 @@ public final class Machine {
 
 		Config.load(configFileName);
 
-		// get the current directory (.)
+		// 获取当前目录 (.)
 		baseDirectory = new File(new File("").getAbsolutePath());
-		// get the nachos directory (./nachos)
+		// 获取 nachos 目录 (./nachos)
 		nachosDirectory = new File(baseDirectory, "nachos");
 
 		String testDirectoryName = Config.getString("FileSystem.testDirectory");
 
-		// get the test directory
+		// 获取 test 目录
 		if (testDirectoryName != null) {
 			testDirectory = new File(testDirectoryName);
 		}
 		else {
-			// use ../test
+			// 使用 ../test
 			testDirectory = new File(baseDirectory.getParentFile(), "test");
 		}
 
@@ -65,7 +62,7 @@ public final class Machine {
 		TCB.givePrivilege(privilege);
 		privilege.stats = stats;
 
-		// the Java SecurityManager has been deprecated
+		// Java 的 SecurityManager 已经被弃用（deprecated）
 		// securityManager.enable();
 		createDevices();
 		checkUserClasses();
@@ -80,24 +77,24 @@ public final class Machine {
 	}
 
 	/**
-	 * Yield to non-Nachos threads. Use in non-preemptive JVM's to give
-	 * non-Nachos threads a chance to run.
+	 * 让出 CPU 给非 Nachos 线程。在非抢占式的 JVM 中使用，让非 Nachos 线程
+	 * 有机会运行。
 	 */
 	public static void yield() {
 		Thread.yield();
 	}
 
 	/**
-	 * Terminate Nachos. Same as <tt>TCB.die()</tt>.
+	 * 终止 Nachos。等同于 <tt>TCB.die()</tt>。
 	 */
 	public static void terminate() {
 		TCB.die();
 	}
 
 	/**
-	 * Terminate Nachos as the result of an unhandled exception or error.
-	 * 
-	 * @param e the exception or error.
+	 * 因为一个未处理的异常或错误而终止 Nachos。
+	 *
+	 * @param e 该异常或错误。
 	 */
 	public static void terminate(Throwable e) {
 		if (e instanceof ThreadDeath)
@@ -108,7 +105,7 @@ public final class Machine {
 	}
 
 	/**
-	 * Print stats, and terminate Nachos.
+	 * 打印统计信息，然后终止 Nachos。
 	 */
 	public static void halt() {
 		System.out.print("Machine halting!\n\n");
@@ -117,9 +114,9 @@ public final class Machine {
 	}
 
 	/**
-	 * Return an array containing all command line arguments.
-	 * 
-	 * @return the command line arguments passed to Nachos.
+	 * 返回一个包含所有命令行参数的数组。
+	 *
+	 * @return 传给 Nachos 的命令行参数。
 	 */
 	public static String[] getCommandLineArguments() {
 		String[] result = new String[args.length];
@@ -167,7 +164,7 @@ public final class Machine {
 					System.out.print(copyright);
 					System.exit(1);
 				}
-				// these switches are reserved for the autograder
+				// 这些开关是保留给 autograder 使用的
 				else if (arg.equals("-[]")) {
 					Lib.assertTrue(i < args.length, "switch without argument");
 					configFileName = args[i++];
@@ -307,79 +304,78 @@ public final class Machine {
 	}
 
 	/**
-	 * Prevent instantiation.
+	 * 禁止实例化。
 	 */
 	private Machine() {
 	}
 
 	/**
-	 * Return the hardware interrupt manager.
-	 * 
-	 * @return the hardware interrupt manager.
+	 * 返回硬件中断管理器。
+	 *
+	 * @return 硬件中断管理器。
 	 */
 	public static Interrupt interrupt() {
 		return interrupt;
 	}
 
 	/**
-	 * Return the hardware timer.
-	 * 
-	 * @return the hardware timer.
+	 * 返回硬件 timer。
+	 *
+	 * @return 硬件 timer。
 	 */
 	public static Timer timer() {
 		return timer;
 	}
 
 	/**
-	 * Return the hardware elevator bank.
-	 * 
-	 * @return the hardware elevator bank, or <tt>null</tt> if it is not
-	 * present.
+	 * 返回硬件 elevator bank（电梯组）。
+	 *
+	 * @return 硬件 elevator bank；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static ElevatorBank bank() {
 		return bank;
 	}
 
 	/**
-	 * Return the MIPS processor.
-	 * 
-	 * @return the MIPS processor, or <tt>null</tt> if it is not present.
+	 * 返回 MIPS 处理器。
+	 *
+	 * @return MIPS 处理器；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static Processor processor() {
 		return processor;
 	}
 
 	/**
-	 * Return the hardware console.
-	 * 
-	 * @return the hardware console, or <tt>null</tt> if it is not present.
+	 * 返回硬件 console（控制台）。
+	 *
+	 * @return 硬件 console；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static SerialConsole console() {
 		return console;
 	}
 
 	/**
-	 * Return the stub filesystem.
-	 * 
-	 * @return the stub file system, or <tt>null</tt> if it is not present.
+	 * 返回 stub 文件系统。
+	 *
+	 * @return stub 文件系统；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static FileSystem stubFileSystem() {
 		return stubFileSystem;
 	}
 
 	/**
-	 * Return the network link.
-	 * 
-	 * @return the network link, or <tt>null</tt> if it is not present.
+	 * 返回网络链路（network link）。
+	 *
+	 * @return 网络链路；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static NetworkLink networkLink() {
 		return networkLink;
 	}
 
 	/**
-	 * Return the autograder.
-	 * 
-	 * @return the autograder.
+	 * 返回 autograder。
+	 *
+	 * @return autograder。
 	 */
 	public static AutoGrader autoGrader() {
 		return autoGrader;
@@ -404,11 +400,10 @@ public final class Machine {
 	private static String autoGraderClassName = "nachos.ag.AutoGrader";
 
 	/**
-	 * Return the name of the shell program that a user-programming kernel must
-	 * run. Make sure <tt>UserKernel.run()</tt> <i>always</i> uses this method
-	 * to decide which program to run.
-	 * 
-	 * @return the name of the shell program to run.
+	 * 返回运行用户程序的内核必须运行的 shell 程序的名字。确保
+	 * <tt>UserKernel.run()</tt> <i>总是</i>用这个方法来决定运行哪个程序。
+	 *
+	 * @return 要运行的 shell 程序的名字。
 	 */
 	public static String getShellProgramName() {
 		if (shellProgramName == null) {
@@ -423,13 +418,13 @@ public final class Machine {
 	private static String shellProgramName = null;
 
 	/**
-	 * Return the name of the process class that the kernel should use. In the
-	 * multi-programming project, returns <tt>nachos.userprog.UserProcess</tt>.
-	 * In the VM project, returns <tt>nachos.vm.VMProcess</tt>. In the
-	 * networking project, returns <tt>nachos.network.NetProcess</tt>.
-	 * 
-	 * @return the name of the process class that the kernel should use.
-	 * 
+	 * 返回内核应该使用的进程类的名字。在多道程序（multi-programming）项目中，
+	 * 返回 <tt>nachos.userprog.UserProcess</tt>。在 VM 项目中，返回
+	 * <tt>nachos.vm.VMProcess</tt>。在网络（networking）项目中，返回
+	 * <tt>nachos.network.NetProcess</tt>。
+	 *
+	 * @return 内核应该使用的进程类的名字。
+	 *
 	 * @see nachos.userprog.UserKernel#run
 	 * @see nachos.userprog.UserProcess
 	 * @see nachos.vm.VMProcess
@@ -521,6 +516,6 @@ public final class Machine {
 		}
 	}
 
-	// dummy variables to make javac smarter
+	// 一些 dummy 变量，让 javac 更"聪明"（顺带把这些类也编译进来）
 	private static Coff dummy1 = null;
 }

@@ -3,36 +3,33 @@ package nachos.threads;
 import nachos.machine.*;
 
 /**
- * A <tt>Semaphore</tt> is a synchronization primitive with an unsigned value. A
- * semaphore has only two operations:
- * 
+ * <tt>Semaphore</tt>（信号量）是一种同步原语，它有一个无符号的值。
+ * semaphore 只有两种操作：
+ *
  * <ul>
- * <li><tt>P()</tt>: waits until the semaphore's value is greater than zero,
- * then decrements it.
- * <li><tt>V()</tt>: increments the semaphore's value, and wakes up one thread
- * waiting in <tt>P()</tt> if possible.
+ * <li><tt>P()</tt>：等待，直到 semaphore 的值大于零，然后把它减一。
+ * <li><tt>V()</tt>：把 semaphore 的值加一；如果可能，唤醒一个在 <tt>P()</tt>
+ * 中等待的线程。
  * </ul>
- * 
+ *
  * <p>
- * Note that this API does not allow a thread to read the value of the semaphore
- * directly. Even if you did read the value, the only thing you would know is
- * what the value used to be. You don't know what the value is now, because by
- * the time you get the value, a context switch might have occurred, and some
- * other thread might have called <tt>P()</tt> or <tt>V()</tt>, so the true
- * value might now be different.
+ * 注意，这个 API 不允许线程直接读取 semaphore 的值。即使你读到了这个值，你
+ * 也只知道它过去是多少，而不知道它现在是多少：因为在你拿到这个值的时候，可能
+ * 已经发生了一次 context switch，其他线程可能已经调用了 <tt>P()</tt> 或
+ * <tt>V()</tt>，所以真实的值现在可能已经不一样了。
  */
 public class Semaphore {
 	/**
-	 * Allocate a new semaphore.
-	 * 
-	 * @param initialValue the initial value of this semaphore.
+	 * 分配（创建）一个新的 semaphore。
+	 *
+	 * @param initialValue 这个 semaphore 的初始值。
 	 */
 	public Semaphore(int initialValue) {
 		value = initialValue;
 	}
 
 	/**
-	 * Atomically wait for this semaphore to become non-zero and decrement it.
+	 * 原子地等待这个 semaphore 变为非零，然后把它减一。
 	 */
 	public void P() {
 		boolean intStatus = Machine.interrupt().disable();
@@ -49,8 +46,8 @@ public class Semaphore {
 	}
 
 	/**
-	 * Atomically increment this semaphore and wake up at most one other thread
-	 * sleeping on this semaphore.
+	 * 原子地把这个 semaphore 加一，并最多唤醒一个在这个 semaphore 上 sleep
+	 * 的其他线程。
 	 */
 	public void V() {
 		boolean intStatus = Machine.interrupt().disable();
@@ -85,7 +82,7 @@ public class Semaphore {
 	}
 
 	/**
-	 * Test if this module is working.
+	 * 测试这个模块是否正常工作。
 	 */
 	public static void selfTest() {
 		Semaphore ping = new Semaphore(0);

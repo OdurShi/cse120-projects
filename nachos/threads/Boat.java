@@ -19,14 +19,14 @@ public class Boat {
 	}
 
 	public static void begin(int adults, int children, BoatGrader b) {
-		// Store the externally generated autograder in a class
-		// variable to be accessible by children.
+		// 把外部生成的 autograder 存到一个类变量里，
+		// 让 children 线程也能访问到它。
 		bg = b;
 
-		// Instantiate global variables here
+		// 在这里初始化全局变量
 
-		// Create threads here. See section 3.4 of the Nachos for Java
-		// Walkthrough linked from the projects page.
+		// 在这里创建线程。参见项目页面上链接的 Nachos for Java
+		// Walkthrough 的 3.4 节。
 
 		Runnable r = new Runnable() {
 			public void run() {
@@ -41,10 +41,9 @@ public class Boat {
 
 	static void AdultItinerary() {
 		/*
-		 * This is where you should put your solutions. Make calls to the
-		 * BoatGrader to show that it is synchronized. For example:
-		 * bg.AdultRowToMolokai(); indicates that an adult has rowed the boat
-		 * across to Molokai
+		 * 这里是你放解答的地方。通过调用 BoatGrader 来表明它是同步的。
+		 * 例如：bg.AdultRowToMolokai(); 表示一个 adult 已经把船划到了
+		 * Molokai。
 		 */
 	}
 
@@ -52,10 +51,9 @@ public class Boat {
 	}
 
 	static void SampleItinerary() {
-		// Please note that this isn't a valid solution (you can't fit
-		// all of them on the boat). Please also note that you may not
-		// have a single thread calculate a solution and then just play
-		// it back at the autograder -- you will be caught.
+		// 请注意，这不是一个有效的解答（船装不下所有人）。另外也请注意，
+		// 你不能让单个线程把解答算出来，然后照着它在 autograder 面前
+		// 演一遍 —— 这样会被发现的。
 		System.out
 				.println("\n ***Everyone piles on the boat and goes to Molokai***");
 		bg.AdultRowToMolokai();

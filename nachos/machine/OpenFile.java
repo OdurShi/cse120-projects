@@ -5,15 +5,15 @@ package nachos.machine;
 import java.io.EOFException;
 
 /**
- * A file that supports reading, writing, and seeking.
+ * 一个支持读、写和定位（seek）的文件。
  */
 public class OpenFile {
 	/**
-	 * Allocate a new <tt>OpenFile</tt> object with the specified name on the
-	 * specified file system.
-	 * 
-	 * @param fileSystem the file system to which this file belongs.
-	 * @param name the name of the file, on that file system.
+	 * 在指定的文件系统上，用指定的名字分配（创建）一个新的 <tt>OpenFile</tt>
+	 * 对象。
+	 *
+	 * @param fileSystem 这个文件所属的文件系统。
+	 * @param name 这个文件在该文件系统上的名字。
 	 */
 	public OpenFile(FileSystem fileSystem, String name) {
 		this.fileSystem = fileSystem;
@@ -21,116 +21,108 @@ public class OpenFile {
 	}
 
 	/**
-	 * Allocate a new unnamed <tt>OpenFile</tt> that is not associated with any
-	 * file system.
+	 * 分配（创建）一个新的、未命名的、不与任何文件系统关联的
+	 * <tt>OpenFile</tt>。
 	 */
 	public OpenFile() {
 		this(null, "unnamed");
 	}
 
 	/**
-	 * Get the file system to which this file belongs.
-	 * 
-	 * @return the file system to which this file belongs.
+	 * 获取这个文件所属的文件系统。
+	 *
+	 * @return 这个文件所属的文件系统。
 	 */
 	public FileSystem getFileSystem() {
 		return fileSystem;
 	}
 
 	/**
-	 * Get the name of this open file.
-	 * 
-	 * @return the name of this open file.
+	 * 获取这个打开文件的名字。
+	 *
+	 * @return 这个打开文件的名字。
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Read this file starting at the specified position and return the number
-	 * of bytes successfully read. If no bytes were read because of a fatal
-	 * error, returns -1
-	 * 
-	 * @param pos the offset in the file at which to start reading.
-	 * @param buf the buffer to store the bytes in.
-	 * @param offset the offset in the buffer to start storing bytes.
-	 * @param length the number of bytes to read.
-	 * @return the actual number of bytes successfully read, or -1 on failure.
+	 * 从指定位置开始读取这个文件，并返回成功读取的字节数。如果因为致命错误
+	 * 一个字节都没有读到，返回 -1。
+	 *
+	 * @param pos 文件中开始读取的偏移量。
+	 * @param buf 用来存放读到的字节的缓冲区。
+	 * @param offset 缓冲区中开始存放字节的偏移量。
+	 * @param length 要读取的字节数。
+	 * @return 实际成功读取的字节数；失败时返回 -1。
 	 */
 	public int read(int pos, byte[] buf, int offset, int length) {
 		return -1;
 	}
 
 	/**
-	 * Write this file starting at the specified position and return the number
-	 * of bytes successfully written. If no bytes were written because of a
-	 * fatal error, returns -1.
-	 * 
-	 * @param pos the offset in the file at which to start writing.
-	 * @param buf the buffer to get the bytes from.
-	 * @param offset the offset in the buffer to start getting.
-	 * @param length the number of bytes to write.
-	 * @return the actual number of bytes successfully written, or -1 on
-	 * failure.
+	 * 从指定位置开始写这个文件，并返回成功写入的字节数。如果因为致命错误
+	 * 一个字节都没有写入，返回 -1。
+	 *
+	 * @param pos 文件中开始写入的偏移量。
+	 * @param buf 提供要写入字节的缓冲区。
+	 * @param offset 缓冲区中开始取字节的偏移量。
+	 * @param length 要写入的字节数。
+	 * @return 实际成功写入的字节数；失败时返回 -1。
 	 */
 	public int write(int pos, byte[] buf, int offset, int length) {
 		return -1;
 	}
 
 	/**
-	 * Get the length of this file.
-	 * 
-	 * @return the length of this file, or -1 if this file has no length.
+	 * 获取这个文件的长度。
+	 *
+	 * @return 这个文件的长度；如果这个文件没有长度，返回 -1。
 	 */
 	public int length() {
 		return -1;
 	}
 
 	/**
-	 * Close this file and release any associated system resources.
+	 * 关闭这个文件，并释放所有相关的系统资源。
 	 */
 	public void close() {
 	}
 
 	/**
-	 * Set the value of the current file pointer.
+	 * 设置当前文件指针的值。
 	 */
 	public void seek(int pos) {
 	}
 
 	/**
-	 * Get the value of the current file pointer, or -1 if this file has no
-	 * pointer.
+	 * 获取当前文件指针的值；如果这个文件没有文件指针，返回 -1。
 	 */
 	public int tell() {
 		return -1;
 	}
 
 	/**
-	 * Read this file starting at the current file pointer and return the number
-	 * of bytes successfully read. Advances the file pointer by this amount. If
-	 * no bytes could be* read because of a fatal error, returns -1.
-	 * 
-	 * @param buf the buffer to store the bytes in.
-	 * @param offset the offset in the buffer to start storing bytes.
-	 * @param length the number of bytes to read.
-	 * @return the actual number of bytes successfully read, or -1 on failure.
+	 * 从当前文件指针处开始读取这个文件，并返回成功读取的字节数。文件指针会
+	 * 前进相应的字节数。如果因为致命错误一个字节都无法读取，返回 -1。
+	 *
+	 * @param buf 用来存放读到的字节的缓冲区。
+	 * @param offset 缓冲区中开始存放字节的偏移量。
+	 * @param length 要读取的字节数。
+	 * @return 实际成功读取的字节数；失败时返回 -1。
 	 */
 	public int read(byte[] buf, int offset, int length) {
 		return -1;
 	}
 
 	/**
-	 * Write this file starting at the current file pointer and return the
-	 * number of bytes successfully written. Advances the file pointer by this
-	 * amount. If no bytes could be written because of a fatal error, returns
-	 * -1.
-	 * 
-	 * @param buf the buffer to get the bytes from.
-	 * @param offset the offset in the buffer to start getting.
-	 * @param length the number of bytes to write.
-	 * @return the actual number of bytes successfully written, or -1 on
-	 * failure.
+	 * 从当前文件指针处开始写这个文件，并返回成功写入的字节数。文件指针会
+	 * 前进相应的字节数。如果因为致命错误一个字节都无法写入，返回 -1。
+	 *
+	 * @param buf 提供要写入字节的缓冲区。
+	 * @param offset 缓冲区中开始取字节的偏移量。
+	 * @param length 要写入的字节数。
+	 * @return 实际成功写入的字节数；失败时返回 -1。
 	 */
 	public int write(byte[] buf, int offset, int length) {
 		return -1;

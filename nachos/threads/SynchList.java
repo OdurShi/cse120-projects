@@ -5,11 +5,11 @@ import nachos.machine.*;
 import nachos.threads.*;
 
 /**
- * A synchronized queue.
+ * 一个同步（线程安全）的队列。
  */
 public class SynchList {
 	/**
-	 * Allocate a new synchronized queue.
+	 * 分配（创建）一个新的同步队列。
 	 */
 	public SynchList() {
 		list = new LinkedList<Object>();
@@ -18,10 +18,10 @@ public class SynchList {
 	}
 
 	/**
-	 * Add the specified object to the end of the queue. If another thread is
-	 * waiting in <tt>removeFirst()</tt>, it is woken up.
-	 * 
-	 * @param o the object to add. Must not be <tt>null</tt>.
+	 * 把指定的对象加到队列末尾。如果有另一个线程正在 <tt>removeFirst()</tt>
+	 * 中等待，就把它唤醒。
+	 *
+	 * @param o 要添加的对象。不能为 <tt>null</tt>。
 	 */
 	public void add(Object o) {
 		Lib.assertTrue(o != null);
@@ -33,10 +33,9 @@ public class SynchList {
 	}
 
 	/**
-	 * Remove an object from the front of the queue, blocking until the queue is
-	 * non-empty if necessary.
-	 * 
-	 * @return the element removed from the front of the queue.
+	 * 从队列头部移除一个对象；如有必要，会阻塞直到队列非空。
+	 *
+	 * @return 从队列头部移除的元素。
 	 */
 	public Object removeFirst() {
 		Object o;
@@ -67,7 +66,7 @@ public class SynchList {
 	}
 
 	/**
-	 * Test that this module is working.
+	 * 测试这个模块是否正常工作。
 	 */
 	public static void selfTest() {
 		SynchList ping = new SynchList();

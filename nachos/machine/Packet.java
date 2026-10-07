@@ -3,21 +3,21 @@
 package nachos.machine;
 
 /**
- * A link-layer packet.
- * 
+ * 一个链路层数据包。
+ *
  * @see nachos.machine.NetworkLink
  */
 public class Packet {
 	/**
-	 * Allocate a new packet to be sent, using the specified parameters.
-	 * 
-	 * @param dstLink the destination link address.
-	 * @param srcLink the source link address.
-	 * @param contents the contents of the packet.
+	 * 用指定的参数分配（创建）一个要发送的新数据包。
+	 *
+	 * @param dstLink 目标链路地址。
+	 * @param srcLink 源链路地址。
+	 * @param contents 数据包的内容。
 	 */
 	public Packet(int dstLink, int srcLink, byte[] contents)
 			throws MalformedPacketException {
-		// make sure the paramters are valid
+		// 确保参数有效
 		if (dstLink < 0 || dstLink >= linkAddressLimit || srcLink < 0
 				|| srcLink >= linkAddressLimit
 				|| contents.length > maxContentsLength)
@@ -34,21 +34,20 @@ public class Packet {
 		packetBytes[2] = (byte) srcLink;
 		packetBytes[3] = (byte) contents.length;
 
-		// if java had subarrays, i'd use them. but System.arraycopy is ok...
+		// 要是 java 有子数组我就用了。不过 System.arraycopy 也还行……
 		System.arraycopy(contents, 0, packetBytes, headerLength,
 				contents.length);
 	}
 
 	/**
-	 * Allocate a new packet using the specified array of bytes received from
-	 * the network.
-	 * 
-	 * @param packetBytes the bytes making up this packet.
+	 * 用从网络上收到的指定字节数组，分配（创建）一个新数据包。
+	 *
+	 * @param packetBytes 组成这个数据包的字节。
 	 */
 	public Packet(byte[] packetBytes) throws MalformedPacketException {
 		this.packetBytes = packetBytes;
 
-		// make sure we have a valid header
+		// 确保 header 有效
 		if (packetBytes.length < headerLength
 				|| packetBytes[0] != NetworkLink.networkID
 				|| packetBytes[1] < 0 || packetBytes[1] >= linkAddressLimit
@@ -65,67 +64,65 @@ public class Packet {
 				contents.length);
 	}
 
-	/** This packet, as an array of bytes that can be sent on a network. */
+	/** 这个数据包，表示为可以在网络上发送的字节数组。 */
 	public byte[] packetBytes;
 
-	/** The address of the destination link of this packet. */
+	/** 这个数据包的目标链路地址。 */
 	public int dstLink;
 
-	/** The address of the source link of this packet. */
+	/** 这个数据包的源链路地址。 */
 	public int srcLink;
 
-	/** The contents of this packet, excluding the link-layer header. */
+	/** 这个数据包的内容，不包括链路层 header。 */
 	public byte[] contents;
 
 	/**
-	 * The number of bytes in a link-layer packet header. The header is
-	 * formatted as follows:
-	 * 
+	 * 链路层数据包 header 的字节数。header 的格式如下：
+	 *
 	 * <table>
 	 * <tr>
-	 * <td>offset</td>
-	 * <td>size</td>
-	 * <td>value</td>
+	 * <td>偏移</td>
+	 * <td>大小</td>
+	 * <td>值</td>
 	 * </tr>
 	 * <tr>
 	 * <td>0</td>
 	 * <td>1</td>
-	 * <td>network ID (collision detecting)</td>
+	 * <td>network ID（用于检测冲突）</td>
 	 * </tr>
 	 * <tr>
 	 * <td>1</td>
 	 * <td>1</td>
-	 * <td>destination link address</td>
+	 * <td>目标链路地址</td>
 	 * </tr>
 	 * <tr>
 	 * <td>2</td>
 	 * <td>1</td>
-	 * <td>source link address</td>
+	 * <td>源链路地址</td>
 	 * </tr>
 	 * <tr>
 	 * <td>3</td>
 	 * <td>1</td>
-	 * <td>length of contents</td>
+	 * <td>内容的长度</td>
 	 * </tr>
 	 * </table>
 	 */
 	public static final int headerLength = 4;
 
 	/**
-	 * The maximum length, in bytes, of a packet that can be sent or received on
-	 * the network.
+	 * 网络上可以发送或接收的数据包的最大长度（以字节为单位）。
 	 */
 	public static final int maxPacketLength = 32;
 
 	/**
-	 * The maximum number of content bytes (not including the header). Note that
-	 * this is just <tt>maxPacketLength - headerLength</tt>.
+	 * 内容字节的最大数目（不包括 header）。注意它就等于
+	 * <tt>maxPacketLength - headerLength</tt>。
 	 */
 	public static final int maxContentsLength = maxPacketLength - headerLength;
 
 	/**
-	 * The upper limit on Nachos link addresses. All link addresses fall between
-	 * <tt>0</tt> and <tt>linkAddressLimit - 1</tt>.
+	 * Nachos 链路地址的上限。所有链路地址都在 <tt>0</tt> 到
+	 * <tt>linkAddressLimit - 1</tt> 之间。
 	 */
 	public static final int linkAddressLimit = 128;
 }

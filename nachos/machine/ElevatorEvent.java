@@ -3,7 +3,7 @@
 package nachos.machine;
 
 /**
- * An event that affects elevator software.
+ * 影响电梯软件的一个事件。
  */
 public final class ElevatorEvent {
 	public ElevatorEvent(int event, int floor, int elevator) {
@@ -12,27 +12,27 @@ public final class ElevatorEvent {
 		this.elevator = elevator;
 	}
 
-	/** The event identifier. Refer to the <i>event*</i> constants. */
+	/** 事件标识符。参见 <i>event*</i> 系列常量。 */
 	public final int event;
 
-	/** The floor pertaining to the event, or -1 if not applicable. */
+	/** 与该事件相关的楼层；不适用时为 -1。 */
 	public final int floor;
 
-	/** The elevator pertaining to the event, or -1 if not applicable. */
+	/** 与该事件相关的电梯；不适用时为 -1。 */
 	public final int elevator;
 
-	/** An up button was pressed. */
+	/** 有人按了向上按钮。 */
 	public static final int eventUpButtonPressed = 0;
 
-	/** A down button was pressed. */
+	/** 有人按了向下按钮。 */
 	public static final int eventDownButtonPressed = 1;
 
-	/** A floor button was pressed inside an elevator. */
+	/** 有人在电梯内按了楼层按钮。 */
 	public static final int eventFloorButtonPressed = 2;
 
-	/** An elevator has arrived and stopped at its destination floor. */
+	/** 一部电梯已经到达并停在了它的目的楼层。 */
 	public static final int eventElevatorArrived = 3;
 
-	/** All riders have finished; the elevator controller should terminate. */
+	/** 所有 rider 都已结束；电梯控制器应该终止。 */
 	public static final int eventRidersDone = 4;
 }

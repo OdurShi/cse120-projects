@@ -3,40 +3,36 @@
 package nachos.machine;
 
 /**
- * A file system that allows the user to create, open, and delete files.
+ * 一个允许用户创建、打开和删除文件的文件系统。
  */
 public interface FileSystem {
 	/**
-	 * Atomically open a file, optionally creating it if it does not already
-	 * exist. If the file does not already exist and <tt>create</tt> is
-	 * <tt>false</tt>, returns <tt>null</tt>. If the file does not already exist
-	 * and <tt>create</tt> is <tt>true</tt>, creates the file with zero length.
-	 * If the file already exists, opens the file without changing it in any
-	 * way.
-	 * 
-	 * @param name the name of the file to open.
-	 * @param create <tt>true</tt> to create the file if it does not already
-	 * exist.
-	 * @return an <tt>OpenFile</tt> representing a new instance of the opened
-	 * file, or <tt>null</tt> if the file could not be opened.
+	 * 原子地打开一个文件；如果文件还不存在，可以选择创建它。如果文件不存在且
+	 * <tt>create</tt> 为 <tt>false</tt>，返回 <tt>null</tt>。如果文件不存在且
+	 * <tt>create</tt> 为 <tt>true</tt>，创建一个长度为零的文件。如果文件已经
+	 * 存在，就打开它，并且不对它做任何修改。
+	 *
+	 * @param name 要打开的文件名。
+	 * @param create 为 <tt>true</tt> 表示文件不存在时创建它。
+	 * @return 一个表示被打开文件的新实例的 <tt>OpenFile</tt>；如果文件无法
+	 * 打开，返回 <tt>null</tt>。
 	 */
 	public OpenFile open(String name, boolean create);
 
 	/**
-	 * Atomically remove an existing file. After a file is removed, it cannot be
-	 * opened until it is created again with <tt>open</tt>. If the file is
-	 * already open, it is up to the implementation to decide whether the file
-	 * can still be accessed or if it is deleted immediately.
-	 * 
-	 * @param name the name of the file to remove.
-	 * @return <tt>true</tt> if the file was successfully removed.
+	 * 原子地删除一个已存在的文件。文件被删除后，在用 <tt>open</tt> 重新创建
+	 * 之前，它无法被打开。如果文件已经被打开，由具体实现决定这个文件是否仍然
+	 * 可以访问，还是立即被删除。
+	 *
+	 * @param name 要删除的文件名。
+	 * @return 如果文件被成功删除，返回 <tt>true</tt>。
 	 */
 	public boolean remove(String name);
 
 	/**
-	 * Return the count of open files in the filesystem.
-	 * 
-	 * @return <tt>int</tt> representing the count of open files.
+	 * 返回文件系统中打开的文件数。
+	 *
+	 * @return 表示打开文件数的 <tt>int</tt>。
 	 */
 	public int getOpenCount();
 }

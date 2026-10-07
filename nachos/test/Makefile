@@ -1,14 +1,13 @@
-# GNU Makefile for building user programs to run on top of Nachos
+# 用来构建运行在 Nachos 之上的用户程序的 GNU Makefile
 #
-# Things to be aware of:
+# 需要注意的事项：
 #
-#    The value of the ARCHDIR environment variable must be set before using
-#	this makefile. If you are using an instructional machine, this should
-#	be automatic. However, if you are not using an instructional machine,
-#	you need to point ARCHDIR at the cross-compiler directory, e.g.
+#    在使用这个 makefile 之前，必须先设置 ARCHDIR 环境变量。如果你用的是
+#	教学用机器，这一步应该会自动完成。但如果你用的不是教学用机器，
+#	你需要把 ARCHDIR 指向交叉编译器所在的目录，例如
 #		setenv ARCHDIR ../mips-x86.win32-xgcc
 
-# you need to point to the right executables
+# 你需要指向正确的可执行文件
 GCCDIR = $(ARCHDIR)/mips-
 
 ASFLAGS = -mips1

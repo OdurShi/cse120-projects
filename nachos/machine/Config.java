@@ -9,14 +9,14 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 
 /**
- * Provides routines to access the Nachos configuration.
+ * 提供访问 Nachos 配置的函数。
  */
 public final class Config {
 	/**
-	 * Load configuration information from the specified file. Must be called
-	 * before the Nachos security manager is installed.
-	 * 
-	 * @param fileName the name of the file containing the configuration to use.
+	 * 从指定的文件中加载配置信息。必须在安装 Nachos security manager 之前
+	 * 调用。
+	 *
+	 * @param fileName 包含要使用的配置的文件名。
 	 */
 	public static void load(String fileName) {
 		System.out.println(" config");
@@ -68,7 +68,7 @@ public final class Config {
 
 				String value = s.sval;
 
-				// ignore everything after first string
+				// 忽略第一个字符串之后的所有内容
 				while (s.nextToken() != StreamTokenizer.TT_EOL
 						&& s.ttype != StreamTokenizer.TT_EOF)
 					;
@@ -98,24 +98,22 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of a key in <tt>nachos.conf</tt>.
-	 * 
-	 * @param key the key to look up.
-	 * @return the value of the specified key, or <tt>null</tt> if it is not
-	 * present.
+	 * 获取 <tt>nachos.conf</tt> 中某个 key 的值。
+	 *
+	 * @param key 要查找的 key。
+	 * @return 指定 key 的值；如果不存在，返回 <tt>null</tt>。
 	 */
 	public static String getString(String key) {
 		return (String) config.get(key);
 	}
 
 	/**
-	 * Get the value of a key in <tt>nachos.conf</tt>, returning the specified
-	 * default if the key does not exist.
-	 * 
-	 * @param key the key to look up.
-	 * @param defaultValue the value to return if the key does not exist.
-	 * @return the value of the specified key, or <tt>defaultValue</tt> if it is
-	 * not present.
+	 * 获取 <tt>nachos.conf</tt> 中某个 key 的值；如果这个 key 不存在，返回
+	 * 指定的默认值。
+	 *
+	 * @param key 要查找的 key。
+	 * @param defaultValue key 不存在时要返回的值。
+	 * @return 指定 key 的值；如果不存在，返回 <tt>defaultValue</tt>。
 	 */
 	public static String getString(String key, String defaultValue) {
 		String result = getString(key);
@@ -143,10 +141,10 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of an integer key in <tt>nachos.conf</tt>.
-	 * 
-	 * @param key the key to look up.
-	 * @return the value of the specified key.
+	 * 获取 <tt>nachos.conf</tt> 中某个整数 key 的值。
+	 *
+	 * @param key 要查找的 key。
+	 * @return 指定 key 的值。
 	 */
 	public static int getInteger(String key) {
 		Integer result = requestInteger(key);
@@ -158,13 +156,12 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of an integer key in <tt>nachos.conf</tt>, returning the
-	 * specified default if the key does not exist.
-	 * 
-	 * @param key the key to look up.
-	 * @param defaultValue the value to return if the key does not exist.
-	 * @return the value of the specified key, or <tt>defaultValue</tt> if the
-	 * key does not exist.
+	 * 获取 <tt>nachos.conf</tt> 中某个整数 key 的值；如果这个 key 不存在，
+	 * 返回指定的默认值。
+	 *
+	 * @param key 要查找的 key。
+	 * @param defaultValue key 不存在时要返回的值。
+	 * @return 指定 key 的值；如果 key 不存在，返回 <tt>defaultValue</tt>。
 	 */
 	public static int getInteger(String key, int defaultValue) {
 		Integer result = requestInteger(key);
@@ -192,10 +189,10 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of a double key in <tt>nachos.conf</tt>.
-	 * 
-	 * @param key the key to look up.
-	 * @return the value of the specified key.
+	 * 获取 <tt>nachos.conf</tt> 中某个 double key 的值。
+	 *
+	 * @param key 要查找的 key。
+	 * @return 指定 key 的值。
 	 */
 	public static double getDouble(String key) {
 		Double result = requestDouble(key);
@@ -207,13 +204,12 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of a double key in <tt>nachos.conf</tt>, returning the
-	 * specified default if the key does not exist.
-	 * 
-	 * @param key the key to look up.
-	 * @param defaultValue the value to return if the key does not exist.
-	 * @return the value of the specified key, or <tt>defaultValue</tt> if the
-	 * key does not exist.
+	 * 获取 <tt>nachos.conf</tt> 中某个 double key 的值；如果这个 key 不存在，
+	 * 返回指定的默认值。
+	 *
+	 * @param key 要查找的 key。
+	 * @param defaultValue key 不存在时要返回的值。
+	 * @return 指定 key 的值；如果 key 不存在，返回 <tt>defaultValue</tt>。
 	 */
 	public static double getDouble(String key, double defaultValue) {
 		Double result = requestDouble(key);
@@ -245,10 +241,10 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of a boolean key in <tt>nachos.conf</tt>.
-	 * 
-	 * @param key the key to look up.
-	 * @return the value of the specified key.
+	 * 获取 <tt>nachos.conf</tt> 中某个 boolean key 的值。
+	 *
+	 * @param key 要查找的 key。
+	 * @return 指定 key 的值。
 	 */
 	public static boolean getBoolean(String key) {
 		Boolean result = requestBoolean(key);
@@ -260,13 +256,12 @@ public final class Config {
 	}
 
 	/**
-	 * Get the value of a boolean key in <tt>nachos.conf</tt>, returning the
-	 * specified default if the key does not exist.
-	 * 
-	 * @param key the key to look up.
-	 * @param defaultValue the value to return if the key does not exist.
-	 * @return the value of the specified key, or <tt>defaultValue</tt> if the
-	 * key does not exist.
+	 * 获取 <tt>nachos.conf</tt> 中某个 boolean key 的值；如果这个 key 不存在，
+	 * 返回指定的默认值。
+	 *
+	 * @param key 要查找的 key。
+	 * @param defaultValue key 不存在时要返回的值。
+	 * @return 指定 key 的值；如果 key 不存在，返回 <tt>defaultValue</tt>。
 	 */
 	public static boolean getBoolean(String key, boolean defaultValue) {
 		Boolean result = requestBoolean(key);

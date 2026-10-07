@@ -5,58 +5,52 @@ import nachos.machine.*;
 import java.util.LinkedList;
 
 /**
- * An implementation of condition variables built upon semaphores.
- * 
+ * 基于 semaphore 实现的 condition variable（条件变量）。
+ *
  * <p>
- * A condition variable is a synchronization primitive that does not have a
- * value (unlike a semaphore or a lock), but threads may still be queued.
- * 
+ * condition variable 是一种同步原语。它没有值（这一点不同于 semaphore 或
+ * lock），但线程仍然可以在它上面排队。
+ *
  * <p>
  * <ul>
- * 
- * <li><tt>sleep()</tt>: atomically release the lock and relinkquish the CPU
- * until woken; then reacquire the lock.
- * 
- * <li><tt>wake()</tt>: wake up a single thread sleeping in this condition
- * variable, if possible.
- * 
- * <li><tt>wakeAll()</tt>: wake up all threads sleeping inn this condition
- * variable.
- * 
+ *
+ * <li><tt>sleep()</tt>：原子地释放 lock 并让出 CPU，直到被唤醒；然后重新
+ * 获取 lock。
+ *
+ * <li><tt>wake()</tt>：如果可能，唤醒一个在这个 condition variable 上
+ * sleep 的线程。
+ *
+ * <li><tt>wakeAll()</tt>：唤醒所有在这个 condition variable 上 sleep 的线程。
+ *
  * </ul>
- * 
+ *
  * <p>
- * Every condition variable is associated with some lock. Multiple condition
- * variables may be associated with the same lock. All three condition variable
- * operations can only be used while holding the associated lock.
- * 
+ * 每个 condition variable 都关联着某个 lock。多个 condition variable 可以
+ * 关联同一个 lock。这三个 condition variable 操作都只能在持有关联的 lock
+ * 时使用。
+ *
  * <p>
- * In Nachos, condition variables are summed to obey <i>Mesa-style</i>
- * semantics. When a <tt>wake()</tt> or <tt>wakeAll()</tt> wakes up another
- * thread, the woken thread is simply put on the ready list, and it is the
- * responsibility of the woken thread to reacquire the lock (this reacquire is
- * taken core of in <tt>sleep()</tt>).
- * 
+ * 在 Nachos 中，condition variable 被假定遵循 <i>Mesa-style</i> 语义。当
+ * <tt>wake()</tt> 或 <tt>wakeAll()</tt> 唤醒另一个线程时，被唤醒的线程只是被
+ * 放到 ready list 上，由被唤醒的线程自己负责重新获取 lock（这个重新获取在
+ * <tt>sleep()</tt> 里处理）。
+ *
  * <p>
- * By contrast, some implementations of condition variables obey
- * <i>Hoare-style</i> semantics, where the thread that calls <tt>wake()</tt>
- * gives up the lock and the CPU to the woken thread, which runs immediately and
- * gives the lock and CPU back to the waker when the woken thread exits the
- * critical section.
- * 
+ * 相比之下，有些 condition variable 的实现遵循 <i>Hoare-style</i> 语义：调用
+ * <tt>wake()</tt> 的线程会把 lock 和 CPU 交给被唤醒的线程，被唤醒的线程立即
+ * 运行，等它退出临界区（critical section）时，再把 lock 和 CPU 还给唤醒者。
+ *
  * <p>
- * The consequence of using Mesa-style semantics is that some other thread can
- * acquire the lock and change data structures, before the woken thread gets a
- * chance to run. The advance to Mesa-style semantics is that it is a lot easier
- * to implement.
+ * 使用 Mesa-style 语义的后果是：在被唤醒的线程获得运行机会之前，其他线程可能
+ * 已经获取了 lock 并修改了数据结构。Mesa-style 语义的好处是实现起来容易得多。
  */
 public class Condition {
 	/**
-	 * Allocate a new condition variable.
-	 * 
-	 * @param conditionLock the lock associated with this condition variable.
-	 * The current thread must hold this lock whenever it uses <tt>sleep()</tt>,
-	 * <tt>wake()</tt>, or <tt>wakeAll()</tt>.
+	 * 分配（创建）一个新的 condition variable。
+	 *
+	 * @param conditionLock 与这个 condition variable 关联的 lock。
+	 * 当前线程在使用 <tt>sleep()</tt>、<tt>wake()</tt> 或 <tt>wakeAll()</tt> 时，
+	 * 必须持有这个 lock。
 	 */
 	public Condition(Lock conditionLock) {
 		this.conditionLock = conditionLock;
@@ -65,16 +59,14 @@ public class Condition {
 	}
 
 	/**
-	 * Atomically release the associated lock and go to sleep on this condition
-	 * variable until another thread wakes it using <tt>wake()</tt>. The current
-	 * thread must hold the associated lock. The thread will automatically
-	 * reacquire the lock before <tt>sleep()</tt> returns.
-	 * 
+	 * 原子地释放关联的 lock，并在这个 condition variable 上 sleep，直到另一个
+	 * 线程用 <tt>wake()</tt> 把它唤醒。当前线程必须持有关联的 lock。在
+	 * <tt>sleep()</tt> 返回之前，线程会自动重新获取这个 lock。
+	 *
 	 * <p>
-	 * This implementation uses semaphores to implement this, by allocating a
-	 * semaphore for each waiting thread. The waker will <tt>V()</tt> this
-	 * semaphore, so thre is no chance the sleeper will miss the wake-up, even
-	 * though the lock is released before caling <tt>P()</tt>.
+	 * 这个实现借助 semaphore 来完成：为每个等待的线程分配一个 semaphore。
+	 * 唤醒者会对这个 semaphore 调用 <tt>V()</tt>，所以即使 lock 在调用
+	 * <tt>P()</tt> 之前就已经释放了，sleep 的线程也不会错过唤醒。
 	 */
 	public void sleep() {
 		Lib.assertTrue(conditionLock.isHeldByCurrentThread());
@@ -88,8 +80,8 @@ public class Condition {
 	}
 
 	/**
-	 * Wake up at most one thread sleeping on this condition variable. The
-	 * current thread must hold the associated lock.
+	 * 最多唤醒一个在这个 condition variable 上 sleep 的线程。当前线程必须
+	 * 持有关联的 lock。
 	 */
 	public void wake() {
 		Lib.assertTrue(conditionLock.isHeldByCurrentThread());
@@ -99,8 +91,8 @@ public class Condition {
 	}
 
 	/**
-	 * Wake up all threads sleeping on this condition variable. The current
-	 * thread must hold the associated lock.
+	 * 唤醒所有在这个 condition variable 上 sleep 的线程。当前线程必须持有
+	 * 关联的 lock。
 	 */
 	public void wakeAll() {
 		Lib.assertTrue(conditionLock.isHeldByCurrentThread());

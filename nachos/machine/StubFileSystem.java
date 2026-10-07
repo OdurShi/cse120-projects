@@ -10,15 +10,15 @@ import java.io.RandomAccessFile;
 import java.io.IOException;
 
 /**
- * This class implements a file system that redirects all requests to the host
- * operating system's file system.
+ * 这个类实现了一个文件系统，它把所有请求都转发给宿主操作系统（host OS）的
+ * 文件系统。
  */
 public class StubFileSystem implements FileSystem {
 	/**
-	 * Allocate a new stub file system.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
-	 * @param directory the root directory of the stub file system.
+	 * 分配（创建）一个新的 stub 文件系统。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
+	 * @param directory stub 文件系统的根目录。
 	 */
 	public StubFileSystem(Privilege privilege, File directory) {
 		this.privilege = privilege;
@@ -38,7 +38,7 @@ public class StubFileSystem implements FileSystem {
 			return null;
 		}
 	}
-	
+
 	public int getOpenCount() {
 		return openCount;
 	}

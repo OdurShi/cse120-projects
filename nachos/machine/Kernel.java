@@ -3,42 +3,41 @@
 package nachos.machine;
 
 /**
- * An OS kernel.
+ * 一个操作系统内核。
  */
 public abstract class Kernel {
-	/** Globally accessible reference to the kernel. */
+	/** 全局可访问的内核引用。 */
 	public static Kernel kernel = null;
 
 	/**
-	 * Allocate a new kernel.
+	 * 分配（创建）一个新的内核。
 	 */
 	public Kernel() {
-		// make sure only one kernel is created
+		// 确保只创建一个内核
 		Lib.assertTrue(kernel == null);
 		kernel = this;
 	}
 
 	/**
-	 * Initialize this kernel.
+	 * 初始化这个内核。
 	 */
 	public abstract void initialize(String[] args);
 
 	/**
-	 * Test that this module works.
-	 * 
-	 * <b>Warning:</b> this method will not be invoked by the autograder when we
-	 * grade your projects. You should perform all initialization in
-	 * <tt>initialize()</tt>.
+	 * 测试这个模块能否正常工作。
+	 *
+	 * <b>警告：</b>我们给你的项目评分时，autograder 不会调用这个方法。你应该在
+	 * <tt>initialize()</tt> 中完成所有初始化工作。
 	 */
 	public abstract void selfTest();
 
 	/**
-	 * Begin executing user programs, if applicable.
+	 * 开始执行用户程序（如果适用的话）。
 	 */
 	public abstract void run();
 
 	/**
-	 * Terminate this kernel. Never returns.
+	 * 终止这个内核。永远不会返回。
 	 */
 	public abstract void terminate();
 }

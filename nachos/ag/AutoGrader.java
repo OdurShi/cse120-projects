@@ -10,21 +10,20 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 /**
- * The default autograder. Loads the kernel, and then tests it using
- * <tt>Kernel.selfTest()</tt>.
+ * 默认的 autograder。加载内核，然后用 <tt>Kernel.selfTest()</tt> 测试它。
  */
 public class AutoGrader {
 	/**
-	 * Allocate a new autograder.
+	 * 分配（创建）一个新的 autograder。
 	 */
 	public AutoGrader() {
 	}
 
 	/**
-	 * Start this autograder. Extract the <tt>-#</tt> arguments, call
-	 * <tt>init()</tt>, load and initialize the kernel, and call <tt>run()</tt>.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * 启动这个 autograder。提取 <tt>-#</tt> 参数，调用 <tt>init()</tt>，加载并
+	 * 初始化内核，然后调用 <tt>run()</tt>。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public void start(Privilege privilege) {
 		Lib.assertTrue(this.privilege == null, "start() called multiple times");
@@ -153,31 +152,28 @@ public class AutoGrader {
 	Kernel kernel;
 
 	/**
-	 * Notify the autograder that the specified thread is the idle thread.
-	 * <tt>KThread.createIdleThread()</tt> <i>must</i> call this method before
-	 * forking the idle thread.
-	 * 
-	 * @param idleThread the idle thread.
+	 * 通知 autograder：指定的线程是 idle 线程。<tt>KThread.createIdleThread()</tt>
+	 * 在 fork idle 线程之前<i>必须</i>调用这个方法。
+	 *
+	 * @param idleThread idle 线程。
 	 */
 	public void setIdleThread(KThread idleThread) {
 	}
 
 	/**
-	 * Notify the autograder that the specified thread has moved to the ready
-	 * state. <tt>KThread.ready()</tt> <i>must</i> call this method before
-	 * returning.
-	 * 
-	 * @param thread the thread that has been added to the ready set.
+	 * 通知 autograder：指定的线程已经进入 ready 状态。<tt>KThread.ready()</tt>
+	 * 在返回之前<i>必须</i>调用这个方法。
+	 *
+	 * @param thread 已经被加入 ready set 的线程。
 	 */
 	public void readyThread(KThread thread) {
 	}
 
 	/**
-	 * Notify the autograder that the specified thread is now running.
-	 * <tt>KThread.restoreState()</tt> <i>must</i> call this method before
-	 * returning.
-	 * 
-	 * @param thread the thread that is now running.
+	 * 通知 autograder：指定的线程现在正在运行。<tt>KThread.restoreState()</tt>
+	 * 在返回之前<i>必须</i>调用这个方法。
+	 *
+	 * @param thread 现在正在运行的线程。
 	 */
 	public void runningThread(KThread thread) {
 		privilege.tcb.associateThread(thread);
@@ -185,31 +181,29 @@ public class AutoGrader {
 	}
 
 	/**
-	 * Notify the autograder that the current thread has finished.
-	 * <tt>KThread.finish()</tt> <i>must</i> call this method before putting the
-	 * thread to sleep and scheduling its TCB to be destroyed.
+	 * 通知 autograder：当前线程已经结束。<tt>KThread.finish()</tt> 在让这个
+	 * 线程 sleep 并安排销毁它的 TCB 之前，<i>必须</i>调用这个方法。
 	 */
 	public void finishingCurrentThread() {
 		privilege.tcb.authorizeDestroy(currentThread);
 	}
 
 	/**
-	 * Notify the autograder that a timer interrupt occurred and was handled by
-	 * software if a timer interrupt handler was installed. Called by the
-	 * hardware timer.
-	 * 
-	 * @param privilege proves the authenticity of this call.
-	 * @param time the actual time at which the timer interrupt was issued.
+	 * 通知 autograder：发生了一次 timer 中断，并且如果安装了 timer 中断处理
+	 * 函数，它已经被软件处理了。由硬件 timer 调用。
+	 *
+	 * @param privilege 证明这次调用的真实性。
+	 * @param time 发出 timer 中断的实际时间。
 	 */
 	public void timerInterrupt(Privilege privilege, long time) {
 		Lib.assertTrue(privilege == this.privilege, "security violation");
 	}
 
 	/**
-	 * Notify the autograder that a user program executed a syscall instruction.
-	 * 
-	 * @param privilege proves the authenticity of this call.
-	 * @return <tt>true</tt> if the kernel exception handler should be called.
+	 * 通知 autograder：一个用户程序执行了一条 syscall 指令。
+	 *
+	 * @param privilege 证明这次调用的真实性。
+	 * @return 如果应该调用内核的异常处理函数，返回 <tt>true</tt>。
 	 */
 	public boolean exceptionHandler(Privilege privilege) {
 		Lib.assertTrue(privilege == this.privilege, "security violation");
@@ -217,23 +211,21 @@ public class AutoGrader {
 	}
 
 	/**
-	 * Notify the autograder that <tt>Processor.run()</tt> was invoked. This can
-	 * be used to simulate user programs.
-	 * 
-	 * @param privilege proves the authenticity of this call.
+	 * 通知 autograder：<tt>Processor.run()</tt> 被调用了。可以用它来模拟用户
+	 * 程序。
+	 *
+	 * @param privilege 证明这次调用的真实性。
 	 */
 	public void runProcessor(Privilege privilege) {
 		Lib.assertTrue(privilege == this.privilege, "security violation");
 	}
 
 	/**
-	 * Notify the autograder that a COFF loader is being constructed for the
-	 * specified file. The autograder can use this to provide its own COFF
-	 * loader, or return <tt>null</tt> to use the default loader.
-	 * 
-	 * @param file the executable file being loaded.
-	 * @return a loader to use in loading the file, or <tt>null</tt> to use the
-	 * default.
+	 * 通知 autograder：正在为指定的文件构造一个 COFF 加载器。autograder 可以借此
+	 * 提供它自己的 COFF 加载器，或者返回 <tt>null</tt> 表示使用默认加载器。
+	 *
+	 * @param file 正在被加载的可执行文件。
+	 * @return 用来加载这个文件的加载器；返回 <tt>null</tt> 表示使用默认加载器。
 	 */
 	public Coff createLoader(OpenFile file) {
 		return null;
@@ -241,25 +233,24 @@ public class AutoGrader {
 
 
         /**
-	 * Notify the autograder that the current process has finished.
-	 * <tt>UserProcess.exit()</tt> <i>must</i> call this method.
+	 * 通知 autograder：当前进程已经结束。<tt>UserProcess.exit()</tt>
+	 * <i>必须</i>调用这个方法。
 	 */
         public void finishingCurrentProcess(int status) {
         }
 
         /**
-         * Notify the autograder that the machine is being terminated.
-	 * <tt>UserProcess.halt()</tt> <i>must</i> call this method.
+         * 通知 autograder：机器即将被终止。<tt>UserProcess.halt()</tt>
+	 * <i>必须</i>调用这个方法。
 	 */
         public void finishingMachine() {
 	}
 
 	/**
-	 * Request permission to send a packet. The autograder can use this to drop
-	 * packets very selectively.
-	 * 
-	 * @param privilege proves the authenticity of this call.
-	 * @return <tt>true</tt> if the packet should be sent.
+	 * 请求发送一个数据包的许可。autograder 可以借此非常有选择地丢弃数据包。
+	 *
+	 * @param privilege 证明这次调用的真实性。
+	 * @return 如果应该发送这个数据包，返回 <tt>true</tt>。
 	 */
 	public boolean canSendPacket(Privilege privilege) {
 		Lib.assertTrue(privilege == this.privilege, "security violation");
@@ -267,11 +258,10 @@ public class AutoGrader {
 	}
 
 	/**
-	 * Request permission to receive a packet. The autograder can use this to
-	 * drop packets very selectively.
-	 * 
-	 * @param privilege proves the authenticity of this call.
-	 * @return <tt>true</tt> if the packet should be delivered to the kernel.
+	 * 请求接收一个数据包的许可。autograder 可以借此非常有选择地丢弃数据包。
+	 *
+	 * @param privilege 证明这次调用的真实性。
+	 * @return 如果应该把这个数据包交给内核，返回 <tt>true</tt>。
 	 */
 	public boolean canReceivePacket(Privilege privilege) {
 		Lib.assertTrue(privilege == this.privilege, "security violation");

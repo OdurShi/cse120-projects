@@ -5,26 +5,25 @@ package nachos.machine;
 import nachos.security.*;
 
 /**
- * The <tt>Processor</tt> class simulates a MIPS processor that supports a
- * subset of the R3000 instruction set. Specifically, the processor lacks all
- * coprocessor support, and can only execute in user mode. Address translation
- * information is accessed via the API. The API also allows a kernel to set an
- * exception handler to be called on any user mode exception.
- * 
+ * <tt>Processor</tt> 类模拟一个支持 R3000 指令集子集的 MIPS 处理器。具体来说，
+ * 这个处理器不支持任何协处理器（coprocessor），并且只能在用户态（user mode）
+ * 下执行。地址翻译信息通过 API 访问。这个 API 还允许内核设置一个异常处理
+ * 函数，在发生任何用户态异常时被调用。
+ *
  * <p>
- * The <tt>Processor</tt> API is re-entrant, so a single simulated processor can
- * be shared by multiple user threads.
- * 
+ * <tt>Processor</tt> 的 API 是可重入的（re-entrant），所以一个模拟处理器可以
+ * 被多个用户线程共享。
+ *
  * <p>
- * An instance of a <tt>Processor</tt> also includes pages of physical memory
- * accessible to user programs, the size of which is fixed by the constructor.
+ * 一个 <tt>Processor</tt> 实例还包含用户程序可以访问的物理内存页，其大小由
+ * 构造函数固定。
  */
 public final class Processor {
 	/**
-	 * Allocate a new MIPS processor, with the specified amount of memory.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
-	 * @param numPhysPages the number of pages of physical memory to attach.
+	 * 分配（创建）一个新的 MIPS 处理器，带有指定大小的内存。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
+	 * @param numPhysPages 要挂载的物理内存页数。
 	 */
 	public Processor(Privilege privilege, int numPhysPages) {
 		System.out.print(" processor");
@@ -37,7 +36,7 @@ public final class Processor {
 
 		usingTLB = (clsVMKernel != null && clsVMKernel
 				.isAssignableFrom(clsKernel));
-		// let config file value override
+		// 允许配置文件中的值覆盖它
 		usingTLB = Config.getBoolean ("Processor.usingTLB", usingTLB);
 
 		this.numPhysPages = numPhysPages;
@@ -58,31 +57,30 @@ public final class Processor {
 	}
 
 	/**
-	 * Set the exception handler, called whenever a user exception occurs.
-	 * 
+	 * 设置异常处理函数，每当发生用户异常时都会调用它。
+	 *
 	 * <p>
-	 * When the exception handler is called, interrupts will be enabled, and the
-	 * CPU cause register will specify the cause of the exception (see the
-	 * <tt>exception<i>*</i></tt> constants).
-	 * 
-	 * @param exceptionHandler the kernel exception handler.
+	 * 调用异常处理函数时，中断是开启的，CPU 的 cause 寄存器会指明异常的原因
+	 * （参见 <tt>exception<i>*</i></tt> 系列常量）。
+	 *
+	 * @param exceptionHandler 内核的异常处理函数。
 	 */
 	public void setExceptionHandler(Runnable exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
 	}
 
 	/**
-	 * Get the exception handler, set by the last call to
-	 * <tt>setExceptionHandler()</tt>.
-	 * 
-	 * @return the exception handler.
+	 * 获取异常处理函数，即最近一次调用 <tt>setExceptionHandler()</tt> 时设置的
+	 * 那个。
+	 *
+	 * @return 异常处理函数。
 	 */
 	public Runnable getExceptionHandler() {
 		return exceptionHandler;
 	}
 
 	/**
-	 * Start executing instructions at the current PC. Never returns.
+	 * 从当前 PC 开始执行指令。永远不会返回。
 	 */
 	public void run() {
 		Lib.debug(dbgProcessor, "starting program in current thread");
@@ -106,10 +104,10 @@ public final class Processor {
 	}
 
 	/**
-	 * Read and return the contents of the specified CPU register.
-	 * 
-	 * @param number the register to read.
-	 * @return the value of the register.
+	 * 读取并返回指定 CPU 寄存器的内容。
+	 *
+	 * @param number 要读取的寄存器。
+	 * @return 寄存器的值。
 	 */
 	public int readRegister(int number) {
 		Lib.assertTrue(number >= 0 && number < numUserRegisters);
@@ -118,10 +116,10 @@ public final class Processor {
 	}
 
 	/**
-	 * Write the specified value into the specified CPU register.
-	 * 
-	 * @param number the register to write.
-	 * @param value the value to write.
+	 * 把指定的值写入指定的 CPU 寄存器。
+	 *
+	 * @param number 要写入的寄存器。
+	 * @param value 要写入的值。
 	 */
 	public void writeRegister(int number, int value) {
 		Lib.assertTrue(number >= 0 && number < numUserRegisters);
@@ -131,32 +129,31 @@ public final class Processor {
 	}
 
 	/**
-	 * Test whether this processor uses a software-managed TLB, or single-level
-	 * paging.
-	 * 
+	 * 检查这个处理器使用的是软件管理的 TLB，还是单级分页（single-level
+	 * paging）。
+	 *
 	 * <p>
-	 * If <tt>false</tt>, this processor directly supports single-level paging;
-	 * use <tt>setPageTable()</tt>.
-	 * 
+	 * 如果为 <tt>false</tt>，这个处理器直接支持单级分页；请使用
+	 * <tt>setPageTable()</tt>。
+	 *
 	 * <p>
-	 * If <tt>true</tt>, this processor has a software-managed TLB; use
-	 * <tt>getTLBSize()</tt>, <tt>readTLBEntry()</tt>, and
-	 * <tt>writeTLBEntry()</tt>.
-	 * 
+	 * 如果为 <tt>true</tt>，这个处理器有一个软件管理的 TLB；请使用
+	 * <tt>getTLBSize()</tt>、<tt>readTLBEntry()</tt> 和
+	 * <tt>writeTLBEntry()</tt>。
+	 *
 	 * <p>
-	 * Using a method associated with the wrong address translation mechanism
-	 * will result in an assertion failure.
-	 * 
-	 * @return <tt>true</tt> if this processor has a software-managed TLB.
+	 * 使用与当前地址翻译机制不符的方法会导致断言失败。
+	 *
+	 * @return 如果这个处理器有软件管理的 TLB，返回 <tt>true</tt>。
 	 */
 	public boolean hasTLB() {
 		return usingTLB;
 	}
 
 	/**
-	 * Get the current page table, set by the last call to setPageTable().
-	 * 
-	 * @return the current page table.
+	 * 获取当前页表，即最近一次调用 setPageTable() 时设置的那个。
+	 *
+	 * @return 当前页表。
 	 */
 	public TranslationEntry[] getPageTable() {
 		Lib.assertTrue(!usingTLB);
@@ -165,11 +162,10 @@ public final class Processor {
 	}
 
 	/**
-	 * Set the page table pointer. All further address translations will use the
-	 * specified page table. The size of the current address space will be
-	 * determined from the length of the page table array.
-	 * 
-	 * @param pageTable the page table to use.
+	 * 设置页表指针。之后所有的地址翻译都会使用指定的页表。当前地址空间的大小
+	 * 由页表数组的长度决定。
+	 *
+	 * @param pageTable 要使用的页表。
 	 */
 	public void setPageTable(TranslationEntry[] pageTable) {
 		Lib.assertTrue(!usingTLB);
@@ -178,9 +174,9 @@ public final class Processor {
 	}
 
 	/**
-	 * Return the number of entries in this processor's TLB.
-	 * 
-	 * @return the number of entries in this processor's TLB.
+	 * 返回这个处理器 TLB 中的条目数。
+	 *
+	 * @return 这个处理器 TLB 中的条目数。
 	 */
 	public int getTLBSize() {
 		Lib.assertTrue(usingTLB);
@@ -189,10 +185,10 @@ public final class Processor {
 	}
 
 	/**
-	 * Returns the specified TLB entry.
-	 * 
-	 * @param number the index into the TLB.
-	 * @return the contents of the specified TLB entry.
+	 * 返回指定的 TLB 条目。
+	 *
+	 * @param number TLB 中的下标。
+	 * @return 指定 TLB 条目的内容。
 	 */
 	public TranslationEntry readTLBEntry(int number) {
 		Lib.assertTrue(usingTLB);
@@ -202,14 +198,14 @@ public final class Processor {
 	}
 
 	/**
-	 * Fill the specified TLB entry.
-	 * 
+	 * 填写指定的 TLB 条目。
+	 *
 	 * <p>
-	 * The TLB is fully associative, so the location of an entry within the TLB
-	 * does not affect anything.
-	 * 
-	 * @param number the index into the TLB.
-	 * @param entry the new contents of the TLB entry.
+	 * TLB 是全相联（fully associative）的，所以一个条目在 TLB 中的位置不会
+	 * 影响任何东西。
+	 *
+	 * @param number TLB 中的下标。
+	 * @param entry TLB 条目的新内容。
 	 */
 	public void writeTLBEntry(int number, TranslationEntry entry) {
 		Lib.assertTrue(usingTLB);
@@ -219,33 +215,31 @@ public final class Processor {
 	}
 
 	/**
-	 * Return the number of pages of physical memory attached to this simulated
-	 * processor.
-	 * 
-	 * @return the number of pages of physical memory.
+	 * 返回挂载到这个模拟处理器上的物理内存页数。
+	 *
+	 * @return 物理内存页数。
 	 */
 	public int getNumPhysPages() {
 		return numPhysPages;
 	}
 
 	/**
-	 * Return a reference to the physical memory array. The size of this array
-	 * is <tt>pageSize * getNumPhysPages()</tt>.
-	 * 
-	 * @return the main memory array.
+	 * 返回指向物理内存数组的引用。这个数组的大小是
+	 * <tt>pageSize * getNumPhysPages()</tt>。
+	 *
+	 * @return 主存数组。
 	 */
 	public byte[] getMemory() {
 		return mainMemory;
 	}
 
 	/**
-	 * Concatenate a page number and an offset into an address.
-	 * 
-	 * @param page the page number. Must be between <tt>0</tt> and
-	 * <tt>(2<sup>32</sup> / pageSize) - 1</tt>.
-	 * @param offset the offset within the page. Must be between <tt>0</tt> and
-	 * <tt>pageSize - 1</tt>.
-	 * @return a 32-bit address consisting of the specified page and offset.
+	 * 把页号和页内偏移拼接成一个地址。
+	 *
+	 * @param page 页号。必须在 <tt>0</tt> 到
+	 * <tt>(2<sup>32</sup> / pageSize) - 1</tt> 之间。
+	 * @param offset 页内偏移。必须在 <tt>0</tt> 到 <tt>pageSize - 1</tt> 之间。
+	 * @return 由指定页号和偏移组成的 32 位地址。
 	 */
 	public static int makeAddress(int page, int offset) {
 		Lib.assertTrue(page >= 0 && page < maxPages);
@@ -255,20 +249,20 @@ public final class Processor {
 	}
 
 	/**
-	 * Extract the page number component from a 32-bit address.
-	 * 
-	 * @param address the 32-bit address.
-	 * @return the page number component of the address.
+	 * 从一个 32 位地址中取出页号部分。
+	 *
+	 * @param address 32 位地址。
+	 * @return 地址的页号部分。
 	 */
 	public static int pageFromAddress(int address) {
 		return (int) (((long) address & 0xFFFFFFFFL) / pageSize);
 	}
 
 	/**
-	 * Extract the offset component from an address.
-	 * 
-	 * @param address the 32-bit address.
-	 * @return the offset component of the address.
+	 * 从一个地址中取出偏移部分。
+	 *
+	 * @param address 32 位地址。
+	 * @return 地址的偏移部分。
 	 */
 	public static int offsetFromAddress(int address) {
 		return (int) (((long) address & 0xFFFFFFFFL) % pageSize);
@@ -279,16 +273,14 @@ public final class Processor {
 	}
 
 	/**
-	 * Translate a virtual address into a physical address, using either a page
-	 * table or a TLB. Check for alignment, make sure the virtual page is valid,
-	 * make sure a read-only page is not being written, make sure the resulting
-	 * physical page is valid, and then return the resulting physical address.
-	 * 
-	 * @param vaddr the virtual address to translate.
-	 * @param size the size of the memory reference (must be 1, 2, or 4).
-	 * @param writing <tt>true</tt> if the memory reference is a write.
-	 * @return the physical address.
-	 * @exception MipsException if a translation error occurred.
+	 * 使用页表或 TLB，把虚拟地址翻译成物理地址。检查对齐，确保虚拟页有效，
+	 * 确保没有写只读页，确保得到的物理页有效，然后返回得到的物理地址。
+	 *
+	 * @param vaddr 要翻译的虚拟地址。
+	 * @param size 这次内存访问的大小（必须是 1、2 或 4）。
+	 * @param writing 如果这次内存访问是写操作，则为 <tt>true</tt>。
+	 * @return 物理地址。
+	 * @exception MipsException 如果发生了翻译错误。
 	 */
 	private int translate(int vaddr, int size, boolean writing)
 			throws MipsException {
@@ -296,19 +288,19 @@ public final class Processor {
 			System.out.println("\ttranslate vaddr=0x" + Lib.toHexString(vaddr)
 					+ (writing ? ", write" : ", read..."));
 
-		// check alignment
+		// 检查对齐
 		if ((vaddr & (size - 1)) != 0) {
 			Lib.debug(dbgProcessor, "\t\talignment error");
 			throw new MipsException(exceptionAddressError, vaddr);
 		}
 
-		// calculate virtual page number and offset from the virtual address
+		// 从虚拟地址计算虚拟页号和页内偏移
 		int vpn = pageFromAddress(vaddr);
 		int offset = offsetFromAddress(vaddr);
 
 		TranslationEntry entry = null;
 
-		// if not using a TLB, then the vpn is an index into the table
+		// 如果不使用 TLB，vpn 就是页表的下标
 		if (!usingTLB) {
 			if (translations == null || vpn >= translations.length
 					|| translations[vpn] == null || !translations[vpn].valid) {
@@ -319,7 +311,7 @@ public final class Processor {
 
 			entry = translations[vpn];
 		}
-		// else, look through all TLB entries for matching vpn
+		// 否则，在所有 TLB 条目中查找匹配的 vpn
 		else {
 			for (int i = 0; i < tlbSize; i++) {
 				if (translations[i].valid && translations[i].vpn == vpn) {
@@ -334,20 +326,20 @@ public final class Processor {
 			}
 		}
 
-		// check if trying to write a read-only page
+		// 检查是否在写一个只读页
 		if (entry.readOnly && writing) {
 			Lib.debug(dbgProcessor, "\t\tread-only exception");
 			throw new MipsException(exceptionReadOnly, vaddr);
 		}
 
-		// check if physical page number is out of range
+		// 检查物理页号是否越界
 		int ppn = entry.ppn;
 		if (ppn < 0 || ppn >= numPhysPages) {
 			Lib.debug(dbgProcessor, "\t\tbad ppn");
 			throw new MipsException(exceptionBusError, vaddr);
 		}
 
-		// set used and dirty bits as appropriate
+		// 按需设置 used 位和 dirty 位
 		entry.used = true;
 		if (writing)
 			entry.dirty = true;
@@ -360,13 +352,13 @@ public final class Processor {
 	}
 
 	/**
-	 * Read </i>size</i> (1, 2, or 4) bytes of virtual memory at <i>vaddr</i>,
-	 * and return the result.
-	 * 
-	 * @param vaddr the virtual address to read from.
-	 * @param size the number of bytes to read (1, 2, or 4).
-	 * @return the value read.
-	 * @exception MipsException if a translation error occurred.
+	 * 读取 <i>vaddr</i> 处 <i>size</i>（1、2 或 4）字节的虚拟内存，并返回
+	 * 结果。
+	 *
+	 * @param vaddr 要读取的虚拟地址。
+	 * @param size 要读取的字节数（1、2 或 4）。
+	 * @return 读到的值。
+	 * @exception MipsException 如果发生了翻译错误。
 	 */
 	private int readMem(int vaddr, int size) throws MipsException {
 		if (Lib.test(dbgProcessor))
@@ -386,13 +378,13 @@ public final class Processor {
 	}
 
 	/**
-	 * Write <i>value</i> to </i>size</i> (1, 2, or 4) bytes of virtual memory
-	 * starting at <i>vaddr</i>.
-	 * 
-	 * @param vaddr the virtual address to write to.
-	 * @param size the number of bytes to write (1, 2, or 4).
-	 * @param value the value to store.
-	 * @exception MipsException if a translation error occurred.
+	 * 把 <i>value</i> 写入从 <i>vaddr</i> 开始的 <i>size</i>（1、2 或 4）
+	 * 字节虚拟内存。
+	 *
+	 * @param vaddr 要写入的虚拟地址。
+	 * @param size 要写入的字节数（1、2 或 4）。
+	 * @param value 要存储的值。
+	 * @exception MipsException 如果发生了翻译错误。
 	 */
 	private void writeMem(int vaddr, int size, int value) throws MipsException {
 		if (Lib.test(dbgProcessor))
@@ -406,171 +398,166 @@ public final class Processor {
 	}
 
 	/**
-	 * Complete the in progress delayed load and scheduled a new one.
-	 * 
-	 * @param nextLoadTarget the target register of the new load.
-	 * @param nextLoadValue the value to be loaded into the new target.
-	 * @param nextLoadMask the mask specifying which bits in the new target are
-	 * to be overwritten. If a bit in <tt>nextLoadMask</tt> is 0, then the
-	 * corresponding bit of register <tt>nextLoadTarget</tt> will not be
-	 * written.
+	 * 完成正在进行的延迟加载（delayed load），并安排一个新的延迟加载。
+	 *
+	 * @param nextLoadTarget 新加载的目标寄存器。
+	 * @param nextLoadValue 要加载到新目标中的值。
+	 * @param nextLoadMask 指定新目标中哪些位要被覆盖的掩码。如果
+	 * <tt>nextLoadMask</tt> 中某一位为 0，那么寄存器 <tt>nextLoadTarget</tt>
+	 * 中对应的位不会被写入。
 	 */
 	private void delayedLoad(int nextLoadTarget, int nextLoadValue,
 			int nextLoadMask) {
-		// complete previous delayed load, if not modifying r0
+		// 完成上一次延迟加载（如果目标不是 r0 的话）
 		if (loadTarget != 0) {
 			int savedBits = registers[loadTarget] & ~loadMask;
 			int newBits = loadValue & loadMask;
 			registers[loadTarget] = savedBits | newBits;
 		}
 
-		// schedule next load
+		// 安排下一次加载
 		loadTarget = nextLoadTarget;
 		loadValue = nextLoadValue;
 		loadMask = nextLoadMask;
 	}
 
 	/**
-	 * Advance the PC to the next instruction.
-	 * 
+	 * 把 PC 推进到下一条指令。
+	 *
 	 * <p>
-	 * Transfer the contents of the nextPC register into the PC register, and
-	 * then add 4 to the value in the nextPC register. Same as
-	 * <tt>advancePC(readRegister(regNextPC)+4)</tt>.
-	 * 
+	 * 把 nextPC 寄存器的内容转移到 PC 寄存器，然后把 nextPC 寄存器的值加 4。
+	 * 等同于 <tt>advancePC(readRegister(regNextPC)+4)</tt>。
+	 *
 	 * <p>
-	 * Use after handling a syscall exception so that the processor will move on
-	 * to the next instruction.
+	 * 在处理完 syscall 异常之后使用，让处理器继续执行下一条指令。
 	 */
 	public void advancePC() {
 		advancePC(registers[regNextPC] + 4);
 	}
 
 	/**
-	 * Transfer the contents of the nextPC register into the PC register, and
-	 * then write the nextPC register.
-	 * 
-	 * @param nextPC the new value of the nextPC register.
+	 * 把 nextPC 寄存器的内容转移到 PC 寄存器，然后写入 nextPC 寄存器。
+	 *
+	 * @param nextPC nextPC 寄存器的新值。
 	 */
 	private void advancePC(int nextPC) {
 		registers[regPC] = registers[regNextPC];
 		registers[regNextPC] = nextPC;
 	}
 
-	/** Caused by a syscall instruction. */
+	/** 由 syscall 指令引起。 */
 	public static final int exceptionSyscall = 0;
 
-	/** Caused by an access to an invalid virtual page. */
+	/** 由访问无效的虚拟页引起。 */
 	public static final int exceptionPageFault = 1;
 
-	/** Caused by an access to a virtual page not mapped by any TLB entry. */
+	/** 由访问一个没有被任何 TLB 条目映射的虚拟页引起。 */
 	public static final int exceptionTLBMiss = 2;
 
-	/** Caused by a write access to a read-only virtual page. */
+	/** 由写一个只读虚拟页引起。 */
 	public static final int exceptionReadOnly = 3;
 
-	/** Caused by an access to an invalid physical page. */
+	/** 由访问无效的物理页引起。 */
 	public static final int exceptionBusError = 4;
 
-	/** Caused by an access to a misaligned virtual address. */
+	/** 由访问未对齐的虚拟地址引起。 */
 	public static final int exceptionAddressError = 5;
 
-	/** Caused by an overflow by a signed operation. */
+	/** 由有符号运算溢出引起。 */
 	public static final int exceptionOverflow = 6;
 
-	/** Caused by an attempt to execute an illegal instruction. */
+	/** 由尝试执行非法指令引起。 */
 	public static final int exceptionIllegalInstruction = 7;
 
-	/** The names of the CPU exceptions. */
+	/** 各个 CPU 异常的名字。 */
 	public static final String exceptionNames[] = { "syscall      ",
 			"page fault   ", "TLB miss     ", "read-only    ", "bus error    ",
 			"address error", "overflow     ", "illegal inst " };
 
-	/** Index of return value register 0. */
+	/** 返回值寄存器 0 的下标。 */
 	public static final int regV0 = 2;
 
-	/** Index of return value register 1. */
+	/** 返回值寄存器 1 的下标。 */
 	public static final int regV1 = 3;
 
-	/** Index of argument register 0. */
+	/** 参数寄存器 0 的下标。 */
 	public static final int regA0 = 4;
 
-	/** Index of argument register 1. */
+	/** 参数寄存器 1 的下标。 */
 	public static final int regA1 = 5;
 
-	/** Index of argument register 2. */
+	/** 参数寄存器 2 的下标。 */
 	public static final int regA2 = 6;
 
-	/** Index of argument register 3. */
+	/** 参数寄存器 3 的下标。 */
 	public static final int regA3 = 7;
 
-	/** Index of the stack pointer register. */
+	/** 栈指针寄存器的下标。 */
 	public static final int regSP = 29;
 
-	/** Index of the return address register. */
+	/** 返回地址寄存器的下标。 */
 	public static final int regRA = 31;
 
-	/** Index of the low register, used for multiplication and division. */
+	/** low 寄存器的下标，用于乘法和除法。 */
 	public static final int regLo = 32;
 
-	/** Index of the high register, used for multiplication and division. */
+	/** high 寄存器的下标，用于乘法和除法。 */
 	public static final int regHi = 33;
 
-	/** Index of the program counter register. */
+	/** 程序计数器（PC）寄存器的下标。 */
 	public static final int regPC = 34;
 
-	/** Index of the next program counter register. */
+	/** 下一个程序计数器（nextPC）寄存器的下标。 */
 	public static final int regNextPC = 35;
 
-	/** Index of the exception cause register. */
+	/** 异常原因（cause）寄存器的下标。 */
 	public static final int regCause = 36;
 
-	/** Index of the exception bad virtual address register. */
+	/** 异常出错虚拟地址（bad virtual address）寄存器的下标。 */
 	public static final int regBadVAddr = 37;
 
-	/** The total number of software-accessible CPU registers. */
+	/** 软件可访问的 CPU 寄存器总数。 */
 	public static final int numUserRegisters = 38;
 
-	/** Provides privilege to this processor. */
+	/** 为这个处理器提供特权。 */
 	private Privilege privilege;
 
-	/** MIPS registers accessible to the kernel. */
+	/** 内核可以访问的 MIPS 寄存器。 */
 	private int registers[] = new int[numUserRegisters];
 
-	/** The registered target of the delayed load currently in progress. */
+	/** 当前正在进行的延迟加载所登记的目标寄存器。 */
 	private int loadTarget = 0;
 
-	/** The bits to be modified by the delayed load currently in progress. */
+	/** 当前正在进行的延迟加载要修改的位。 */
 	private int loadMask;
 
-	/** The value to be loaded by the delayed load currently in progress. */
+	/** 当前正在进行的延迟加载要加载的值。 */
 	private int loadValue;
 
-	/** <tt>true</tt> if using a software-managed TLB. */
+	/** 如果使用软件管理的 TLB，则为 <tt>true</tt>。 */
 	private boolean usingTLB;
 
-	/** Number of TLB entries. */
+	/** TLB 条目数。 */
 	private int tlbSize = 4;
 
 	/**
-	 * Either an associative or direct-mapped set of translation entries,
-	 * depending on whether there is a TLB.
+	 * 一组翻译条目：有 TLB 时是全相联的，没有 TLB 时是直接映射的。
 	 */
 	private TranslationEntry[] translations;
 
-	/** Size of a page, in bytes. */
+	/** 页的大小，以字节为单位。 */
 	public static final int pageSize = 0x400;
 
-	/** Number of pages in a 32-bit address space. */
+	/** 32 位地址空间中的页数。 */
 	public static final int maxPages = (int) (0x100000000L / pageSize);
 
-	/** Number of physical pages in memory. */
+	/** 内存中的物理页数。 */
 	private int numPhysPages;
 
-	/** Main memory for user programs. */
+	/** 供用户程序使用的主存。 */
 	private byte[] mainMemory;
 
-	/** The kernel exception handler, called on every user exception. */
+	/** 内核的异常处理函数，每次发生用户异常时都会调用。 */
 	private Runnable exceptionHandler = null;
 
 	private static final char dbgProcessor = 'p';
@@ -612,7 +599,7 @@ public final class Processor {
 
 			Lib.assertTrue(exceptionHandler != null);
 
-			// autograder might not want kernel to know about this exception
+			// autograder 可能不想让内核知道这个异常
 			if (!Machine.autoGrader().exceptionHandler(privilege))
 				return;
 
@@ -626,7 +613,7 @@ public final class Processor {
 
 	private class Instruction {
 		public void run() throws MipsException {
-			// hopefully this looks familiar to 152 students?
+			// 学过 152（计算机体系结构）的同学应该看着眼熟吧？
 			fetch();
 			decode();
 			execute();
@@ -677,7 +664,7 @@ public final class Processor {
 			mask = 0xFFFFFFFF;
 			branch = true;
 
-			// get memory access size
+			// 获取内存访问的大小
 			if (test(Mips.SIZEB))
 				size = 1;
 			else if (test(Mips.SIZEH))
@@ -687,10 +674,10 @@ public final class Processor {
 			else
 				size = 0;
 
-			// get nextPC
+			// 获取 nextPC
 			nextPC = registers[regNextPC] + 4;
 
-			// get dstReg
+			// 获取 dstReg
 			if (test(Mips.DSTRA))
 				dstReg = regRA;
 			else if (format == Mips.IFMT)
@@ -700,7 +687,7 @@ public final class Processor {
 			else
 				dstReg = -1;
 
-			// get jtarget
+			// 获取 jtarget
 			if (format == Mips.RFMT)
 				jtarget = registers[rs];
 			else if (format == Mips.IFMT)
@@ -710,21 +697,21 @@ public final class Processor {
 			else
 				jtarget = -1;
 
-			// get imm
+			// 获取 imm
 			if (test(Mips.UNSIGNED)) {
 				imm &= 0xFFFF;
 			}
 
-			// get addr
+			// 获取 addr
 			addr = registers[rs] + imm;
 
-			// get src1
+			// 获取 src1
 			if (test(Mips.SRC1SH))
 				src1 = sh;
 			else
 				src1 = registers[rs];
 
-			// get src2
+			// 获取 src2
 			if (test(Mips.SRC2IMM))
 				src2 = imm;
 			else
@@ -840,11 +827,11 @@ public final class Processor {
 					maxCharsPrinted += 2;
 				}
 				else {
-					// most separation possible is tsi, 5+1+1=7,
-					// thankfully less than 8 (makes this possible)
+					// 最大可能的间隔出现在 tsi，5+1+1=7，
+					// 好在小于 8（这样才可行）
 					Lib.assertTrue(maxCharsPrinted - minCharsPrinted < 8);
-					// longest string is stj, which is 40-42 chars w/ -d M;
-					// go for 48
+					// 最长的字符串是 stj，加上 -d M 时有 40-42 个字符；
+					// 取 48
 					while ((minCharsPrinted % 8) != 0) {
 						System.out.print(" ");
 						minCharsPrinted++;
@@ -971,11 +958,10 @@ public final class Processor {
 			case Mips.LWL:
 				value = readMem(addr & ~0x3, 4);
 
-				// LWL shifts the input left so the addressed byte is highest
-				preserved = (3 - (addr & 0x3)) * 8; // number of bits to
-													// preserve
-				mask = -1 << preserved; // preserved bits are 0 in mask
-				dst = value << preserved; // shift input to correct place
+				// LWL 把输入左移，使被寻址的字节位于最高位
+				preserved = (3 - (addr & 0x3)) * 8; // 要保留的位数
+				mask = -1 << preserved; // 要保留的位在 mask 中为 0
+				dst = value << preserved; // 把输入移到正确的位置
 				addr &= ~0x3;
 
 				break;
@@ -983,10 +969,10 @@ public final class Processor {
 			case Mips.LWR:
 				value = readMem(addr & ~0x3, 4);
 
-				// LWR shifts the input right so the addressed byte is lowest
-				preserved = (addr & 0x3) * 8; // number of bits to preserve
-				mask = -1 >>> preserved; // preserved bits are 0 in mask
-				dst = value >>> preserved; // shift input to correct place
+				// LWR 把输入右移，使被寻址的字节位于最低位
+				preserved = (addr & 0x3) * 8; // 要保留的位数
+				mask = -1 >>> preserved; // 要保留的位在 mask 中为 0
+				dst = value >>> preserved; // 把输入移到正确的位置
 				addr &= ~0x3;
 
 				break;
@@ -998,12 +984,12 @@ public final class Processor {
 			case Mips.SWL:
 				value = readMem(addr & ~0x3, 4);
 
-				// SWL shifts highest order byte into the addressed position
+				// SWL 把最高位字节移到被寻址的位置
 				preserved = (3 - (addr & 0x3)) * 8;
 				mask = -1 >>> preserved;
 				dst = src2 >>> preserved;
 
-				// merge values
+				// 合并两个值
 				dst = (dst & mask) | (value & ~mask);
 
 				writeMem(addr & ~0x3, 4, (int) dst);
@@ -1012,12 +998,12 @@ public final class Processor {
 			case Mips.SWR:
 				value = readMem(addr & ~0x3, 4);
 
-				// SWR shifts the lowest order byte into the addressed position
+				// SWR 把最低位字节移到被寻址的位置
 				preserved = (addr & 0x3) * 8;
 				mask = -1 << preserved;
 				dst = src2 << preserved;
 
-				// merge values
+				// 合并两个值
 				dst = (dst & mask) | (value & ~mask);
 
 				writeMem(addr & ~0x3, 4, (int) dst);
@@ -1035,7 +1021,7 @@ public final class Processor {
 		}
 
 		private void writeBack() throws MipsException {
-			// if instruction is signed, but carry bit !+ sign bit, throw
+			// 如果指令是有符号的，但进位位不等于符号位，就抛出异常
 			if (test(Mips.OVERFLOW) && Lib.test(dst, 31) != Lib.test(dst, 32))
 				throw new MipsException(exceptionOverflow);
 
@@ -1069,7 +1055,7 @@ public final class Processor {
 				System.out.print("\n");
 		}
 
-		// state used to execute a single instruction
+		// 用于执行单条指令的状态
 		int value, op, rs, rt, rd, sh, func, target, imm;
 
 		int operation, format, flags;
@@ -1110,7 +1096,7 @@ public final class Processor {
 
 		int flags;
 
-		// operation types
+		// 操作类型
 		static final int INVALID = 0, UNIMPL = 1, ADD = 2, SUB = 3, MULT = 4,
 				DIV = 5, SLL = 6, SRA = 7, SRL = 8, SLT = 9, AND = 10, OR = 11,
 				NOR = 12, XOR = 13, LUI = 14, MFLO = 21, MFHI = 22, MTLO = 23,
@@ -1128,12 +1114,12 @@ public final class Processor {
 
 		static final char RS = 's', RT = 't', RD = 'd', IMM = 'i',
 				SHIFTAMOUNT = 'h', ADDR = 'a', // imm(rs)
-				TARGET = 'j', RETURNADDRESS = 'r'; // rd, or none if rd=31;
-													// can't be last
+				TARGET = 'j', RETURNADDRESS = 'r'; // rd；如果 rd=31 则不显示；
+													// 不能放在最后
 
 		static final Mips[] optable = {
-				new Mips(), // special
-				new Mips(), // reg-imm
+				new Mips(), // special 表
+				new Mips(), // reg-imm 表
 				new Mips(JUMP, "j j", JFMT, BRANCH),
 				new Mips(JUMP, "jal j", JFMT, BRANCH | LINK | DST | DSTRA),
 				new Mips(BEQ, "beq stj", IFMT, BRANCH),

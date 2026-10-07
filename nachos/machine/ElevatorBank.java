@@ -11,22 +11,22 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 /**
- * A bank of elevators.
+ * 一组电梯（elevator bank）。
  */
 public final class ElevatorBank implements Runnable {
-	/** Indicates an elevator intends to move down. */
+	/** 表示电梯打算向下移动。 */
 	public static final int dirDown = -1;
 
-	/** Indicates an elevator intends not to move. */
+	/** 表示电梯打算不移动。 */
 	public static final int dirNeither = 0;
 
-	/** Indicates an elevator intends to move up. */
+	/** 表示电梯打算向上移动。 */
 	public static final int dirUp = 1;
 
 	/**
-	 * Allocate a new elevator bank.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * 分配（创建）一个新的 elevator bank。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public ElevatorBank(Privilege privilege) {
 		System.out.print(" elevators");
@@ -37,14 +37,12 @@ public final class ElevatorBank implements Runnable {
 	}
 
 	/**
-	 * Initialize this elevator bank with the specified number of elevators and
-	 * the specified number of floors. The software elevator controller must
-	 * also be specified. This elevator must not already be running a
-	 * simulation.
-	 * 
-	 * @param numElevators the number of elevators in the bank.
-	 * @param numFloors the number of floors in the bank.
-	 * @param controller the elevator controller.
+	 * 用指定的电梯数和楼层数初始化这个 elevator bank。还必须指定软件电梯
+	 * 控制器。这个电梯不能已经在运行模拟。
+	 *
+	 * @param numElevators 这组电梯中的电梯数。
+	 * @param numFloors 这组电梯服务的楼层数。
+	 * @param controller 电梯控制器。
 	 */
 	public void init(int numElevators, int numFloors,
 			ElevatorControllerInterface controller) {
@@ -67,14 +65,13 @@ public final class ElevatorBank implements Runnable {
 	}
 
 	/**
-	 * Add a rider to the simulation. This method must not be called after
-	 * <tt>run()</tt> is called.
-	 * 
-	 * @param rider the rider to add.
-	 * @param floor the floor the rider will start on.
-	 * @param stops the array to pass to the rider's <tt>initialize()</tt>
-	 * method.
-	 * @return the controls that will be given to the rider.
+	 * 向模拟中添加一个 rider（乘客）。在调用 <tt>run()</tt> 之后不能再调用
+	 * 这个方法。
+	 *
+	 * @param rider 要添加的 rider。
+	 * @param floor rider 的起始楼层。
+	 * @param stops 要传给 rider 的 <tt>initialize()</tt> 方法的数组。
+	 * @return 将要交给这个 rider 的 controls。
 	 */
 	public RiderControls addRider(RiderInterface rider, int floor, int[] stops) {
 		Lib.assertTrue(!simulationStarted);
@@ -86,7 +83,7 @@ public final class ElevatorBank implements Runnable {
 	}
 
 	/**
-	 * Create a GUI for this elevator bank.
+	 * 为这个 elevator bank 创建一个 GUI。
 	 */
 	public void enableGui() {
 		Lib.assertTrue(!simulationStarted);
@@ -96,9 +93,8 @@ public final class ElevatorBank implements Runnable {
 	}
 
 	/**
-	 * Run a simulation. Initialize all elevators and riders, and then fork
-	 * threads to each of their <tt>run()</tt> methods. Return when the
-	 * simulation is finished.
+	 * 运行一次模拟。初始化所有电梯和 rider，然后为它们各自的 <tt>run()</tt>
+	 * 方法 fork 线程。模拟结束后返回。
 	 */
 	public void run() {
 		Lib.assertTrue(!simulationStarted);
@@ -142,7 +138,7 @@ public final class ElevatorBank implements Runnable {
 	}
 
 	/**
-	 * Tests whether this module is working.
+	 * 测试这个模块是否正常工作。
 	 */
 	public static void selfTest() {
 		new ElevatorTest().run();
@@ -351,7 +347,7 @@ public final class ElevatorBank implements Runnable {
 			Lib.assertTrue(!doorsOpen);
 
 			if (!moving) {
-				// can't move to current floor
+				// 不能移动到当前所在的楼层
 				if (floor == newDestination)
 					return false;
 
@@ -362,10 +358,10 @@ public final class ElevatorBank implements Runnable {
 				return true;
 			}
 			else {
-				// moving, shouldn't be at destination
+				// 正在移动，不应该已经在目的地
 				Lib.assertTrue(floor != destination);
 
-				// make sure it's ok to stop
+				// 确保现在可以停下
 				if ((destination > floor && newDestination <= floor)
 						|| (destination < floor && newDestination >= floor))
 					return false;

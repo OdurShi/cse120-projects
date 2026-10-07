@@ -7,18 +7,17 @@ import nachos.threads.KThread;
 import nachos.threads.Semaphore;
 
 /**
- * Tests the <tt>ElevatorBank</tt> module, using a single elevator and a single
- * rider.
+ * 用一部电梯和一个 rider 测试 <tt>ElevatorBank</tt> 模块。
  */
 public final class ElevatorTest {
 	/**
-	 * Allocate a new <tt>ElevatorTest</tt> object.
+	 * 分配（创建）一个新的 <tt>ElevatorTest</tt> 对象。
 	 */
 	public ElevatorTest() {
 	}
 
 	/**
-	 * Run a test on <tt>Machine.bank()</tt>.
+	 * 在 <tt>Machine.bank()</tt> 上运行一次测试。
 	 */
 	public void run() {
 		Machine.bank().init(1, 2, new ElevatorController());

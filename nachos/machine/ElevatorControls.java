@@ -3,94 +3,86 @@
 package nachos.machine;
 
 /**
- * A set of controls that can be used by an elevator controller.
+ * 一组可以被电梯控制器使用的 controls（控制接口）。
  */
 public interface ElevatorControls {
 	/**
-	 * Return the number of floors in the elevator bank. If <i>n</i> is the
-	 * number of floors in the bank, then the floors are numbered <i>0</i> (the
-	 * ground floor) through <i>n - 1</i> (the top floor).
-	 * 
-	 * @return the number of floors in the bank.
+	 * 返回 elevator bank 中的楼层数。如果这组电梯有 <i>n</i> 层楼，那么楼层
+	 * 编号从 <i>0</i>（底层）到 <i>n - 1</i>（顶层）。
+	 *
+	 * @return 这组电梯的楼层数。
 	 */
 	public int getNumFloors();
 
 	/**
-	 * Return the number of elevators in the elevator bank. If <i>n</i> is the
-	 * number of elevators in the bank, then the elevators are numbered <i>0</i>
-	 * through <i>n - 1</i>.
-	 * 
-	 * @return the numbe rof elevators in the bank.
+	 * 返回 elevator bank 中的电梯数。如果这组电梯有 <i>n</i> 部电梯，那么电梯
+	 * 编号从 <i>0</i> 到 <i>n - 1</i>。
+	 *
+	 * @return 这组电梯中的电梯数。
 	 */
 	public int getNumElevators();
 
 	/**
-	 * Set the elevator interrupt handler. This handler will be called when an
-	 * elevator event occurs, and when all the riders have reaced their
-	 * destinations.
-	 * 
-	 * @param handler the elevator interrupt handler.
+	 * 设置电梯中断处理函数。当发生电梯事件，以及所有 rider 都到达目的地时，
+	 * 会调用这个处理函数。
+	 *
+	 * @param handler 电梯中断处理函数。
 	 */
 	public void setInterruptHandler(Runnable handler);
 
 	/**
-	 * Open an elevator's doors.
-	 * 
-	 * @param elevator which elevator's doors to open.
+	 * 打开某部电梯的门。
+	 *
+	 * @param elevator 要开门的电梯。
 	 */
 	public void openDoors(int elevator);
 
 	/**
-	 * Close an elevator's doors.
-	 * 
-	 * @param elevator which elevator's doors to close.
+	 * 关上某部电梯的门。
+	 *
+	 * @param elevator 要关门的电梯。
 	 */
 	public void closeDoors(int elevator);
 
 	/**
-	 * Move an elevator to another floor. The elevator's doors must be closed.
-	 * If the elevator is already moving and cannot safely stop at the specified
-	 * floor because it has already passed or is about to pass the floor, fails
-	 * and returns <tt>false</tt>. If the elevator is already stopped at the
-	 * specified floor, returns <tt>false</tt>.
-	 * 
-	 * @param floor the floor to move to.
-	 * @param elevator the elevator to move.
-	 * @return <tt>true</tt> if the elevator's destination was changed.
+	 * 把电梯移动到另一层楼。电梯的门必须是关着的。如果电梯已经在移动，并且
+	 * 因为已经经过或即将经过指定楼层而无法在那里安全停下，则操作失败并返回
+	 * <tt>false</tt>。如果电梯已经停在指定楼层，返回 <tt>false</tt>。
+	 *
+	 * @param floor 要移动到的楼层。
+	 * @param elevator 要移动的电梯。
+	 * @return 如果电梯的目的地被改变了，返回 <tt>true</tt>。
 	 */
 	public boolean moveTo(int floor, int elevator);
 
 	/**
-	 * Return the current location of the elevator. If the elevator is in
-	 * motion, the returned value will be within one of the exact location.
-	 * 
-	 * @param elevator the elevator to locate.
-	 * @return the floor the elevator is on.
+	 * 返回电梯的当前位置。如果电梯正在移动，返回值与准确位置的差距在一层
+	 * 以内。
+	 *
+	 * @param elevator 要定位的电梯。
+	 * @return 电梯所在的楼层。
 	 */
 	public int getFloor(int elevator);
 
 	/**
-	 * Set which direction the elevator bank will show for this elevator's
-	 * display. The <i>direction</i> argument should be one of the <i>dir*</i>
-	 * constants in the <tt>ElevatorBank</tt> class.
-	 * 
-	 * @param elevator the elevator whose direction display to set.
-	 * @param direction the direction to show (up, down, or neither).
+	 * 设置 elevator bank 在这部电梯的显示屏上显示哪个方向。<i>direction</i>
+	 * 参数应该是 <tt>ElevatorBank</tt> 类中 <i>dir*</i> 系列常量之一。
+	 *
+	 * @param elevator 要设置方向显示的电梯。
+	 * @param direction 要显示的方向（上、下或都不是）。
 	 */
 	public void setDirectionDisplay(int elevator, int direction);
 
 	/**
-	 * Call when the elevator controller is finished.
+	 * 电梯控制器结束时调用。
 	 */
 	public void finish();
 
 	/**
-	 * Return the next event in the event queue. Note that there may be multiple
-	 * events pending when an elevator interrupt occurs, so this method should
-	 * be called repeatedly until it returns <tt>null</tt>.
-	 * 
-	 * @return the next event, or <tt>null</tt> if no further events are
-	 * currently pending.
+	 * 返回事件队列中的下一个事件。注意，发生电梯中断时可能有多个待处理的事件，
+	 * 所以应该反复调用这个方法，直到它返回 <tt>null</tt>。
+	 *
+	 * @return 下一个事件；如果当前没有更多待处理的事件，返回 <tt>null</tt>。
 	 */
 	public ElevatorEvent getNextEvent();
 }

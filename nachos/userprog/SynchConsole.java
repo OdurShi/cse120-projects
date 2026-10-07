@@ -5,14 +5,14 @@ import nachos.threads.*;
 import nachos.userprog.*;
 
 /**
- * Provides a simple, synchronized interface to the machine's console. The
- * interface can also be accessed through <tt>OpenFile</tt> objects.
+ * 为机器的 console 提供一个简单的、同步的接口。也可以通过 <tt>OpenFile</tt>
+ * 对象来访问这个接口。
  */
 public class SynchConsole {
 	/**
-	 * Allocate a new <tt>SynchConsole</tt>.
-	 * 
-	 * @param console the underlying serial console to use.
+	 * 分配（创建）一个新的 <tt>SynchConsole</tt>。
+	 *
+	 * @param console 要使用的底层串行 console。
 	 */
 	public SynchConsole(SerialConsole console) {
 		this.console = console;
@@ -31,14 +31,14 @@ public class SynchConsole {
 	}
 
 	/**
-	 * Return the next unsigned byte received (in the range <tt>0</tt> through
-	 * <tt>255</tt>). If a byte has not arrived at, blocks until a byte arrives,
-	 * or returns immediately, depending on the value of <i>block</i>.
-	 * 
-	 * @param block <tt>true</tt> if <tt>readByte()</tt> should wait for a byte
-	 * if none is available.
-	 * @return the next byte read, or -1 if <tt>block</tt> was <tt>false</tt>
-	 * and no byte was available.
+	 * 返回接收到的下一个无符号字节（范围是 <tt>0</tt> 到 <tt>255</tt>）。如果
+	 * 还没有字节到达，根据 <i>block</i> 的值，要么阻塞直到有字节到达，要么立即
+	 * 返回。
+	 *
+	 * @param block 如果没有可用的字节时 <tt>readByte()</tt> 应该等待，则为
+	 * <tt>true</tt>。
+	 * @return 读到的下一个字节；如果 <tt>block</tt> 为 <tt>false</tt> 并且没有
+	 * 可用的字节，返回 -1。
 	 */
 	public int readByte(boolean block) {
 		int value;
@@ -62,9 +62,9 @@ public class SynchConsole {
 	}
 
 	/**
-	 * Return an <tt>OpenFile</tt> that can be used to read this as a file.
-	 * 
-	 * @return a file that can read this console.
+	 * 返回一个 <tt>OpenFile</tt>，可以用来像读文件一样读取这个 console。
+	 *
+	 * @return 一个可以读取这个 console 的文件。
 	 */
 	public OpenFile openForReading() {
 		return new File(true, false);
@@ -76,9 +76,9 @@ public class SynchConsole {
 	}
 
 	/**
-	 * Send a byte. Blocks until the send is complete.
-	 * 
-	 * @param value the byte to be sent (the upper 24 bits are ignored).
+	 * 发送一个字节。阻塞直到发送完成。
+	 *
+	 * @param value 要发送的字节（高 24 位会被忽略）。
 	 */
 	public void writeByte(int value) {
 		writeLock.acquire();
@@ -88,9 +88,9 @@ public class SynchConsole {
 	}
 
 	/**
-	 * Return an <tt>OpenFile</tt> that can be used to write this as a file.
-	 * 
-	 * @return a file that can write this console.
+	 * 返回一个 <tt>OpenFile</tt>，可以用来像写文件一样写这个 console。
+	 *
+	 * @return 一个可以写这个 console 的文件。
 	 */
 	public OpenFile openForWriting() {
 		return new File(false, true);

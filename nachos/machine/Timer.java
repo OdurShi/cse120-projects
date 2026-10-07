@@ -5,20 +5,18 @@ package nachos.machine;
 import nachos.security.*;
 
 /**
- * A hardware timer generates a CPU timer interrupt approximately every 500
- * clock ticks. This means that it can be used for implementing time-slicing, or
- * for having a thread go to sleep for a specific period of time.
- * 
- * The <tt>Timer</tt> class emulates a hardware timer by scheduling a timer
- * interrupt to occur every time approximately 500 clock ticks pass. There is a
- * small degree of randomness here, so interrupts do not occur exactly every 500
- * ticks.
+ * 硬件 timer 大约每 500 个 clock tick 产生一次 CPU timer 中断。这意味着它可以
+ * 用来实现时间片轮转（time-slicing），或者让一个线程 sleep 一段指定的时间。
+ *
+ * <tt>Timer</tt> 类模拟硬件 timer 的方式是：每经过大约 500 个 clock tick，
+ * 就安排（schedule）一次 timer 中断。这里带有少量随机性，所以中断并不是精确
+ * 地每 500 个 tick 发生一次。
  */
 public final class Timer {
 	/**
-	 * Allocate a new timer.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * 分配（创建）一个新的 timer。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public Timer(Privilege privilege) {
 		System.out.println(" timer");
@@ -42,19 +40,19 @@ public final class Timer {
 	}
 
 	/**
-	 * Set the callback to use as a timer interrupt handler. The timer interrupt
-	 * handler will be called approximately every 500 clock ticks.
-	 * 
-	 * @param handler the timer interrupt handler.
+	 * 设置用作 timer 中断处理函数的回调。timer 中断处理函数大约每 500 个
+	 * clock tick 被调用一次。
+	 *
+	 * @param handler timer 中断处理函数。
 	 */
 	public void setInterruptHandler(Runnable handler) {
 		this.handler = handler;
 	}
 
 	/**
-	 * Get the current time.
-	 * 
-	 * @return the number of clock ticks since Nachos started.
+	 * 获取当前时间。
+	 *
+	 * @return 自 Nachos 启动以来经过的 clock tick 数。
 	 */
 	public long getTime() {
 		return privilege.stats.totalTicks;

@@ -5,17 +5,17 @@ package nachos.machine;
 import nachos.machine.*;
 
 /**
- * An object that maintains Nachos runtime statistics.
+ * 维护 Nachos 运行时统计信息的对象。
  */
 public final class Stats {
 	/**
-	 * Allocate a new statistics object.
+	 * 分配（创建）一个新的统计对象。
 	 */
 	public Stats() {
 	}
 
 	/**
-	 * Print out the statistics in this object.
+	 * 打印这个对象中的统计信息。
 	 */
 	public void print() {
 		System.out.println("Ticks: total " + totalTicks + ", kernel "
@@ -35,95 +35,93 @@ public final class Stats {
 	}
 
 	/**
-	 * The total amount of simulated time that has passed since Nachos started.
+	 * 自 Nachos 启动以来经过的模拟时间总量。
 	 */
 	public long totalTicks = 0;
 
 	/**
-	 * The total amount of simulated time that Nachos has spent in kernel mode.
+	 * Nachos 在内核态（kernel mode）下花费的模拟时间总量。
 	 */
 	public long kernelTicks = 0;
 
 	/**
-	 * The total amount of simulated time that Nachos has spent in user mode.
+	 * Nachos 在用户态（user mode）下花费的模拟时间总量。
 	 */
 	public long userTicks = 0;
 
-	/** The total number of sectors Nachos has read from the simulated disk. */
+	/** Nachos 从模拟磁盘读取的扇区总数。 */
 	public int numDiskReads = 0;
 
-	/** The total number of sectors Nachos has written to the simulated disk. */
+	/** Nachos 写入模拟磁盘的扇区总数。 */
 	public int numDiskWrites = 0;
 
-	/** The total number of characters Nachos has read from the console. */
+	/** Nachos 从 console 读取的字符总数。 */
 	public int numConsoleReads = 0;
 
-	/** The total number of characters Nachos has written to the console. */
+	/** Nachos 写到 console 的字符总数。 */
 	public int numConsoleWrites = 0;
 
-	/** The total number of page faults that have occurred. */
+	/** 发生的 page fault 总数。 */
 	public int numPageFaults = 0;
 
-	/** The total number of TLB misses that have occurred. */
+	/** 发生的 TLB miss 总数。 */
 	public int numTLBMisses = 0;
 
-        /** The total number of pages read from COFF files. */
+        /** 从 COFF 文件读取的页面总数。 */
         public int numCOFFReads = 0;
-    
-        /** The total number of pages read from swap. */
+
+        /** 从 swap 读取的页面总数。 */
         public int numSwapReads = 0;
 
-        /** The total number of pages written to swap. */
+        /** 写入 swap 的页面总数。 */
         public int numSwapWrites = 0;
 
-        /** The total number of writes avoided with clean page optimization. */
+        /** 通过 clean page 优化而省去的写操作总数。 */
         public int numSwapSkips = 0;
 
-    /** The total number of packets Nachos has sent to the network. */
+    /** Nachos 发送到网络的数据包总数。 */
 	public int numPacketsSent = 0;
 
-	/** The total number of packets Nachos has received from the network. */
+	/** Nachos 从网络接收的数据包总数。 */
 	public int numPacketsReceived = 0;
 
 	/**
-	 * The amount to advance simulated time after each user instructions is
-	 * executed.
+	 * 每执行一条用户指令后，模拟时间前进的量。
 	 */
 	public static final int UserTick = 1;
 
 	/**
-	 * The amount to advance simulated time after each interrupt enable.
+	 * 每次开启中断后，模拟时间前进的量。
 	 */
 	public static final int KernelTick = 10;
 
 	/**
-	 * The amount of simulated time required to rotate the disk 360 degrees.
+	 * 磁盘旋转 360 度所需的模拟时间。
 	 */
 	public static final int RotationTime = 500;
 
 	/**
-	 * The amount of simulated time required for the disk to seek.
+	 * 磁盘寻道所需的模拟时间。
 	 */
 	public static final int SeekTime = 500;
 
 	/**
-	 * The amount of simulated time required for the console to handle a
-	 * character.
+	 * console 处理一个字符所需的模拟时间。
 	 */
 	public static final int ConsoleTime = 100;
 
 	/**
-	 * The amount of simulated time required for the network to handle a packet.
+	 * 网络处理一个数据包所需的模拟时间。
 	 */
 	public static final int NetworkTime = 100;
 
 	/**
-	 * The mean amount of simulated time between timer interrupts.
+	 * 两次 timer 中断之间的平均模拟时间。
 	 */
 	public static final int TimerTicks = 500;
 
 	/**
-	 * The amount of simulated time required for an elevator to move a floor.
+	 * 电梯移动一层楼所需的模拟时间。
 	 */
 	public static final int ElevatorTicks = 2000;
 }

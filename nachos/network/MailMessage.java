@@ -3,24 +3,24 @@ package nachos.network;
 import nachos.machine.*;
 
 /**
- * A mail message. Includes a packet header, a mail header, and the actual
- * payload.
- * 
+ * 一条邮件消息（mail message）。包括一个数据包 header、一个邮件 header，以及
+ * 实际的有效载荷（payload）。
+ *
  * @see nachos.machine.Packet
  */
 public class MailMessage {
 	/**
-	 * Allocate a new mail message to be sent, using the specified parameters.
-	 * 
-	 * @param dstLink the destination link address.
-	 * @param dstPort the destination port.
-	 * @param srcLink the source link address.
-	 * @param srcPort the source port.
-	 * @param contents the contents of the packet.
+	 * 用指定的参数分配（创建）一条要发送的新邮件消息。
+	 *
+	 * @param dstLink 目标链路地址。
+	 * @param dstPort 目标端口。
+	 * @param srcLink 源链路地址。
+	 * @param srcPort 源端口。
+	 * @param contents 数据包的内容。
 	 */
 	public MailMessage(int dstLink, int dstPort, int srcLink, int srcPort,
 			byte[] contents) throws MalformedPacketException {
-		// make sure the paramters are valid
+		// 确保参数有效
 		if (dstPort < 0 || dstPort >= portLimit || srcPort < 0
 				|| srcPort >= portLimit || contents.length > maxContentsLength)
 			throw new MalformedPacketException();
@@ -41,14 +41,14 @@ public class MailMessage {
 	}
 
 	/**
-	 * Allocate a new mail message using the specified packet from the network.
-	 * 
-	 * @param packet the packet containg the mail message.
+	 * 用从网络上收到的指定数据包，分配（创建）一条新的邮件消息。
+	 *
+	 * @param packet 包含这条邮件消息的数据包。
 	 */
 	public MailMessage(Packet packet) throws MalformedPacketException {
 		this.packet = packet;
 
-		// make sure we have a valid header
+		// 确保 header 有效
 		if (packet.contents.length < headerLength || packet.contents[0] < 0
 				|| packet.contents[0] >= portLimit || packet.contents[1] < 0
 				|| packet.contents[1] >= portLimit)
@@ -63,7 +63,7 @@ public class MailMessage {
 	}
 
 	/**
-	 * Return a string representation of the message headers.
+	 * 返回消息 header 的字符串表示。
 	 */
 	public String toString() {
 		return "from (" + packet.srcLink + ":" + srcPort + ") to ("
@@ -71,48 +71,47 @@ public class MailMessage {
 				+ " bytes";
 	}
 
-	/** This message, as a packet that can be sent through a network link. */
+	/** 这条消息，表示为一个可以通过网络链路发送的数据包。 */
 	public Packet packet;
 
-	/** The port used by this message on the destination machine. */
+	/** 这条消息在目标机器上使用的端口。 */
 	public int dstPort;
 
-	/** The port used by this message on the source machine. */
+	/** 这条消息在源机器上使用的端口。 */
 	public int srcPort;
 
-	/** The contents of this message, excluding the mail message header. */
+	/** 这条消息的内容，不包括邮件消息 header。 */
 	public byte[] contents;
 
 	/**
-	 * The number of bytes in a mail header. The header is formatted as follows:
-	 * 
+	 * 邮件 header 的字节数。header 的格式如下：
+	 *
 	 * <table>
 	 * <tr>
-	 * <td>offset</td>
-	 * <td>size</td>
-	 * <td>value</td>
+	 * <td>偏移</td>
+	 * <td>大小</td>
+	 * <td>值</td>
 	 * </tr>
 	 * <tr>
 	 * <td>0</td>
 	 * <td>1</td>
-	 * <td>destination port</td>
+	 * <td>目标端口</td>
 	 * </tr>
 	 * <tr>
 	 * <td>1</td>
 	 * <td>1</td>
-	 * <td>source port</td>
+	 * <td>源端口</td>
 	 * </tr>
 	 * </table>
 	 */
 	public static final int headerLength = 2;
 
-	/** Maximum payload (real data) that can be included in a single mesage. */
+	/** 单条消息中可以包含的最大有效载荷（真正的数据）。 */
 	public static final int maxContentsLength = Packet.maxContentsLength
 			- headerLength;
 
 	/**
-	 * The upper limit on mail ports. All ports fall between <tt>0</tt> and
-	 * <tt>portLimit - 1</tt>.
+	 * 邮件端口的上限。所有端口都在 <tt>0</tt> 到 <tt>portLimit - 1</tt> 之间。
 	 */
 	public static final int portLimit = 128;
 }

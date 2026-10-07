@@ -9,41 +9,35 @@ import java.util.Iterator;
 import java.util.SortedSet;
 
 /**
- * The <tt>Interrupt</tt> class emulates low-level interrupt hardware. The
- * hardware provides a method (<tt>setStatus()</tt>) to enable or disable
- * interrupts.
- * 
+ * <tt>Interrupt</tt> 类模拟底层的中断硬件。这个硬件提供一个方法
+ * （<tt>setStatus()</tt>）来开启或关闭中断。
+ *
  * <p>
- * In order to emulate the hardware, we need to keep track of all pending
- * interrupts the hardware devices would cause, and when they are supposed to
- * occur.
- * 
+ * 为了模拟硬件，我们需要记录硬件设备将会引发的所有待处理（pending）中断，
+ * 以及它们应该在什么时候发生。
+ *
  * <p>
- * This module also keeps track of simulated time. Time advances only when the
- * following occur:
+ * 这个模块还负责记录模拟时间。只有在发生以下情况时，时间才会前进：
  * <ul>
- * <li>interrupts are enabled, when they were previously disabled
- * <li>a MIPS instruction is executed
+ * <li>中断从之前的关闭状态变为开启
+ * <li>执行了一条 MIPS 指令
  * </ul>
- * 
+ *
  * <p>
- * As a result, unlike real hardware, interrupts (including time-slice context
- * switches) cannot occur just anywhere in the code where interrupts are
- * enabled, but rather only at those places in the code where simulated time
- * advances (so that it becomes time for the hardware simulation to invoke an
- * interrupt handler).
- * 
+ * 因此，与真实硬件不同，中断（包括时间片到期引起的 context switch）不会在
+ * 代码中任何开着中断的地方发生，而只会在代码中模拟时间前进的那些地方发生
+ * （这样才会到达硬件模拟调用中断处理函数的时刻）。
+ *
  * <p>
- * This means that incorrectly synchronized code may work fine on this hardware
- * simulation (even with randomized time slices), but it wouldn't work on real
- * hardware. But even though Nachos can't always detect when your program would
- * fail in real life, you should still write properly synchronized code.
+ * 这意味着同步不正确的代码在这个硬件模拟上可能运行得很好（即使时间片是随机
+ * 的），但在真实硬件上却无法工作。不过，即使 Nachos 不总能检测出你的程序在
+ * 真实环境中会在什么时候出错，你仍然应该写出正确同步的代码。
  */
 public final class Interrupt {
 	/**
-	 * Allocate a new interrupt controller.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * 分配（创建）一个新的中断控制器。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public Interrupt(Privilege privilege) {
 		System.out.println(" interrupt");
@@ -56,40 +50,38 @@ public final class Interrupt {
 	}
 
 	/**
-	 * Enable interrupts. This method has the same effect as
-	 * <tt>setStatus(true)</tt>.
+	 * 开启中断。这个方法的效果与 <tt>setStatus(true)</tt> 相同。
 	 */
 	public void enable() {
 		setStatus(true);
 	}
 
 	/**
-	 * Disable interrupts and return the old interrupt state. This method has
-	 * the same effect as <tt>setStatus(false)</tt>.
-	 * 
-	 * @return <tt>true</tt> if interrupts were enabled.
+	 * 关闭中断，并返回原来的中断状态。这个方法的效果与
+	 * <tt>setStatus(false)</tt> 相同。
+	 *
+	 * @return 如果原来中断是开启的，返回 <tt>true</tt>。
 	 */
 	public boolean disable() {
 		return setStatus(false);
 	}
 
 	/**
-	 * Restore interrupts to the specified status. This method has the same
-	 * effect as <tt>setStatus(<i>status</i>)</tt>.
-	 * 
-	 * @param status <tt>true</tt> to enable interrupts.
+	 * 把中断恢复为指定的状态。这个方法的效果与
+	 * <tt>setStatus(<i>status</i>)</tt> 相同。
+	 *
+	 * @param status 为 <tt>true</tt> 表示开启中断。
 	 */
 	public void restore(boolean status) {
 		setStatus(status);
 	}
 
 	/**
-	 * Set the interrupt status to be enabled (<tt>true</tt>) or disabled (
-	 * <tt>false</tt>) and return the previous status. If the interrupt status
-	 * changes from disabled to enabled, the simulated time is advanced.
-	 * 
-	 * @param status <tt>true</tt> to enable interrupts.
-	 * @return <tt>true</tt> if interrupts were enabled.
+	 * 把中断状态设为开启（<tt>true</tt>）或关闭（<tt>false</tt>），并返回之前的
+	 * 状态。如果中断状态从关闭变为开启，模拟时间就会前进。
+	 *
+	 * @param status 为 <tt>true</tt> 表示开启中断。
+	 * @return 如果原来中断是开启的，返回 <tt>true</tt>。
 	 */
 	public boolean setStatus(boolean status) {
 		boolean oldStatus = enabled;
@@ -102,18 +94,18 @@ public final class Interrupt {
 	}
 
 	/**
-	 * Tests whether interrupts are enabled.
-	 * 
-	 * @return <tt>true</tt> if interrupts are enabled.
+	 * 检查中断是否处于开启状态。
+	 *
+	 * @return 如果中断是开启的，返回 <tt>true</tt>。
 	 */
 	public boolean enabled() {
 		return enabled;
 	}
 
 	/**
-	 * Tests whether interrupts are disabled.
-	 * 
-	 * @return <tt>true</tt> if interrupts are disabled.
+	 * 检查中断是否处于关闭状态。
+	 *
+	 * @return 如果中断是关闭的，返回 <tt>true</tt>。
 	 */
 	public boolean disabled() {
 		return !enabled;
@@ -210,7 +202,7 @@ public final class Interrupt {
 		public int compareTo(Object o) {
 			PendingInterrupt toOccur = (PendingInterrupt) o;
 
-			// can't return 0 for unequal objects, so check all fields
+			// 对不相等的对象不能返回 0，所以要检查所有字段
 			if (time < toOccur.time)
 				return -1;
 			else if (time > toOccur.time)

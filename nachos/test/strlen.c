@@ -1,6 +1,6 @@
 #include "stdlib.h"
 
-/* returns the length of the character string str, not including the null-terminator */
+/* 返回字符串 str 的长度，不包括 null 结束符 */
 unsigned strlen(const char *str) {
   int result=0;
 

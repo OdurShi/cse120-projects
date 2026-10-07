@@ -72,16 +72,16 @@ static int _vsprintf(char *s, char *format, va_list ap) {
     int min,zpad,len=0,regular=0;
     char *temp;
 
-    /* process format string */
+    /* 处理格式字符串 */
     while (*format != 0) {
-	/* if switch, process */
+	/* 如果是格式控制符（%），就处理它 */
 	if (*format == '%') {
 	    if (regular > 0) {
 		len += mcharprint(&s, format-regular, regular);
 		regular = 0;
 	    }
 	    format++;
-	    /* bug: '-' here will potentially screw things up */
+	    /* bug：这里出现 '-' 可能会把事情搞砸 */
 	    assert(*format != '-');
 
 	    min=zpad=0;

@@ -1,6 +1,6 @@
 #include "stdlib.h"
 
-/* lexicographically compares a and b */
+/* 按字典序比较 a 和 b */
 int strcmp(const char* a, const char* b) {
   do {
     if (*a < *b)

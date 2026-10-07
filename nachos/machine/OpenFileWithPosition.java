@@ -3,23 +3,23 @@
 package nachos.machine;
 
 /**
- * An <tt>OpenFile</tt> that maintains a current file position.
+ * 一个会维护当前文件位置的 <tt>OpenFile</tt>。
  */
 public abstract class OpenFileWithPosition extends OpenFile {
 	/**
-	 * Allocate a new <tt>OpenFileWithPosition</tt> with the specified name on
-	 * the specified file system.
-	 * 
-	 * @param fileSystem the file system to which this file belongs.
-	 * @param name the name of the file, on that file system.
+	 * 在指定的文件系统上，用指定的名字分配（创建）一个新的
+	 * <tt>OpenFileWithPosition</tt>。
+	 *
+	 * @param fileSystem 这个文件所属的文件系统。
+	 * @param name 这个文件在该文件系统上的名字。
 	 */
 	public OpenFileWithPosition(FileSystem fileSystem, String name) {
 		super(fileSystem, name);
 	}
 
 	/**
-	 * Allocate a new unnamed <tt>OpenFileWithPosition</tt> that is not
-	 * associated with any file system.
+	 * 分配（创建）一个新的、未命名的、不与任何文件系统关联的
+	 * <tt>OpenFileWithPosition</tt>。
 	 */
 	public OpenFileWithPosition() {
 		super();
@@ -52,7 +52,7 @@ public abstract class OpenFileWithPosition extends OpenFile {
 	}
 
 	/**
-	 * The current value of the file pointer.
+	 * 文件指针的当前值。
 	 */
 	protected int position = 0;
 }

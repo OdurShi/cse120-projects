@@ -18,7 +18,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 
 /**
- * A graphical visualization for the <tt>ElevatorBank</tt> class.
+ * <tt>ElevatorBank</tt> 类的图形化可视界面。
  */
 public final class ElevatorGui extends Frame {
 	private final static int w = 90, h = 75;
@@ -363,14 +363,14 @@ public final class ElevatorGui extends Frame {
 					g.drawLine(w - s, y, w - 1, y + s - 1);
 			}
 
-			// rectangle containing direction display area
+			// 包含方向显示区域的矩形
 			Rectangle d = new Rectangle(s * 3 / 2, h * (numFloors - 1 - floor),
 					w - 3 * s, w / 3 - s);
 
-			// unit of measurement in direction rect (12ux4u)
+			// 方向矩形中的度量单位（12u x 4u）
 			int u = d.width / 12;
 
-			// draw elevator, fill riders
+			// 画电梯，并画出里面的 rider
 			Rectangle e = new Rectangle(d.x, d.y + d.height, d.width, h
 					- d.height - u);
 			g.drawRect(e.x, e.y, e.width, e.height);
@@ -378,7 +378,7 @@ public final class ElevatorGui extends Frame {
 
 			g.setColor(Color.lightGray);
 
-			// draw doors...
+			// 画门……
 			if (doorsOpen) {
 				g.drawLine(e.x + 2 * s, e.y, e.x + 2 * s, e.y + e.height);
 				for (int y = 0; y < e.height - 2 * s; y += 2 * s)
@@ -403,7 +403,7 @@ public final class ElevatorGui extends Frame {
 			int[] xDown = { d.x + u * 4, d.x + u * 6, d.x + u * 5 };
 			int[] yDown = { d.y + u * 1, d.y + u * 1, d.y + u * 3 };
 
-			// draw arrows
+			// 画箭头
 			if (direction == ElevatorBank.dirUp)
 				g.fillPolygon(xUp, yUp, 3);
 			else

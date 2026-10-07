@@ -6,24 +6,23 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 /**
- * A round-robin scheduler tracks waiting threads in FIFO queues, implemented
- * with linked lists. When a thread begins waiting for access, it is appended to
- * the end of a list. The next thread to receive access is always the first
- * thread in the list. This causes access to be given on a first-come
- * first-serve basis.
+ * round-robin scheduler 用 FIFO 队列（由链表实现）来记录等待的线程。当一个
+ * 线程开始等待访问权时，它被追加到链表的末尾。下一个获得访问权的线程总是
+ * 链表中的第一个线程。这样访问权就是按先来先服务（first-come first-serve）
+ * 的方式分配的。
  */
 public class RoundRobinScheduler extends Scheduler {
 	/**
-	 * Allocate a new round-robin scheduler.
+	 * 分配（创建）一个新的 round-robin scheduler。
 	 */
 	public RoundRobinScheduler() {
 	}
 
 	/**
-	 * Allocate a new FIFO thread queue.
-	 * 
-	 * @param transferPriority ignored. Round robin schedulers have no priority.
-	 * @return a new FIFO thread queue.
+	 * 分配（创建）一个新的 FIFO 线程队列。
+	 *
+	 * @param transferPriority 被忽略。round robin scheduler 没有优先级。
+	 * @return 一个新的 FIFO 线程队列。
 	 */
 	public ThreadQueue newThreadQueue(boolean transferPriority) {
 		return new FifoQueue();
@@ -31,9 +30,9 @@ public class RoundRobinScheduler extends Scheduler {
 
 	private class FifoQueue extends ThreadQueue {
 		/**
-		 * Add a thread to the end of the wait queue.
-		 * 
-		 * @param thread the thread to append to the queue.
+		 * 把一个线程加到等待队列的末尾。
+		 *
+		 * @param thread 要追加到队列中的线程。
 		 */
 		public void waitForAccess(KThread thread) {
 			Lib.assertTrue(Machine.interrupt().disabled());
@@ -42,10 +41,9 @@ public class RoundRobinScheduler extends Scheduler {
 		}
 
 		/**
-		 * Remove a thread from the beginning of the queue.
-		 * 
-		 * @return the first thread on the queue, or <tt>null</tt> if the queue
-		 * is empty.
+		 * 从队列的开头移除一个线程。
+		 *
+		 * @return 队列中的第一个线程；如果队列为空，返回 <tt>null</tt>。
 		 */
 		public KThread nextThread() {
 			Lib.assertTrue(Machine.interrupt().disabled());
@@ -57,21 +55,20 @@ public class RoundRobinScheduler extends Scheduler {
 		}
 
                 /**
-		 * Cancel the thread on the queue by removing it.
-		 * 
-		 * @return <tt>true</tt> if thread was in the queue and has
-		 * been removed, or <tt>false</tt> otherwise.
+		 * 通过把队列中的线程移除来取消它。
+		 *
+		 * @return 如果线程在队列中并且已被移除，返回 <tt>true</tt>；否则返回
+		 * <tt>false</tt>。
 		 */
 		public boolean cancelThread(KThread thread) {
 			Lib.assertTrue(Machine.interrupt().disabled());
 
 			return waitQueue.remove(thread);
 		}
-	    
+
 		/**
-		 * The specified thread has received exclusive access, without using
-		 * <tt>waitForAccess()</tt> or <tt>nextThread()</tt>. Assert that no
-		 * threads are waiting for access.
+		 * 指定的线程没有通过 <tt>waitForAccess()</tt> 或 <tt>nextThread()</tt>
+		 * 就获得了独占访问权。断言（assert）此时没有线程在等待访问权。
 		 */
 		public void acquire(KThread thread) {
 			Lib.assertTrue(Machine.interrupt().disabled());
@@ -80,11 +77,11 @@ public class RoundRobinScheduler extends Scheduler {
 		}
 
 		/**
-		 * Print out the contents of the queue.
+		 * 打印队列的内容。
 		 */
 		public void print() {
 			Lib.assertTrue(Machine.interrupt().disabled());
-			
+
 			for (Iterator i = waitQueue.iterator(); i.hasNext();)
 				System.out.print((KThread) i.next() + " ");
 			System.out.println();

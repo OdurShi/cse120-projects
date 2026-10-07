@@ -5,27 +5,22 @@ import java.util.function.IntSupplier;
 import nachos.machine.*;
 
 /**
- * A <i>Future</i> is a convenient mechanism for using asynchonous
- * operations.
+ * <i>Future</i> 是一种方便使用异步操作的机制。
  */
 public class Future {
     /**
-     * Instantiate a new <i>Future</i>.  The <i>Future</i> will invoke
-     * the supplied <i>function</i> asynchronously in a KThread.  In
-     * particular, the constructor should not block as a consequence
-     * of invoking <i>function</i>.
+     * 创建一个新的 <i>Future</i>。这个 <i>Future</i> 会在一个 KThread 中异步地
+     * 调用所提供的 <i>function</i>。特别地，构造函数不应该因为调用
+     * <i>function</i> 而阻塞。
      */
     public Future (IntSupplier function) {
     }
 
     /**
-     * Return the result of invoking the <i>function</i> passed in to
-     * the <i>Future</i> when it was created.  If the function has not
-     * completed when <i>get</i> is invoked, then the caller is
-     * blocked.  If the function has completed, then <i>get</i>
-     * returns the result of the function.  Note that <i>get</i> may
-     * be called any number of times (potentially by multiple
-     * threads), and it should always return the same value.
+     * 返回调用创建 <i>Future</i> 时传入的 <i>function</i> 的结果。如果调用
+     * <i>get</i> 时这个函数还没执行完，调用者就会被阻塞。如果函数已经执行完，
+     * <i>get</i> 就返回函数的结果。注意 <i>get</i> 可以被调用任意多次（可能由
+     * 多个线程调用），并且每次都应该返回同一个值。
      */
     public int get () {
 	return -1;

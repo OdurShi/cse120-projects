@@ -1,13 +1,12 @@
 /* halt.c
- *	Simple program to test whether running a user program works.
- *	
- *	Just do a "syscall" that shuts down the OS.
+ *	一个简单的程序，用来测试运行用户程序是否正常。
  *
- * 	NOTE: for some reason, user programs with global data structures 
- *	sometimes haven't worked in the Nachos environment.  So be careful
- *	out there!  One option is to allocate data structures as 
- * 	automatics within a procedure, but if you do this, you have to
- *	be careful to allocate a big enough stack to hold the automatics!
+ *	它只做一次关闭操作系统的 "syscall"。
+ *
+ * 	注意：出于某种原因，带有全局数据结构的用户程序在 Nachos 环境中
+ *	有时会运行不正常。所以要小心！一种做法是把数据结构作为过程内的
+ * 	自动变量（automatics）来分配，但如果你这样做，就要注意分配一个
+ *	足够大的栈来存放这些自动变量！
  */
 
 #include "syscall.h"
@@ -16,5 +15,5 @@ int
 main()
 {
     halt();
-    /* not reached */
+    /* 不会执行到这里 */
 }

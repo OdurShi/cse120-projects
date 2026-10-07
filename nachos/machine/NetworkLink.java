@@ -12,62 +12,51 @@ import java.net.UnknownHostException;
 import java.net.SocketException;
 
 /**
- * A full-duplex network link. Provides ordered, unreliable delivery of
- * limited-size packets to other machines on the network. Packets are guaranteed
- * to be uncorrupted as well.
- * 
+ * 一条全双工（full-duplex）网络链路。向网络上的其他机器有序但不可靠地投递
+ * 有大小限制的数据包。同时保证数据包不会损坏。
+ *
  * <p>
- * Recall the general layering of network protocols:
+ * 回顾一下网络协议的一般分层：
  * <ul>
- * <li>Session/Transport
- * <li>Network
- * <li>Link
- * <li>Physical
+ * <li>会话层/传输层（Session/Transport）
+ * <li>网络层（Network）
+ * <li>链路层（Link）
+ * <li>物理层（Physical）
  * </ul>
- * 
+ *
  * <p>
- * The physical layer provides a bit stream interface to the link layer. This
- * layer is very hardware-dependent.
- * 
+ * 物理层向链路层提供比特流接口。这一层非常依赖硬件。
+ *
  * <p>
- * The link layer uses the physical layer to provide a packet interface to the
- * network layer. The link layer generally provides unreliable delivery of
- * limited-size packets, but guarantees that packets will not arrive out of
- * order. Some links protect against packet corruption as well. The ethernet
- * protocol is an example of a link layer.
- * 
+ * 链路层利用物理层，向网络层提供数据包接口。链路层通常提供有大小限制的数据包
+ * 的不可靠投递，但保证数据包不会乱序到达。有些链路还能防止数据包损坏。以太网
+ * （ethernet）协议就是链路层的一个例子。
+ *
  * <p>
- * The network layer exists to connect multiple networks together into an
- * internet. The network layer provides globally unique addresses. Routers
- * (a.k.a. gateways) move packets across networks at this layer. The network
- * layer provides unordered, unreliable delivery of limited-size uncorrupted
- * packets to any machine on the same internet. The most commonly used network
- * layer protocol is IP (Internet Protocol), which is used to connect the
- * Internet.
- * 
+ * 网络层的存在是为了把多个网络连接成一个互联网（internet）。网络层提供全局
+ * 唯一的地址。路由器（也叫网关）在这一层把数据包在网络之间转发。网络层向同一
+ * 互联网上的任何机器提供有大小限制、未损坏的数据包的无序、不可靠投递。最常用的
+ * 网络层协议是 IP（Internet Protocol），它被用来连接 Internet。
+ *
  * <p>
- * The session/transport layer provides a byte-stream interface to the
- * application. This means that the transport layer must deliver uncorrupted
- * bytes to the application, in the same order they were sent. Byte-streams must
- * be connected and disconnected, and exist between ports, not machines.
- * 
+ * 会话层/传输层向应用程序提供字节流接口。这意味着传输层必须把未损坏的字节按
+ * 发送的顺序交给应用程序。字节流必须先建立连接、最后断开连接，并且存在于端口
+ * 之间，而不是机器之间。
+ *
  * <p>
- * This class provides a link layer abstraction. Since we do not allow different
- * Nachos networks to communicate with one another, there is no need for a
- * network layer in Nachos. This should simplify your design for the
- * session/transport layer, since you can assume packets never arrive out of
- * order.
+ * 这个类提供链路层的抽象。由于我们不允许不同的 Nachos 网络之间相互通信，所以
+ * Nachos 中不需要网络层。这应该能简化你对会话层/传输层的设计，因为你可以假定
+ * 数据包永远不会乱序到达。
  */
 public class NetworkLink {
 	/**
-	 * Allocate a new network link.
-	 * 
+	 * 分配（创建）一条新的网络链路。
+	 *
 	 * <p>
-	 * <tt>nachos.conf</tt> specifies the reliability of the network. The
-	 * reliability, between 0 and 1, is the probability that any particular
-	 * packet will not get dropped by the network.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * <tt>nachos.conf</tt> 指定了网络的可靠性。可靠性的取值在 0 到 1 之间，
+	 * 表示任意一个数据包不会被网络丢弃的概率。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public NetworkLink(Privilege privilege) {
 		System.out.print(" network");
@@ -129,30 +118,27 @@ public class NetworkLink {
 	}
 
 	/**
-	 * Returns the address of this network link.
-	 * 
-	 * @return the address of this network link.
+	 * 返回这条网络链路的地址。
+	 *
+	 * @return 这条网络链路的地址。
 	 */
 	public int getLinkAddress() {
 		return linkAddress;
 	}
 
 	/**
-	 * Set this link's receive and send interrupt handlers.
-	 * 
+	 * 设置这条链路的接收中断处理函数和发送中断处理函数。
+	 *
 	 * <p>
-	 * The receive interrupt handler is called every time a packet arrives and
-	 * can be read using <tt>receive()</tt>.
-	 * 
+	 * 每当有一个数据包到达、可以用 <tt>receive()</tt> 读取时，接收中断处理
+	 * 函数就会被调用。
+	 *
 	 * <p>
-	 * The send interrupt handler is called every time a packet sent with
-	 * <tt>send()</tt> is finished being sent. This means that another packet
-	 * can be sent.
-	 * 
-	 * @param receiveInterruptHandler the callback to call when a packet
-	 * arrives.
-	 * @param sendInterruptHandler the callback to call when another packet can
-	 * be sent.
+	 * 每当一个用 <tt>send()</tt> 发送的数据包发送完毕时，发送中断处理函数就会
+	 * 被调用。这表示可以发送下一个数据包了。
+	 *
+	 * @param receiveInterruptHandler 有数据包到达时要调用的回调函数。
+	 * @param sendInterruptHandler 可以发送下一个数据包时要调用的回调函数。
 	 */
 	public void setInterruptHandlers(Runnable receiveInterruptHandler,
 			Runnable sendInterruptHandler) {
@@ -193,10 +179,9 @@ public class NetworkLink {
 	}
 
 	/**
-	 * Return the next packet received.
-	 * 
-	 * @return the next packet received, or <tt>null</tt> if no packet is
-	 * available.
+	 * 返回接收到的下一个数据包。
+	 *
+	 * @return 接收到的下一个数据包；如果没有可用的数据包，返回 <tt>null</tt>。
 	 */
 	public Packet receive() {
 		Packet p = incomingPacket;
@@ -252,10 +237,10 @@ public class NetworkLink {
 	private void sendInterrupt() {
 		Lib.assertTrue(outgoingPacket != null);
 
-		// randomly drop packets, according to its reliability
+		// 根据可靠性随机丢弃数据包
 		if (Machine.autoGrader().canSendPacket(privilege)
 				&& Lib.random() <= reliability) {
-			// ok, no drop
+			// 好的，不丢弃
 			privilege.doPrivileged(new Runnable() {
 				public void run() {
 					sendPacket();
@@ -285,10 +270,9 @@ public class NetworkLink {
 	}
 
 	/**
-	 * Send another packet. If a packet is already being sent, the result is not
-	 * defined.
-	 * 
-	 * @param pkt the packet to send.
+	 * 发送下一个数据包。如果已经有一个数据包正在发送，结果是未定义的。
+	 *
+	 * @param pkt 要发送的数据包。
 	 */
 	public void send(Packet pkt) {
 		if (outgoingPacket == null)
@@ -302,10 +286,8 @@ public class NetworkLink {
 	private static final int portBase;
 
 	/**
-	 * The address of the network to which are attached all network links in
-	 * this JVM. This is a hash on the account name of the JVM running this
-	 * Nachos instance. It is used to help prevent packets from other users from
-	 * accidentally interfering with this network.
+	 * 这个 JVM 中所有网络链路所连接的网络的地址。它是对运行这个 Nachos 实例的
+	 * JVM 的账户名做的哈希。它用来帮助防止其他用户的数据包意外干扰这个网络。
 	 */
 	public static final byte networkID;
 

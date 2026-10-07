@@ -1,10 +1,10 @@
 #include "stdlib.h"
 
-/* lexicographically compares a and b up to n chars */
+/* 按字典序比较 a 和 b 的前 n 个字符 */
 int strncmp(const char* a, const char* b, int n)
 {
   assert(n > 0);
-  
+
   do {
     if (*a < *b)
       return -1;

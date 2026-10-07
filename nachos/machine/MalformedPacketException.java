@@ -3,11 +3,11 @@
 package nachos.machine;
 
 /**
- * Thrown when a malformed packet is processed.
+ * 处理格式错误的数据包时抛出。
  */
 public class MalformedPacketException extends Exception {
 	/**
-	 * Allocate a new <tt>MalformedPacketException</tt>.
+	 * 分配（创建）一个新的 <tt>MalformedPacketException</tt>。
 	 */
 	public MalformedPacketException() {
 	}

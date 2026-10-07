@@ -8,20 +8,18 @@ import nachos.vm.*;
 import java.io.EOFException;
 
 /**
- * Encapsulates the state of a user process that is not contained in its user
- * thread (or threads). This includes its address translation state, a file
- * table, and information about the program being executed.
- * 
+ * 封装一个用户进程中不属于其用户线程的那部分状态。这包括它的地址翻译状态、
+ * 文件表，以及正在执行的程序的相关信息。
+ *
  * <p>
- * This class is extended by other classes to support additional functionality
- * (such as additional syscalls).
- * 
+ * 其他类会继承这个类，以支持更多功能（例如更多的 syscall）。
+ *
  * @see nachos.vm.VMProcess
  * @see nachos.network.NetProcess
  */
 public class UserProcess {
 	/**
-	 * Allocate a new process.
+	 * 分配（创建）一个新进程。
 	 */
 	public UserProcess() {
 		int numPhysPages = Machine.processor().getNumPhysPages();
@@ -31,19 +29,17 @@ public class UserProcess {
 	}
 
 	/**
-	 * Allocate and return a new process of the correct class. The class name is
-	 * specified by the <tt>nachos.conf</tt> key
-	 * <tt>Kernel.processClassName</tt>.
-	 * 
-	 * @return a new process of the correct class.
+	 * 分配并返回一个正确类型的新进程。类名由 <tt>nachos.conf</tt> 中的 key
+	 * <tt>Kernel.processClassName</tt> 指定。
+	 *
+	 * @return 一个正确类型的新进程。
 	 */
 	public static UserProcess newUserProcess() {
 	        String name = Machine.getProcessClassName ();
 
-		// If Lib.constructObject is used, it quickly runs out
-		// of file descriptors and throws an exception in
-		// createClassLoader.  Hack around it by hard-coding
-		// creating new processes of the appropriate type.
+		// 如果使用 Lib.constructObject，很快就会耗尽文件描述符，
+		// 并在 createClassLoader 中抛出异常。这里用一个变通办法：
+		// 把创建相应类型新进程的代码写死。
 
 		if (name.equals ("nachos.userprog.UserProcess")) {
 		    return new UserProcess ();
@@ -55,12 +51,12 @@ public class UserProcess {
 	}
 
 	/**
-	 * Execute the specified program with the specified arguments. Attempts to
-	 * load the program, and then forks a thread to run it.
-	 * 
-	 * @param name the name of the file containing the executable.
-	 * @param args the arguments to pass to the executable.
-	 * @return <tt>true</tt> if the program was successfully executed.
+	 * 用指定的参数执行指定的程序。尝试加载这个程序，然后 fork 一个线程来
+	 * 运行它。
+	 *
+	 * @param name 包含可执行文件的文件名。
+	 * @param args 要传给可执行文件的参数。
+	 * @return 如果程序成功执行，返回 <tt>true</tt>。
 	 */
 	public boolean execute(String name, String[] args) {
 		if (!load(name, args))
@@ -73,32 +69,29 @@ public class UserProcess {
 	}
 
 	/**
-	 * Save the state of this process in preparation for a context switch.
-	 * Called by <tt>UThread.saveState()</tt>.
+	 * 保存这个进程的状态，为 context switch 做准备。由
+	 * <tt>UThread.saveState()</tt> 调用。
 	 */
 	public void saveState() {
 	}
 
 	/**
-	 * Restore the state of this process after a context switch. Called by
-	 * <tt>UThread.restoreState()</tt>.
+	 * 在 context switch 之后恢复这个进程的状态。由
+	 * <tt>UThread.restoreState()</tt> 调用。
 	 */
 	public void restoreState() {
 		Machine.processor().setPageTable(pageTable);
 	}
 
 	/**
-	 * Read a null-terminated string from this process's virtual memory. Read at
-	 * most <tt>maxLength + 1</tt> bytes from the specified address, search for
-	 * the null terminator, and convert it to a <tt>java.lang.String</tt>,
-	 * without including the null terminator. If no null terminator is found,
-	 * returns <tt>null</tt>.
-	 * 
-	 * @param vaddr the starting virtual address of the null-terminated string.
-	 * @param maxLength the maximum number of characters in the string, not
-	 * including the null terminator.
-	 * @return the string read, or <tt>null</tt> if no null terminator was
-	 * found.
+	 * 从这个进程的虚拟内存中读取一个以 null 结尾的字符串。从指定地址最多读取
+	 * <tt>maxLength + 1</tt> 个字节，查找 null 结束符，然后把它转换成一个
+	 * <tt>java.lang.String</tt>（不包括 null 结束符）。如果没有找到 null
+	 * 结束符，返回 <tt>null</tt>。
+	 *
+	 * @param vaddr 以 null 结尾的字符串的起始虚拟地址。
+	 * @param maxLength 字符串的最大字符数，不包括 null 结束符。
+	 * @return 读到的字符串；如果没有找到 null 结束符，返回 <tt>null</tt>。
 	 */
 	public String readVirtualMemoryString(int vaddr, int maxLength) {
 		Lib.assertTrue(maxLength >= 0);
@@ -116,30 +109,27 @@ public class UserProcess {
 	}
 
 	/**
-	 * Transfer data from this process's virtual memory to all of the specified
-	 * array. Same as <tt>readVirtualMemory(vaddr, data, 0, data.length)</tt>.
-	 * 
-	 * @param vaddr the first byte of virtual memory to read.
-	 * @param data the array where the data will be stored.
-	 * @return the number of bytes successfully transferred.
+	 * 把数据从这个进程的虚拟内存传输到整个指定数组中。等同于
+	 * <tt>readVirtualMemory(vaddr, data, 0, data.length)</tt>。
+	 *
+	 * @param vaddr 要读取的虚拟内存的第一个字节。
+	 * @param data 用来存放数据的数组。
+	 * @return 成功传输的字节数。
 	 */
 	public int readVirtualMemory(int vaddr, byte[] data) {
 		return readVirtualMemory(vaddr, data, 0, data.length);
 	}
 
 	/**
-	 * Transfer data from this process's virtual memory to the specified array.
-	 * This method handles address translation details. This method must
-	 * <i>not</i> destroy the current process if an error occurs, but instead
-	 * should return the number of bytes successfully copied (or zero if no data
-	 * could be copied).
-	 * 
-	 * @param vaddr the first byte of virtual memory to read.
-	 * @param data the array where the data will be stored.
-	 * @param offset the first byte to write in the array.
-	 * @param length the number of bytes to transfer from virtual memory to the
-	 * array.
-	 * @return the number of bytes successfully transferred.
+	 * 把数据从这个进程的虚拟内存传输到指定数组中。这个方法负责处理地址翻译的
+	 * 细节。出错时，这个方法<i>不能</i>销毁当前进程，而应该返回成功复制的字节数
+	 * （如果一个字节都无法复制，就返回零）。
+	 *
+	 * @param vaddr 要读取的虚拟内存的第一个字节。
+	 * @param data 用来存放数据的数组。
+	 * @param offset 数组中要写入的第一个字节。
+	 * @param length 要从虚拟内存传输到数组的字节数。
+	 * @return 成功传输的字节数。
 	 */
 	public int readVirtualMemory(int vaddr, byte[] data, int offset, int length) {
 		Lib.assertTrue(offset >= 0 && length >= 0
@@ -147,7 +137,7 @@ public class UserProcess {
 
 		byte[] memory = Machine.processor().getMemory();
 
-		// for now, just assume that virtual addresses equal physical addresses
+		// 暂时先假定虚拟地址等于物理地址
 		if (vaddr < 0 || vaddr >= memory.length)
 			return 0;
 
@@ -158,30 +148,27 @@ public class UserProcess {
 	}
 
 	/**
-	 * Transfer all data from the specified array to this process's virtual
-	 * memory. Same as <tt>writeVirtualMemory(vaddr, data, 0, data.length)</tt>.
-	 * 
-	 * @param vaddr the first byte of virtual memory to write.
-	 * @param data the array containing the data to transfer.
-	 * @return the number of bytes successfully transferred.
+	 * 把指定数组中的全部数据传输到这个进程的虚拟内存中。等同于
+	 * <tt>writeVirtualMemory(vaddr, data, 0, data.length)</tt>。
+	 *
+	 * @param vaddr 要写入的虚拟内存的第一个字节。
+	 * @param data 包含要传输的数据的数组。
+	 * @return 成功传输的字节数。
 	 */
 	public int writeVirtualMemory(int vaddr, byte[] data) {
 		return writeVirtualMemory(vaddr, data, 0, data.length);
 	}
 
 	/**
-	 * Transfer data from the specified array to this process's virtual memory.
-	 * This method handles address translation details. This method must
-	 * <i>not</i> destroy the current process if an error occurs, but instead
-	 * should return the number of bytes successfully copied (or zero if no data
-	 * could be copied).
-	 * 
-	 * @param vaddr the first byte of virtual memory to write.
-	 * @param data the array containing the data to transfer.
-	 * @param offset the first byte to transfer from the array.
-	 * @param length the number of bytes to transfer from the array to virtual
-	 * memory.
-	 * @return the number of bytes successfully transferred.
+	 * 把数据从指定数组传输到这个进程的虚拟内存中。这个方法负责处理地址翻译的
+	 * 细节。出错时，这个方法<i>不能</i>销毁当前进程，而应该返回成功复制的字节数
+	 * （如果一个字节都无法复制，就返回零）。
+	 *
+	 * @param vaddr 要写入的虚拟内存的第一个字节。
+	 * @param data 包含要传输的数据的数组。
+	 * @param offset 数组中要传输的第一个字节。
+	 * @param length 要从数组传输到虚拟内存的字节数。
+	 * @return 成功传输的字节数。
 	 */
 	public int writeVirtualMemory(int vaddr, byte[] data, int offset, int length) {
 		Lib.assertTrue(offset >= 0 && length >= 0
@@ -189,7 +176,7 @@ public class UserProcess {
 
 		byte[] memory = Machine.processor().getMemory();
 
-		// for now, just assume that virtual addresses equal physical addresses
+		// 暂时先假定虚拟地址等于物理地址
 		if (vaddr < 0 || vaddr >= memory.length)
 			return 0;
 
@@ -200,14 +187,13 @@ public class UserProcess {
 	}
 
 	/**
-	 * Load the executable with the specified name into this process, and
-	 * prepare to pass it the specified arguments. Opens the executable, reads
-	 * its header information, and copies sections and arguments into this
-	 * process's virtual memory.
-	 * 
-	 * @param name the name of the file containing the executable.
-	 * @param args the arguments to pass to the executable.
-	 * @return <tt>true</tt> if the executable was successfully loaded.
+	 * 把指定名字的可执行文件加载到这个进程中，并准备把指定的参数传给它。打开
+	 * 可执行文件，读取它的 header 信息，然后把各个 section 和参数复制到这个
+	 * 进程的虚拟内存中。
+	 *
+	 * @param name 包含可执行文件的文件名。
+	 * @param args 要传给可执行文件的参数。
+	 * @return 如果可执行文件被成功加载，返回 <tt>true</tt>。
 	 */
 	private boolean load(String name, String[] args) {
 		Lib.debug(dbgProcess, "UserProcess.load(\"" + name + "\")");
@@ -227,7 +213,7 @@ public class UserProcess {
 			return false;
 		}
 
-		// make sure the sections are contiguous and start at page 0
+		// 确保各个 section 是连续的，并且从第 0 页开始
 		numPages = 0;
 		for (int s = 0; s < coff.getNumSections(); s++) {
 			CoffSection section = coff.getSection(s);
@@ -239,12 +225,12 @@ public class UserProcess {
 			numPages += section.getLength();
 		}
 
-		// make sure the argv array will fit in one page
+		// 确保 argv 数组能放进一页
 		byte[][] argv = new byte[args.length][];
 		int argsSize = 0;
 		for (int i = 0; i < args.length; i++) {
 			argv[i] = args[i].getBytes();
-			// 4 bytes for argv[] pointer; then string plus one for null byte
+			// argv[] 指针占 4 字节；然后是字符串本身，再加 1 字节的 null
 			argsSize += 4 + argv[i].length + 1;
 		}
 		if (argsSize > pageSize) {
@@ -253,36 +239,35 @@ public class UserProcess {
 			return false;
 		}
 
-		// program counter initially points at the program entry point
+		// 程序计数器一开始指向程序的入口点
 		initialPC = coff.getEntryPoint();
 
-		// next comes the stack; stack pointer initially points to top of it
+		// 接下来是栈；栈指针一开始指向栈顶
 		numPages += stackPages;
 		initialSP = numPages * pageSize;
 
-		// and finally reserve 1 page for arguments
+		// 最后再为参数预留 1 页
 		numPages++;
 
 		Lib.debug(dbgProcess, "UserProcess.load: " + numPages + " pages in address space (" + Machine.processor().getNumPhysPages() + " physical pages)");
 
 		/*
-		 * Layout of the Nachos user process address space.
-		 * The code above calculates the total number of pages
-		 * in the address space for this executable.
+		 * Nachos 用户进程地址空间的布局。
+		 * 上面的代码计算了这个可执行文件的地址空间
+		 * 总共需要多少页。
 		 *
-		 * +------------------+
-		 * | Code and data    |
-		 * | pages from       |   size = num pages in COFF file
-		 * | executable file  |
-		 * | (COFF file)      |
-		 * +------------------+
-		 * | Stack pages      |   size = stackPages
-		 * +------------------+
-		 * | Arg page         |   size = 1
-		 * +------------------+
+		 * +--------------------+
+		 * | 来自可执行文件     |   大小 = COFF 文件中的页数
+		 * | （COFF 文件）的    |
+		 * | 代码和数据页       |
+		 * +--------------------+
+		 * | 栈页 (stack pages) |   大小 = stackPages
+		 * +--------------------+
+		 * | 参数页 (arg page)  |   大小 = 1
+		 * +--------------------+
 		 *
-		 * Page 0 is at the top, and the last page at the
-		 * bottom is the arg page at numPages-1.
+		 * 第 0 页在最上面，最下面的最后一页是参数页，
+		 * 也就是第 numPages-1 页。
 		 */
 
 		if (!loadSections()) {
@@ -290,7 +275,7 @@ public class UserProcess {
 			return false;
 		}
 
-		// store arguments in last page
+		// 把参数存到最后一页
 		int entryOffset = (numPages - 1) * pageSize;
 		int stringOffset = entryOffset + args.length * 4;
 
@@ -311,11 +296,11 @@ public class UserProcess {
 	}
 
 	/**
-	 * Allocates memory for this process, and loads the COFF sections into
-	 * memory. If this returns successfully, the process will definitely be run
-	 * (this is the last step in process initialization that can fail).
-	 * 
-	 * @return <tt>true</tt> if the sections were successfully loaded.
+	 * 为这个进程分配内存，并把 COFF 的各个 section 加载到内存中。如果这个方法
+	 * 成功返回，这个进程就一定会运行（这是进程初始化过程中最后一个可能失败的
+	 * 步骤）。
+	 *
+	 * @return 如果各个 section 被成功加载，返回 <tt>true</tt>。
 	 */
 	protected boolean loadSections() {
 		if (numPages > Machine.processor().getNumPhysPages()) {
@@ -324,7 +309,7 @@ public class UserProcess {
 			return false;
 		}
 
-		// load sections
+		// 加载各个 section
 		for (int s = 0; s < coff.getNumSections(); s++) {
 			CoffSection section = coff.getSection(s);
 
@@ -334,7 +319,7 @@ public class UserProcess {
 			for (int i = 0; i < section.getLength(); i++) {
 				int vpn = section.getFirstVPN() + i;
 
-				// for now, just assume virtual addresses=physical addresses
+				// 暂时先假定虚拟地址 = 物理地址
 				section.loadPage(i, vpn);
 			}
 		}
@@ -343,36 +328,34 @@ public class UserProcess {
 	}
 
 	/**
-	 * Release any resources allocated by <tt>loadSections()</tt>.
+	 * 释放 <tt>loadSections()</tt> 分配的所有资源。
 	 */
 	protected void unloadSections() {
 	}
 
 	/**
-	 * Initialize the processor's registers in preparation for running the
-	 * program loaded into this process. Set the PC register to point at the
-	 * start function, set the stack pointer register to point at the top of the
-	 * stack, set the A0 and A1 registers to argc and argv, respectively, and
-	 * initialize all other registers to 0.
+	 * 初始化处理器的寄存器，为运行加载到这个进程中的程序做准备。把 PC 寄存器
+	 * 设为指向起始函数，把栈指针寄存器设为指向栈顶，把 A0 和 A1 寄存器分别设为
+	 * argc 和 argv，并把其他所有寄存器初始化为 0。
 	 */
 	public void initRegisters() {
 		Processor processor = Machine.processor();
 
-		// by default, everything's 0
+		// 默认情况下，所有寄存器都是 0
 		for (int i = 0; i < processor.numUserRegisters; i++)
 			processor.writeRegister(i, 0);
 
-		// initialize PC and SP according
+		// 相应地初始化 PC 和 SP
 		processor.writeRegister(Processor.regPC, initialPC);
 		processor.writeRegister(Processor.regSP, initialSP);
 
-		// initialize the first two argument registers to argc and argv
+		// 把前两个参数寄存器初始化为 argc 和 argv
 		processor.writeRegister(Processor.regA0, argc);
 		processor.writeRegister(Processor.regA1, argv);
 	}
 
 	/**
-	 * Handle the halt() system call.
+	 * 处理 halt() 系统调用。
 	 */
 	private int handleHalt() {
 		Lib.debug(dbgProcess, "UserProcess.handleHalt");
@@ -384,17 +367,16 @@ public class UserProcess {
 	}
 
 	/**
-	 * Handle the exit() system call.
+	 * 处理 exit() 系统调用。
 	 */
 	private int handleExit(int status) {
-	        // Do not remove this call to the autoGrader...
+	        // 不要删除这个对 autoGrader 的调用……
 		Machine.autoGrader().finishingCurrentProcess(status);
-		// ...and leave it as the top of handleExit so that we
-		// can grade your implementation.
+		// ……并且要让它保持为 handleExit 的第一条语句，
+		// 这样我们才能给你的实现评分。
 
-		// for now, simply print out the value of the exit
-		// status for debugging, and unconditionally terminate
-		// with just one process
+		// 暂时只是把退出状态的值打印出来方便调试，
+		// 然后无条件终止（目前只有一个进程）
 		System.out.println ("UserProcess.handleExit (" + status + ")");
 		Kernel.kernel.terminate();
 
@@ -402,23 +384,23 @@ public class UserProcess {
 	}
 
 	private static final int syscallHalt = 0,
-			/* Process syscalls */
-			syscallExit = 1, syscallExec = 2, syscallJoin = 3, 
-			/* File syscalls */
+			/* 进程相关的 syscall */
+			syscallExit = 1, syscallExec = 2, syscallJoin = 3,
+			/* 文件相关的 syscall */
 			syscallCreate = 4, syscallOpen = 5, syscallRead = 6,
 			syscallWrite = 7, syscallClose = 8, syscallUnlink = 9,
-			/* Signal syscalls (optional) */
+			/* 信号相关的 syscall（可选） */
 			syscallSignal = 13, syscallSigreturn = 14,
 			syscallAlarm = 15;
 
 	/**
-	 * Handle a syscall exception. Called by <tt>handleException()</tt>. The
-	 * <i>syscall</i> argument identifies which syscall the user executed:
-	 * 
+	 * 处理一个 syscall 异常。由 <tt>handleException()</tt> 调用。参数
+	 * <i>syscall</i> 指明用户执行的是哪个 syscall：
+	 *
 	 * <table>
 	 * <tr>
-	 * <td>syscall#</td>
-	 * <td>syscall prototype</td>
+	 * <td>syscall 编号</td>
+	 * <td>syscall 原型</td>
 	 * </tr>
 	 * <tr>
 	 * <td>0</td>
@@ -464,13 +446,13 @@ public class UserProcess {
 	 * <td><tt>int  unlink(char *name);</tt></td>
 	 * </tr>
 	 * </table>
-	 * 
-	 * @param syscall the syscall number.
-	 * @param a0 the first syscall argument.
-	 * @param a1 the second syscall argument.
-	 * @param a2 the third syscall argument.
-	 * @param a3 the fourth syscall argument.
-	 * @return the value to be returned to the user.
+	 *
+	 * @param syscall syscall 编号。
+	 * @param a0 syscall 的第一个参数。
+	 * @param a1 syscall 的第二个参数。
+	 * @param a2 syscall 的第三个参数。
+	 * @param a3 syscall 的第四个参数。
+	 * @return 要返回给用户的值。
 	 */
 	public int handleSyscall(int syscall, int a0, int a1, int a2, int a3) {
 		switch (syscall) {
@@ -487,11 +469,11 @@ public class UserProcess {
 	}
 
 	/**
-	 * Handle a user exception. Called by <tt>UserKernel.exceptionHandler()</tt>
-	 * . The <i>cause</i> argument identifies which exception occurred; see the
-	 * <tt>Processor.exceptionZZZ</tt> constants.
-	 * 
-	 * @param cause the user exception that occurred.
+	 * 处理一个用户异常。由 <tt>UserKernel.exceptionHandler()</tt> 调用。参数
+	 * <i>cause</i> 指明发生的是哪种异常；参见 <tt>Processor.exceptionZZZ</tt>
+	 * 系列常量。
+	 *
+	 * @param cause 发生的用户异常。
 	 */
 	public void handleException(int cause) {
 		Processor processor = Machine.processor();
@@ -514,21 +496,21 @@ public class UserProcess {
 		}
 	}
 
-	/** The program being run by this process. */
+	/** 这个进程正在运行的程序。 */
 	protected Coff coff;
 
-	/** This process's page table. */
+	/** 这个进程的页表。 */
 	protected TranslationEntry[] pageTable;
 
-	/** The number of contiguous pages occupied by the program. */
+	/** 程序占用的连续页数。 */
 	protected int numPages;
 
-	/** The number of pages in the program's stack. */
+	/** 程序栈的页数。 */
 	protected final int stackPages = 8;
 
-	/** The thread that executes the user-level program. */
+	/** 执行用户级程序的线程。 */
         protected UThread thread;
-    
+
 	private int initialPC, initialSP;
 
 	private int argc, argv;

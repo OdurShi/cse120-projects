@@ -5,44 +5,39 @@ package nachos.machine;
 import nachos.security.*;
 
 /**
- * A serial console can be used to send and receive characters. Only one
- * character may be sent at a time, and only one character may be received at a
- * time.
+ * 串行 console 可以用来发送和接收字符。一次只能发送一个字符，一次也只能
+ * 接收一个字符。
  */
 
 public interface SerialConsole {
 	/**
-	 * Set this console's receive and send interrupt handlers.
-	 * 
+	 * 设置这个 console 的接收中断处理函数和发送中断处理函数。
+	 *
 	 * <p>
-	 * The receive interrupt handler is called every time another byte arrives
-	 * and can be read using <tt>readByte()</tt>.
-	 * 
+	 * 每当又有一个字节到达、可以用 <tt>readByte()</tt> 读取时，接收中断处理
+	 * 函数就会被调用。
+	 *
 	 * <p>
-	 * The send interrupt handler is called every time a byte sent with
-	 * <tt>writeByte()</tt> is finished being sent. This means that another byte
-	 * can be sent.
-	 * 
-	 * @param receiveInterruptHandler the callback to call when a byte arrives.
-	 * @param sendInterruptHandler the callback to call when another byte can be
-	 * sent.
+	 * 每当一个用 <tt>writeByte()</tt> 发送的字节发送完毕时，发送中断处理函数
+	 * 就会被调用。这表示可以发送下一个字节了。
+	 *
+	 * @param receiveInterruptHandler 有字节到达时要调用的回调函数。
+	 * @param sendInterruptHandler 可以发送下一个字节时要调用的回调函数。
 	 */
 	public void setInterruptHandlers(Runnable receiveInterruptHandler,
 			Runnable sendInterruptHandler);
 
 	/**
-	 * Return the next unsigned byte received (in the range <tt>0</tt> through
-	 * <tt>255</tt>).
-	 * 
-	 * @return the next byte read, or -1 if no byte is available.
+	 * 返回接收到的下一个无符号字节（范围是 <tt>0</tt> 到 <tt>255</tt>）。
+	 *
+	 * @return 读到的下一个字节；如果没有可用的字节，返回 -1。
 	 */
 	public int readByte();
 
 	/**
-	 * Send another byte. If a byte is already being sent, the result is not
-	 * defined.
-	 * 
-	 * @param value the byte to be sent (the upper 24 bits are ignored).
+	 * 发送下一个字节。如果已经有一个字节正在发送，结果是未定义的。
+	 *
+	 * @param value 要发送的字节（高 24 位会被忽略）。
 	 */
 	public void writeByte(int value);
 }

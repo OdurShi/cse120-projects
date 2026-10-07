@@ -5,11 +5,11 @@ package nachos.machine;
 import java.io.EOFException;
 
 /**
- * A COFF (common object file format) loader.
+ * COFF（common object file format，通用目标文件格式）加载器。
  */
 public class Coff {
 	/**
-	 * Allocate a new Coff object.
+	 * 分配（创建）一个新的 Coff 对象。
 	 */
 	protected Coff() {
 		file = null;
@@ -18,24 +18,21 @@ public class Coff {
 	}
 
 	/**
-	 * Load the COFF executable in the specified file.
-	 * 
+	 * 加载指定文件中的 COFF 可执行文件。
+	 *
 	 * <p>
-	 * Notes:
+	 * 注意：
 	 * <ol>
-	 * <li>If the constructor returns successfully, the file becomes the
-	 * property of this loader, and should not be accessed any further.
-	 * <li>The autograder expects this loader class to be used. Do not load
-	 * sections through any other mechanism.
-	 * <li>This loader will verify that the file is backed by a file system, by
-	 * asserting that read() operations take non-zero simulated time to
-	 * complete. Do not supply a file backed by a simulated cache (the primary
-	 * purpose of this restriction is to prevent sections from being loaded
-	 * instantaneously while handling page faults).
+	 * <li>如果构造函数成功返回，这个文件就归这个加载器所有，之后不应再访问它。
+	 * <li>autograder 期望你使用这个加载器类。不要通过其他任何机制加载
+	 * section。
+	 * <li>这个加载器会通过断言 read() 操作花费了非零的模拟时间，来验证这个文件
+	 * 确实由文件系统支撑。不要提供由模拟缓存支撑的文件（这个限制的主要目的，
+	 * 是防止在处理 page fault 时 section 被瞬间加载完成）。
 	 * </ol>
-	 * 
-	 * @param file the file containing the executable.
-	 * @exception EOFException if the executable is corrupt.
+	 *
+	 * @param file 包含可执行文件的文件。
+	 * @exception EOFException 如果可执行文件已损坏。
 	 */
 	public Coff(OpenFile file) throws EOFException {
 		this.file = file;
@@ -93,21 +90,20 @@ public class Coff {
 	}
 
 	/**
-	 * Return the number of sections in the executable.
-	 * 
-	 * @return the number of sections in the executable.
+	 * 返回可执行文件中 section 的个数。
+	 *
+	 * @return 可执行文件中 section 的个数。
 	 */
 	public int getNumSections() {
 		return sections.length;
 	}
 
 	/**
-	 * Return an object that can be used to access the specified section. Valid
-	 * section numbers include <tt>0</tt> through <tt>getNumSections() -
-	 * 1</tt>.
-	 * 
-	 * @param sectionNumber the section to select.
-	 * @return an object that can be used to access the specified section.
+	 * 返回一个可以用来访问指定 section 的对象。有效的 section 编号是从
+	 * <tt>0</tt> 到 <tt>getNumSections() - 1</tt>。
+	 *
+	 * @param sectionNumber 要选择的 section。
+	 * @return 一个可以用来访问指定 section 的对象。
 	 */
 	public CoffSection getSection(int sectionNumber) {
 		Lib.assertTrue(sectionNumber >= 0 && sectionNumber < sections.length);
@@ -116,10 +112,10 @@ public class Coff {
 	}
 
 	/**
-	 * Return the program entry point. This is the value that to which the PC
-	 * register should be initialized to before running the program.
-	 * 
-	 * @return the program entry point.
+	 * 返回程序的入口点（entry point）。在运行程序之前，PC 寄存器应该被初始化
+	 * 为这个值。
+	 *
+	 * @return 程序的入口点。
 	 */
 	public int getEntryPoint() {
 		Lib.assertTrue(file != null);
@@ -128,8 +124,7 @@ public class Coff {
 	}
 
 	/**
-	 * Close the executable file and release any resources allocated by this
-	 * loader.
+	 * 关闭可执行文件，并释放这个加载器分配的所有资源。
 	 */
 	public void close() {
 		file.close();
@@ -139,10 +134,10 @@ public class Coff {
 
 	private OpenFile file;
 
-	/** The virtual address of the first instruction of the program. */
+	/** 程序第一条指令的虚拟地址。 */
 	protected int entryPoint;
 
-	/** The sections in this COFF executable. */
+	/** 这个 COFF 可执行文件中的 section。 */
 	protected CoffSection sections[];
 
 	private static final int headerLength = 20;

@@ -7,13 +7,13 @@ import nachos.security.*;
 import java.io.IOException;
 
 /**
- * A text-based console that uses System.in and System.out.
+ * 一个使用 System.in 和 System.out 的文本 console。
  */
 public class StandardConsole implements SerialConsole {
 	/**
-	 * Allocate a new standard console.
-	 * 
-	 * @param privilege encapsulates privileged access to the Nachos machine.
+	 * 分配（创建）一个新的标准 console。
+	 *
+	 * @param privilege 封装了对 Nachos 机器的特权访问。
 	 */
 	public StandardConsole(Privilege privilege) {
 		System.out.print(" console");
@@ -47,9 +47,9 @@ public class StandardConsole implements SerialConsole {
 	}
 
 	/**
-	 * Attempt to read a byte from the object backing this console.
-	 * 
-	 * @return the byte read, or -1 of no data is available.
+	 * 尝试从这个 console 背后的对象读取一个字节。
+	 *
+	 * @return 读到的字节；如果没有可用的数据，返回 -1。
 	 */
 	protected int in() {
 		try {
@@ -64,26 +64,26 @@ public class StandardConsole implements SerialConsole {
 	}
 
 	private int translateCharacter(int c) {
-		// translate win32 0x0D 0x0A sequence to single newline
+		// 把 win32 的 0x0D 0x0A 序列转换成单个换行符
 		if (c == 0x0A && prevCarriageReturn) {
 			prevCarriageReturn = false;
 			return -1;
 		}
 		prevCarriageReturn = (c == 0x0D);
 
-		// invalid if non-ASCII
+		// 非 ASCII 字符视为无效
 		if (c >= 0x80)
 			return -1;
-		// backspace characters
+		// 退格字符
 		else if (c == 0x04 || c == 0x08 || c == 0x19 || c == 0x1B || c == 0x7F)
 			return '\b';
-		// if normal ASCII range, nothing to do
+		// 如果在普通 ASCII 范围内，不需要做任何处理
 		else if (c >= 0x20)
 			return c;
-		// newline characters
+		// 换行字符
 		else if (c == 0x0A || c == 0x0D)
 			return '\n';
-		// everything else is invalid
+		// 其他一切都视为无效
 		else
 			return -1;
 	}
@@ -120,9 +120,9 @@ public class StandardConsole implements SerialConsole {
 	}
 
 	/**
-	 * Write a byte to the object backing this console.
-	 * 
-	 * @param value the byte to write.
+	 * 向这个 console 背后的对象写一个字节。
+	 *
+	 * @param value 要写的字节。
 	 */
 	protected void out(int value) {
 		System.out.write(value);

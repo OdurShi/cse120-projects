@@ -3,13 +3,13 @@
 package nachos.machine;
 
 /**
- * A read-only <tt>OpenFile</tt> backed by a byte array.
+ * 一个以字节数组为后备存储的只读 <tt>OpenFile</tt>。
  */
 public class ArrayFile extends OpenFileWithPosition {
 	/**
-	 * Allocate a new <tt>ArrayFile</tt>.
-	 * 
-	 * @param array the array backing this file.
+	 * 分配（创建）一个新的 <tt>ArrayFile</tt>。
+	 *
+	 * @param array 作为这个文件后备存储的数组。
 	 */
 	public ArrayFile(byte[] array) {
 		this.array = array;

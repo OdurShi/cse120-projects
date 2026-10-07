@@ -5,12 +5,12 @@ import nachos.threads.*;
 import nachos.userprog.*;
 
 /**
- * A UThread is KThread that can execute user program code inside a user
- * process, in addition to Nachos kernel code.
+ * UThread 是一种 KThread，它除了能执行 Nachos 内核代码之外，还能在一个用户
+ * 进程中执行用户程序代码。
  */
 public class UThread extends KThread {
 	/**
-	 * Allocate a new UThread.
+	 * 分配（创建）一个新的 UThread。
 	 */
 	public UThread(UserProcess process) {
 		super();
@@ -34,7 +34,7 @@ public class UThread extends KThread {
 	}
 
 	/**
-	 * Save state before giving up the processor to another thread.
+	 * 在把处理器让给另一个线程之前保存状态。
 	 */
 	protected void saveState() {
 		process.saveState();
@@ -46,7 +46,7 @@ public class UThread extends KThread {
 	}
 
 	/**
-	 * Restore state before receiving the processor again.
+	 * 在再次获得处理器之前恢复状态。
 	 */
 	protected void restoreState() {
 		super.restoreState();
@@ -58,18 +58,17 @@ public class UThread extends KThread {
 	}
 
 	/**
-	 * Storage for the user register set.
-	 * 
+	 * 用户寄存器组的存储空间。
+	 *
 	 * <p>
-	 * A thread capable of running user code actually has <i>two</i> sets of CPU
-	 * registers: one for its state while executing user code, and one for its
-	 * state while executing kernel code. While this thread is not running, its
-	 * user state is stored here.
+	 * 一个能运行用户代码的线程实际上有<i>两</i>组 CPU 寄存器：一组用于执行用户
+	 * 代码时的状态，另一组用于执行内核代码时的状态。当这个线程没有在运行时，
+	 * 它的用户态状态就保存在这里。
 	 */
 	public int userRegisters[] = new int[Processor.numUserRegisters];
 
 	/**
-	 * The process to which this thread belongs.
+	 * 这个线程所属的进程。
 	 */
 	public UserProcess process;
 }

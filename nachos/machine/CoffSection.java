@@ -8,18 +8,18 @@ import java.io.EOFException;
 import java.util.Arrays;
 
 /**
- * A <tt>CoffSection</tt> manages a single section within a COFF executable.
+ * <tt>CoffSection</tt> 管理 COFF 可执行文件中的单个 section。
  */
 public class CoffSection {
 	/**
-	 * Allocate a new COFF section with the specified parameters.
-	 * 
-	 * @param coff the COFF object to which this section belongs.
-	 * @param name the COFF name of this section.
-	 * @param executable <tt>true</tt> if this section contains code.
-	 * @param readOnly <tt>true</tt> if this section is read-only.
-	 * @param numPages the number of virtual pages in this section.
-	 * @param firstVPN the first virtual page number used by this.
+	 * 用指定的参数分配（创建）一个新的 COFF section。
+	 *
+	 * @param coff 这个 section 所属的 COFF 对象。
+	 * @param name 这个 section 的 COFF 名字。
+	 * @param executable 如果这个 section 包含代码，则为 <tt>true</tt>。
+	 * @param readOnly 如果这个 section 是只读的，则为 <tt>true</tt>。
+	 * @param numPages 这个 section 中的虚拟页数。
+	 * @param firstVPN 这个 section 使用的第一个虚拟页号。
 	 */
 	protected CoffSection(Coff coff, String name, boolean executable,
 			boolean readOnly, int numPages, int firstVPN) {
@@ -37,12 +37,12 @@ public class CoffSection {
 	}
 
 	/**
-	 * Load a COFF section from an executable.
-	 * 
-	 * @param file the file containing the executable.
-	 * @param headerOffset the offset of the section header in the executable.
-	 * 
-	 * @exception EOFException if an error occurs.
+	 * 从可执行文件中加载一个 COFF section。
+	 *
+	 * @param file 包含可执行文件的文件。
+	 * @param headerOffset section header 在可执行文件中的偏移量。
+	 *
+	 * @exception EOFException 如果发生错误。
 	 */
 	public CoffSection(OpenFile file, Coff coff, int headerOffset)
 			throws EOFException {
@@ -109,67 +109,66 @@ public class CoffSection {
 	}
 
 	/**
-	 * Return the COFF object used to load this executable instance.
-	 * 
-	 * @return the COFF object corresponding to this section.
+	 * 返回用来加载这个可执行文件实例的 COFF 对象。
+	 *
+	 * @return 这个 section 对应的 COFF 对象。
 	 */
 	public Coff getCoff() {
 		return coff;
 	}
 
 	/**
-	 * Return the name of this section.
-	 * 
-	 * @return the name of this section.
+	 * 返回这个 section 的名字。
+	 *
+	 * @return 这个 section 的名字。
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Test whether this section is read-only.
-	 * 
-	 * @return <tt>true</tt> if this section should never be written.
+	 * 检查这个 section 是否只读。
+	 *
+	 * @return 如果这个 section 永远不应该被写入，返回 <tt>true</tt>。
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
 	/**
-	 * Test whether this section is initialized. Loading a page from an
-	 * initialized section requires a disk access, while loading a page from an
-	 * uninitialized section requires only zero-filling the page.
-	 * 
-	 * @return <tt>true</tt> if this section contains initialized data in the
-	 * executable.
+	 * 检查这个 section 是否已初始化。从已初始化的 section 加载一页需要访问
+	 * 磁盘，而从未初始化的 section 加载一页只需要把这一页填零。
+	 *
+	 * @return 如果这个 section 在可执行文件中包含已初始化的数据，返回
+	 * <tt>true</tt>。
 	 */
 	public boolean isInitialzed() {
 		return initialized;
 	}
 
 	/**
-	 * Return the length of this section in pages.
-	 * 
-	 * @return the number of pages in this section.
+	 * 返回这个 section 以页为单位的长度。
+	 *
+	 * @return 这个 section 中的页数。
 	 */
 	public int getLength() {
 		return numPages;
 	}
 
 	/**
-	 * Return the first virtual page number used by this section.
-	 * 
-	 * @return the first virtual page number used by this section.
+	 * 返回这个 section 使用的第一个虚拟页号。
+	 *
+	 * @return 这个 section 使用的第一个虚拟页号。
 	 */
 	public int getFirstVPN() {
 		return firstVPN;
 	}
 
 	/**
-	 * Load a page from this segment into physical memory.
-	 * 
-	 * @param spn the page number within this segment.
-	 * @param ppn the physical page to load into.
+	 * 把这个段中的一页加载到物理内存中。
+	 *
+	 * @param spn 段内的页号。
+	 * @param ppn 要加载到的物理页。
 	 */
 	public void loadPage(int spn, int ppn) {
 		Lib.assertTrue(file != null);
@@ -197,32 +196,32 @@ public class CoffSection {
 		Machine.incrNumCOFFReads();
 	}
 
-	/** The COFF object to which this section belongs. */
+	/** 这个 section 所属的 COFF 对象。 */
 	protected Coff coff;
 
-	/** The COFF name of this section. */
+	/** 这个 section 的 COFF 名字。 */
 	protected String name;
 
-	/** True if this section contains code. */
+	/** 如果这个 section 包含代码，则为 true。 */
 	protected boolean executable;
 
-	/** True if this section is read-only. */
+	/** 如果这个 section 是只读的，则为 true。 */
 	protected boolean readOnly;
 
-	/** True if this section contains initialized data. */
+	/** 如果这个 section 包含已初始化的数据，则为 true。 */
 	protected boolean initialized;
 
-	/** The number of virtual pages in this section. */
+	/** 这个 section 中的虚拟页数。 */
 	protected int numPages;
 
-	/** The first virtual page number used by this section. */
+	/** 这个 section 使用的第一个虚拟页号。 */
 	protected int firstVPN;
 
 	private OpenFile file;
 
 	private int contentOffset, size;
 
-	/** The length of a COFF section header. */
+	/** COFF section header 的长度。 */
 	public static final int headerLength = 40;
 
 	private static final char dbgCoffSection = 'c';

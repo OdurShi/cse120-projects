@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Shell-script front-end to run Nachos.
-# Simply sets terminal to a minimum of one byte to complete a read and
-# disables character echo. Restores original terminal state on exit.
+# 用来运行 Nachos 的 shell 脚本前端。
+# 它只是把终端设置为「至少读到一个字节就完成一次读取」，并关闭字符回显。
+# 退出时会恢复终端原来的状态。
 
 onexit () {
   stty $OLDSTTYSTATE

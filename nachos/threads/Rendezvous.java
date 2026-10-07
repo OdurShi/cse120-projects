@@ -3,30 +3,25 @@ package nachos.threads;
 import nachos.machine.*;
 
 /**
- * A <i>Rendezvous</i> allows threads to synchronously exchange values.
+ * <i>Rendezvous</i> 让线程之间可以同步地交换值。
  */
 public class Rendezvous {
     /**
-     * Allocate a new Rendezvous.
+     * 分配（创建）一个新的 Rendezvous。
      */
     public Rendezvous () {
     }
 
     /**
-     * Synchronously exchange a value with another thread.  The first
-     * thread A (with value X) to exhange will block waiting for
-     * another thread B (with value Y).  When thread B arrives, it
-     * will unblock A and the threads will exchange values: value Y
-     * will be returned to thread A, and value X will be returned to
-     * thread B.
+     * 和另一个线程同步地交换一个值。第一个调用 exchange 的线程 A（带着值 X）
+     * 会阻塞，等待另一个线程 B（带着值 Y）。当线程 B 到来时，它会解除 A 的
+     * 阻塞，然后两个线程交换值：值 Y 返回给线程 A，值 X 返回给线程 B。
      *
-     * Different integer tags are used as different, parallel
-     * synchronization points (i.e., threads synchronizing at
-     * different tags do not interact with each other).  The same tag
-     * can also be used repeatedly for multiple exchanges.
+     * 不同的整数 tag 用作不同的、相互平行的同步点（也就是说，在不同 tag 上
+     * 同步的线程之间互不影响）。同一个 tag 也可以被反复用于多次交换。
      *
-     * @param tag the synchronization tag.
-     * @param value the integer to exchange.
+     * @param tag 同步用的 tag。
+     * @param value 要交换的整数值。
      */
     public int exchange (int tag, int value) {
 	return 0;

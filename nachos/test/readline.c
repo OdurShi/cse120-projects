@@ -6,29 +6,29 @@ void readline(char *s, int maxlength) {
 
   while (1) {
     char c = getch();
-    /* if end of line, finish up */
+    /* 如果是行尾，就收尾 */
     if (c == '\n') {
       putchar('\n');
       s[i] = 0;
       return;
     }
-    /* else if backspace... */
+    /* 否则如果是退格…… */
     else if (c == '\b') {
-      /* if nothing to delete, beep */
+      /* 如果没有可删除的字符，就响铃 */
       if (i == 0) {
 	beep();
       }
-      /* else delete it */
+      /* 否则删掉一个字符 */
       else {
 	printf("\b \b");
 	i--;
       }
     }
-    /* else if bad character or no room for more, beep */
+    /* 否则如果是无效字符或者已经没有空间了，就响铃 */
     else if (c < 0x20 || i+1 == maxlength) {
       beep();
     }
-    /* else add the character */
+    /* 否则把这个字符加进去 */
     else {
       s[i++] = c;
       putchar(c);

@@ -3,9 +3,8 @@
 package nachos.machine;
 
 /**
- * An event that affects rider software. If a rider is outside the elevators, it
- * will only receive events on the same floor as the rider. If a rider is inside
- * an elevator, it will only receive events pertaining to that elevator.
+ * 影响 rider 软件的一个事件。如果 rider 在电梯外面，它只会收到与它在同一层
+ * 的事件。如果 rider 在电梯里面，它只会收到与那部电梯相关的事件。
  */
 public final class RiderEvent {
 	public RiderEvent(int event, int floor, int elevator, int direction) {
@@ -15,24 +14,24 @@ public final class RiderEvent {
 		this.direction = direction;
 	}
 
-	/** The event identifier. Refer to the <i>event*</i> constants. */
+	/** 事件标识符。参见 <i>event*</i> 系列常量。 */
 	public final int event;
 
-	/** The floor pertaining to the event, or -1 if not applicable. */
+	/** 与该事件相关的楼层；不适用时为 -1。 */
 	public final int floor;
 
-	/** The elevator pertaining to the event, or -1 if not applicable. */
+	/** 与该事件相关的电梯；不适用时为 -1。 */
 	public final int elevator;
 
-	/** The direction display of the elevator (neither if not applicable). */
+	/** 电梯的方向显示（不适用时为 neither）。 */
 	public final int direction;
 
-	/** An elevator's doors have opened. */
+	/** 一部电梯的门已经打开。 */
 	public static final int eventDoorsOpened = 0;
 
-	/** An elevator's doors were open and its direction display changed. */
+	/** 一部电梯的门开着，并且它的方向显示改变了。 */
 	public static final int eventDirectionChanged = 1;
 
-	/** An elevator's doors have closed. */
+	/** 一部电梯的门已经关上。 */
 	public static final int eventDoorsClosed = 2;
 }
